@@ -12,9 +12,10 @@ const size_t user_proc_start = 32;
 
 /* process */
 
-const int process_sleep = 0;
-const int process_runable = 1;
-const int process_zombie = 2;
+const int process_uninited = 0;
+const int process_sleep = 1;
+const int process_runable = 2;
+const int process_zombie = 3;
 
 /* page */
 
@@ -23,6 +24,7 @@ const size_t page_size = 1 << 12;
 /* virtual memory */
 
 const size_t vm_size = 1u << 31;
+const size_t page_num = vm_size / page_size;
 
 /* interrupt */
 
