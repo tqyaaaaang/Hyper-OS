@@ -46,6 +46,8 @@ namespace logging
 		friend logger & operator << ( logger &buf, log_endl_t a )
 		{
 			{
+				std::lock_guard < std::mutex > lock ( output_lock );
+
 				( *OUT ) << BUF.str () << std::endl;
 			}
 			BUF.clear ();
