@@ -1,5 +1,9 @@
 .vscode
+
 bin
+
+*.vcxproj*
+Debug
 
 cmake_install.cmake
 CmakeFiles

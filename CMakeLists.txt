@@ -4,10 +4,7 @@ SET ( CMAKE_CXX_STANDARD 11 )
 
 PROJECT ( HYPER-OS )
 
-SET ( src_list
-    src/main.cpp
-    src/trap/trap.cpp
-)
+FILE ( GLOB_RECURSE src_list "src/*.cpp" )
 
 SET ( prog_name hos )
 
