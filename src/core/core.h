@@ -17,6 +17,12 @@ public:
 	~CPU_core ();
 
 	/**
+	* CPU_core.set_enabled
+	* set the CPU status
+	*/
+	void set_enabled ( bool status );
+
+	/**
 	 * CPU_core.enable
 	 * enable the CPU
 	 */
@@ -33,6 +39,12 @@ public:
 	 * check if the core is enabled
 	 */
 	bool is_enabled () const;
+
+	/**
+	 * CPU_core.set_interrupt_enabled
+	 * set the CPU interrupt status
+	 */
+	void set_interrupt_enabled ( bool status );
 
 	/**
 	 * CPU_core.enable_interrupt

@@ -15,14 +15,19 @@ CPU_core::~CPU_core ()
 {
 }
 
+void CPU_core::set_enabled ( bool status )
+{
+	enabled_flag = status;
+}
+
 void CPU_core::enable ()
 {
-	enabled_flag = true;
+	set_enabled ( true );
 }
 
 void CPU_core::disable ()
 {
-	enabled_flag = false;
+	set_enabled ( false );
 }
 
 bool CPU_core::is_enabled () const
@@ -30,14 +35,19 @@ bool CPU_core::is_enabled () const
 	return enabled_flag;
 }
 
+void CPU_core::set_interrupt_enabled ( bool status )
+{
+	interrupt_enabled_flag = status;
+}
+
 void CPU_core::enable_interrupt ()
 {
-	interrupt_enabled_flag = true;
+	set_interrupt_enabled ( true );
 }
 
 void CPU_core::disable_interrupt ()
 {
-	interrupt_enabled_flag = false;
+	set_interrupt_enabled ( false );
 }
 
 bool CPU_core::is_interrupt_enabled () const
