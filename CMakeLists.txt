@@ -12,3 +12,5 @@ SET ( CMAKE_INSTALL_PREFIX )
 
 SET ( EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
 ADD_EXECUTABLE ( ${prog_name} ${src_list} )
+
+target_link_libraries( ${prog_name} pthread )
