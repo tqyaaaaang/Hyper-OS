@@ -19,3 +19,5 @@ private:
 };
 
 extern thread_local context_t context;
+
+void init_context ();
