@@ -3,6 +3,8 @@
  * CPU Cores
  */
 
+#pragma once
+
 #include "core.h"
 #include <vector>
 
