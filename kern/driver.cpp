@@ -1,3 +1,4 @@
+#include "pmm.h"
 #include "intr.h"
 #include "state_info.h"
 #include "defs.h"
@@ -7,8 +8,8 @@ int main()
 {
 	state_init();
 	intr_init();
+	pm_init();
 	clock_init();
-	// pm_init();
 	// mmu_init();
 	// vm_init();
 	// process_init(); 

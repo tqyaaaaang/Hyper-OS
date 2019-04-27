@@ -45,7 +45,6 @@ void alltraps()
 static void thread_main()
 {
 	while (intr_enabled()) {
-		cout << "hello!" << endl;
 		unique_lock<mutex> locker(do_intr_mut);
 		// enable to service next interrupt
 		do_intr.wait(locker);
