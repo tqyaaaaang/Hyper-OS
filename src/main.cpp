@@ -4,9 +4,11 @@
  */
 
 #include "core/cpus.h"
-#include "env.h"
+#include "env/env.h"
+#include "logging/logging.h"
 
 int main ()
 {
+	init_logger ();
 	init_cpus ( CPU_CORES );
 }
