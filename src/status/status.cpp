@@ -35,9 +35,14 @@ std::string status_t::get_name () const
 
 thread_local status_t status;
 
-void init_status ()
+void init_status_phase_1 ()
 {
-	logging::info << "Setting initial thread status" << logging::log_endl;
-	status.set_core ( &cores[0] );
+	logging::info << "Setting initial thread status - Phase 1" << logging::log_endl;
 	status.set_name ( "main thread" );
+}
+
+void init_status_phase_2 ()
+{
+	logging::info << "Setting initial thread status - Phase 2" << logging::log_endl;
+	status.set_core ( &cores[0] );
 }

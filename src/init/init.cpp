@@ -14,8 +14,9 @@
 void init ()
 {
 	init_logger ();
+	init_status_phase_1 ();
 
 	init_cpus ( CPU_CORES );
-	init_status ();
+	init_status_phase_2 ();
 	init_pmm ( );
 }
