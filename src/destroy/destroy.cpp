@@ -10,6 +10,5 @@
 void destroy ()
 {
 	destroy_pmm ();
-	destory_cpus ();
-	// destory_shutdown ();
+	destroy_cpus ();
 }

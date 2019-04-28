@@ -20,7 +20,7 @@ void init_cpus ( int n )
 	}
 }
 
-void destory_cpus ()
+void destroy_cpus ()
 {
 	logging::debug << "Destory CPUs" << logging::log_endl;
 

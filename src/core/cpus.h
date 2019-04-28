@@ -19,4 +19,4 @@ void init_cpus ( int n );
 /**
  destroy_cpus ()
  */
-void destory_cpus ();
+void destroy_cpus ();
