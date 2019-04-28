@@ -1,6 +1,7 @@
 #include "../logging/logging.h"
 #include "../env/env.h"
 #include "../tools/bus.h"
+#include "../status/status.h"
 #include "pmem_info.h"
 #include <cstdint>
 #include <assert.h>
@@ -104,6 +105,7 @@ static pm_result pm_write(size_t paddr, char data)
  */
 static void memory_main()
 {
+	status.set_name("memory");
 	logging::info << "physical memory online." << logging::log_endl;
 	while (1) {
 		pm_info info = mmu2pm.read();
@@ -130,6 +132,7 @@ static void memory_main()
 /* init physical memory */
 void init_pm()
 {
+	
 	logging::info << "pm init." << logging::log_endl;
 	pm_pages = new pm_page_frame[PAGE_NUM];
 	th_pm = thread(memory_main);
