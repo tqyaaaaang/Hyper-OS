@@ -25,7 +25,7 @@ page_frame *pages;
  */
 page_frame* alloc_pages(int n)
 {
-	
+	return NULL;
 }
  
 inline page_frame* alloc_page()
