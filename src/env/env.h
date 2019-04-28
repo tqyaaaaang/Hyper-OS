@@ -2,6 +2,7 @@
  * env.h
  * Environment Variables
  */
+#pragma once
 
 // CPU Information
 extern const int CPU_CORES;   // Number of CPU cores

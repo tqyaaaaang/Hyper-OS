@@ -1,6 +1,7 @@
 .vscode
 
 bin
+CMakeFiles
 
 *.vcxproj*
 Debug
@@ -9,3 +10,5 @@ cmake_install.cmake
 CmakeFiles
 CMakeCache.txt
 Makefile
+
+*~

@@ -1,13 +1,16 @@
-/* physical memory & pm manager 
+/* physical memory manager 
  * alloc_page(s) : alloc new page frame(s)
  * free_page(s)  : free allocted page frame(s)
- * read/write    : physical memory interface for mmu
  */
 
 #include <iostream>
 #include <list>
 #include "pmm.h"
 #include "page_dir.h"
+#include "pmem.h"
+#include "../logging/logging.h"
+#include "../env/env.h"
+#include "../tools/bus.h"
 
 using std::cout;
 using std::endl;
@@ -40,30 +43,25 @@ inline void free_page(page_frame *pg)
 { free_pages(pg); }
 
 /* init physical memory and manager */
-void pm_init()
+void pmm_init()
 {
-	cout << "pm init." << endl;
+	logging::info << "pmm init." << logging::log_endl;
+	pm_init();
 }
 
-/* memory thread */
-static void memory_thread_main()
+/* shutdown physical memory and manager */
+void pmm_shutdown()
 {
-	
+	pm_shutdown();
 }
 
-/* interface for mmu, read a byte
- * @paddr : physical address to read
- */
-size_t read(size_t paddr)
+void pmm_debug()
 {
-	
-}
-
-/* interface for mmu, write a byte
- * @paddr : physical address to write
- * @data  : data to write
- */
-void write(size_t paddr, char data)
-{
-	
+	logging::info << "--- pmm debugging ---"  << logging::log_endl;
+	write(10, 1);
+	logging::info << "read 10 : " << read(10) << logging::log_endl;
+	write(1 << 20, 2);
+	write(1 << 30, 3);
+	logging::info << "read 1 << 20 : " << read(1 << 20) << logging::log_endl;
+	logging::info << "read 1 << 30 : " << read(1 << 30) << logging::log_endl;
 }
