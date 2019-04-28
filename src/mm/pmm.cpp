@@ -44,8 +44,14 @@ inline void free_page(page_frame *pg)
 /* init physical memory and manager */
 void init_pmm()
 {
-	logging::info << "Initialize physical memory mamanger" << logging::log_endl;
+	logging::info << "Initialize physical memory manager" << logging::log_endl;
 	pages = new page_frame[PAGE_NUM];
+}
+
+void destory_pmm ()
+{
+	logging::debug << "Destory physical memory manager" << logging::log_endl;
+	delete[] pages;
 }
 
 /* memory thread */

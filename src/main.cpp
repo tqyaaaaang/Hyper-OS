@@ -4,8 +4,11 @@
  */
 
 #include "init/init.h"
+#include "destroy/destroy.h"
 
 int main ()
 {
 	init ();
+
+	destroy ();
 }
