@@ -7,14 +7,16 @@
 #include <iostream>
 #include <list>
 #include "pmm.h"
+#include "pmem_info.h"
 #include "page_dir.h"
+#include "../logging/logging.h"
 
 using std::cout;
 using std::endl;
 using std::list;
 
 list<page_frame*> free_list;
-page_frame pages[PAGE_NUM];
+page_frame *pages;
 
 /* alloce n page frames
  * return page_frame pointer of first page frame(s)
@@ -22,7 +24,7 @@ page_frame pages[PAGE_NUM];
  */
 page_frame* alloc_pages(int n)
 {
-	
+	return NULL;
 }
  
 inline page_frame* alloc_page()
@@ -40,9 +42,10 @@ inline void free_page(page_frame *pg)
 { free_pages(pg); }
 
 /* init physical memory and manager */
-void pm_init()
+void init_pmm()
 {
-	cout << "pm init." << endl;
+	logging::info << "Initialize physical memory mamanger" << logging::log_endl;
+	pages = new page_frame[PAGE_NUM];
 }
 
 /* memory thread */
@@ -56,7 +59,7 @@ static void memory_thread_main()
  */
 size_t read(size_t paddr)
 {
-	
+	return 0;
 }
 
 /* interface for mmu, write a byte

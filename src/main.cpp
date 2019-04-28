@@ -7,10 +7,13 @@
 #include "context/context.h"
 #include "env/env.h"
 #include "logging/logging.h"
+#include "mm/pmm.h"
 
 int main ()
 {
 	init_logger ();
+
 	init_cpus ( CPU_CORES );
 	init_context ();
+	init_pmm ();
 }

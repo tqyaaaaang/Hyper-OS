@@ -3,8 +3,16 @@
  * Environment Variables
  */
 
+#pragma once
+
+#include <cstdint>
+#include <cstddef>
+
 // CPU Information
 extern const int CPU_CORES;   // Number of CPU cores
+
+// Memory information
+extern const size_t MEMORY_SIZE;   // The size of the physical memory
 
 // Logging
 extern const char *LOG_FILE_NAME;   // File name to write log, NULL if write to stdout
