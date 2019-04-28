@@ -6,9 +6,8 @@
 #pragma once
 
 #include "core.h"
-#include <vector>
 
-extern std::vector < CPU_core > cores;   // List of CPU cores
+extern CPU_core *cores;   // List of CPU cores
 
 /**
  * init_cpus ( int n )
@@ -16,3 +15,8 @@ extern std::vector < CPU_core > cores;   // List of CPU cores
  * @n: the number of cpus
  */
 void init_cpus ( int n );
+
+/**
+ destroy_cpus ()
+ */
+void destory_cpus ();

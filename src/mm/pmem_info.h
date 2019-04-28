@@ -6,6 +6,6 @@
 #include <cstdint>
 #include <cstddef>
 
-const size_t PAGE_SIZE = 1 << 12;
-const size_t MEMORY_SIZE = (size_t)1 << 32;
-const size_t PAGE_NUM = MEMORY_SIZE / PAGE_SIZE;
+extern const size_t PAGE_SIZE;   // Size of each page
+extern const size_t PAGE_NUM;    // Number of pages
+extern const size_t MEMORY_SIZE; // Size of memory

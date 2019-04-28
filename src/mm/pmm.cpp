@@ -17,7 +17,7 @@ using std::endl;
 using std::list;
 
 list<page_frame*> free_list;
-page_frame pages[PAGE_NUM];
+page_frame *pages;
 
 /* alloce n page frames
  * return page_frame pointer of first page frame(s)
@@ -43,25 +43,25 @@ inline void free_page(page_frame *pg)
 { free_pages(pg); }
 
 /* init physical memory and manager */
-void pmm_init()
+void init_pmm()
 {
 	logging::info << "pmm init." << logging::log_endl;
-	pm_init();
+	init_pm();
 }
 
 /* shutdown physical memory and manager */
-void pmm_shutdown()
+void destroy_pmm()
 {
-	pm_shutdown();
+	destroy_pm();
 }
 
-void pmm_debug()
+void debug_pmm()
 {
 	logging::info << "--- pmm debugging ---"  << logging::log_endl;
 	write(10, 1);
 	logging::info << "read 10 : " << read(10) << logging::log_endl;
 	write(1 << 20, 2);
-	write(1 << 30, 3);
+	write(1 << 29, 3);
 	logging::info << "read 1 << 20 : " << read(1 << 20) << logging::log_endl;
-	logging::info << "read 1 << 30 : " << read(1 << 30) << logging::log_endl;
+	logging::info << "read 1 << 29 : " << read(1 << 29) << logging::log_endl;
 }

@@ -13,14 +13,14 @@ public:
 	int ref_counter; // ref counter
 } ;
 
-extern page_frame pages[PAGE_NUM];
+extern page_frame *pages;
 
 extern std::list<page_frame*> free_list;
 
 // init function
-void pmm_init();
-void pmm_debug();
-void pmm_shutdown();
+void init_pmm();
+void debug_pmm();
+void destroy_pmm();
 
 // interface for OS 
 page_frame* alloc_pages(int n);

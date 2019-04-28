@@ -128,7 +128,7 @@ static void memory_main()
 }
 
 /* init physical memory */
-void pm_init()
+void init_pm()
 {
 	logging::info << "pm init." << logging::log_endl;
 	pm_pages = new pm_page_frame[PAGE_NUM];
@@ -138,7 +138,7 @@ void pm_init()
 }
 
 /* showdown physical memory */
-void pm_shutdown()
+void destroy_pm()
 {
 	// shutdown memory thread
 	pm_info info;
