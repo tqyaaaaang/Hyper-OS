@@ -22,7 +22,7 @@ CPU_core * status_t::get_core () const
 	return current_core;
 }
 
-thread_local status_t context;
+thread_local status_t status;
 
 void init_status ()
 {
