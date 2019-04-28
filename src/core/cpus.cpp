@@ -11,10 +11,10 @@ CPU_core *cores;   // List of CPU cores
 
 void init_cpus ( int n )
 {
-	logging::info << "Initialize " << n << " CPU(s)" << logging::log_endl;
+	logging::info << "Initializing " << n << " CPU(s)" << logging::log_endl;
 	cores = new CPU_core[CPU_CORES];
 	for ( int i = 0; i < CPU_CORES; ++i ){
-		logging::debug << "Initialize CPU #" << i << logging::log_endl;
+		logging::debug << "Initializing CPU #" << i << logging::log_endl;
 		cores[i].enable ();
 		cores[i].enable_interrupt ();
 	}
@@ -22,7 +22,7 @@ void init_cpus ( int n )
 
 void destroy_cpus ()
 {
-	logging::debug << "Destory CPUs" << logging::log_endl;
+	logging::debug << "Destorying CPUs" << logging::log_endl;
 
 	delete[] cores;
 }

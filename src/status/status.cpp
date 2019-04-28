@@ -26,6 +26,6 @@ thread_local status_t context;
 
 void init_status ()
 {
-	logging::info << "Set initial thread status" << logging::log_endl;
+	logging::info << "Setting initial thread status" << logging::log_endl;
 	context.set_core ( &cores[0] );
 }
