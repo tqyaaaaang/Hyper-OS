@@ -24,12 +24,12 @@ namespace logging
 }
 
 logging::logger::logger ()
-	: visible ( false )
+	: level ( 0 ), visible ( false )
 {
 }
 
-logging::logger::logger ( bool _visible )
-	: visible ( _visible )
+logging::logger::logger ( int _level )
+	: level ( _level ), visible ( _level <= LOG_LEVEL )
 {
 }
 
@@ -45,9 +45,9 @@ void init_logger ()
 		logging::OUT = new std::ofstream ( LOG_FILE_NAME );
 	}
 
-	logging::critical = logging::logger ( LOGGING_LEVEL::CRITICAL <= LOG_LEVEL );
-	logging::error = logging::logger ( LOGGING_LEVEL::ERROR <= LOG_LEVEL );
-	logging::warning = logging::logger ( LOGGING_LEVEL::WARNING <= LOG_LEVEL );
-	logging::info = logging::logger ( LOGGING_LEVEL::INFO <= LOG_LEVEL );
-	logging::debug = logging::logger ( LOGGING_LEVEL::DEBUG <= LOG_LEVEL );
+	logging::critical = logging::logger ( LOGGING_LEVEL::CRITICAL );
+	logging::error = logging::logger ( LOGGING_LEVEL::ERROR );
+	logging::warning = logging::logger ( LOGGING_LEVEL::WARNING );
+	logging::info = logging::logger ( LOGGING_LEVEL::INFO );
+	logging::debug = logging::logger ( LOGGING_LEVEL::DEBUG );
 }

@@ -10,6 +10,8 @@
 #include <sstream>
 #include <mutex>
 
+#include "log_helper.h"
+
 namespace logging
 {
 	extern thread_local std::stringstream BUF;
@@ -33,7 +35,7 @@ namespace logging
 	{
 	public:
 		logger ();
-		logger ( bool _visible );
+		logger ( int _level );
 		~logger ();
 
 		template < typename T >
@@ -51,7 +53,7 @@ namespace logging
 				{
 					std::lock_guard < std::mutex > lock ( output_lock );
 
-					( *OUT ) << BUF.str () << std::endl;
+					( *OUT ) << get_prefix ( buf.level ) << BUF.str () << std::endl;
 				}
 				BUF.clear ();
 				BUF.str ( "" );
@@ -60,6 +62,7 @@ namespace logging
 		}
 
 	private:
+		int level;
 		bool visible;
 	};
 
