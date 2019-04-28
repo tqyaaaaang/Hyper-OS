@@ -6,7 +6,8 @@
 #pragma once
 
 #include <string>
-#include "../core/core.h"
+
+class CPU_core;
 
 class status_t
 {

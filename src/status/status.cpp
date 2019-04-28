@@ -6,6 +6,7 @@
 #include "status.h"
 #include "../core/cpus.h"
 #include "../logging/logging.h"
+#include "../core/core.h"
 
 status_t::status_t ()
 	: current_core ( NULL )
