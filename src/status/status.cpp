@@ -9,6 +9,7 @@
 
 status_t::status_t ()
 	: current_core ( NULL )
+	, name ( "" )
 {
 }
 
@@ -22,10 +23,21 @@ CPU_core * status_t::get_core () const
 	return current_core;
 }
 
+void status_t::set_name ( std::string _name )
+{
+	name = _name;
+}
+
+std::string status_t::get_name () const
+{
+	return name;
+}
+
 thread_local status_t status;
 
 void init_status ()
 {
 	logging::info << "Setting initial thread status" << logging::log_endl;
-	context.set_core ( &cores[0] );
+	status.set_core ( &cores[0] );
+	status.set_name ( "main thread" );
 }

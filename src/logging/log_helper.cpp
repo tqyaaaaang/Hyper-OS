@@ -9,8 +9,10 @@
 #include <ctime>
 #include <sstream>
 #include <iomanip>
+#include <thread>
 
 #include "../env/env.h"
+#include "../status/status.h"
 
 
 
@@ -60,7 +62,20 @@ std::string logging::get_level ( int level )
 	return result;
 }
 
+std::string logging::get_thread ()
+{
+	std::stringstream string_helper;
+	string_helper << std::this_thread::get_id () << " (";
+	if ( status.get_name () != "" ) {
+		string_helper << " " << status.get_name () << " ";
+	}
+	string_helper << ") ";
+	std::string result;
+	getline ( string_helper, result );
+	return result;
+}
+
 std::string logging::get_prefix ( int level )
 {
-	return get_time () + " : " + get_level ( level ) + " : ";
+	return get_time () + " : " + get_level ( level ) + " : " + get_thread () + " : ";
 }
