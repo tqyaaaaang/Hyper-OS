@@ -1,7 +1,6 @@
 /*
  * Memory Infomations
  */
-#pragma once
 
 #include "pmem_info.h"
 #include "../env/env.h"
