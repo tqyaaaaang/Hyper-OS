@@ -64,7 +64,11 @@ public:
 	 */
 	bool is_interrupt_enabled () const;
 
+	void set_core_id ( int id );   // Set the CPU core id
+	int get_core_id () const;   // Get the CPU core id
+
 private:
 	bool enabled_flag;
 	bool interrupt_enabled_flag;
+	int core_id;
 };

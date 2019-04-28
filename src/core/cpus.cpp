@@ -15,6 +15,7 @@ void init_cpus ( int n )
 	cores = new CPU_core[CPU_CORES];
 	for ( int i = 0; i < CPU_CORES; ++i ){
 		logging::debug << "Initializing CPU #" << i << logging::log_endl;
+		cores[i].set_core_id ( i );
 		cores[i].enable ();
 		cores[i].enable_interrupt ();
 	}
