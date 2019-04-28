@@ -4,18 +4,17 @@
 #include "page_dir.h"
 #include <cstdint>
 #include <list>
+#include <cstddef>
 
 class page_frame {
 public:
-	uintptr_t paddr; // start point of page
+	size_t paddr;    // start point of page
 	int length;      // length of the page block
 	bool alloced;    // if alloced
 	int ref_counter; // ref counter
 } ;
 
 extern page_frame *pages;
-
-extern std::list<page_frame*> free_list;
 
 // init function
 void init_pmm();

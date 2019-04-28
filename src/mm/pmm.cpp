@@ -16,7 +16,6 @@ using std::cout;
 using std::endl;
 using std::list;
 
-list<page_frame*> free_list;
 page_frame *pages;
 
 /* alloce n page frames
