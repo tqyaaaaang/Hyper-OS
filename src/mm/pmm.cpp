@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <list>
+#include <cassert>
 #include "pmm.h"
 #include "page_dir.h"
 #include "pmem.h"
@@ -15,6 +16,8 @@
 using std::cout;
 using std::endl;
 using std::list;
+using logging::debug;
+using logging::log_endl;
 
 page_frame *pages;
 
@@ -56,11 +59,14 @@ void destroy_pmm()
 
 void debug_pmm()
 {
-	logging::info << "--- pmm debugging ---"  << logging::log_endl;
 	write(10, 1);
-	logging::info << "read 10 : " << read(10) << logging::log_endl;
-	write(1 << 20, 2);
-	write(1 << 29, 3);
-	logging::info << "read 1 << 20 : " << read(1 << 20) << logging::log_endl;
-	logging::info << "read 1 << 29 : " << read(1 << 29) << logging::log_endl;
+	assert(read(10) == 1);
+	write(1 << 20, 127);
+	write(1 << 29 | 1, 2);
+	assert(read(1 << 20) == 127);
+	assert(read(1 << 29 | 1) == 2);
+	write(10, 0);
+	write(1 << 20, 0);
+	write(1 << 29 | 1, 0);
+	debug << "pmm check ok." << log_endl;
 }
