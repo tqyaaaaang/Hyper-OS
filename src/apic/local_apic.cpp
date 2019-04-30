@@ -186,5 +186,8 @@ void local_apic::run_isr ( interrupt_t * current_interrupt )
 	logging::debug << "Calling ISR of interrupt : " << current_interrupt->to_string () << logging::log_endl;
 	status_t isr_status = status;
 	isr_status.set_core ( core );
+	std::stringstream string_helper;
+	string_helper << "ISR #" << isr_stack.size () << " of CPU #" << core->get_core_id ();
+	isr_status.set_name ( string_helper.str () );
 	isr_stack.push ( std::make_pair ( current_interrupt, std::thread ( interrupt_trap_entry, isr_status, current_interrupt ) ) );
 }

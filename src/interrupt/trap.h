@@ -9,4 +9,4 @@
 
 class interrupt_t;
 
-void interrupt_trap_entry ( status_t father_thread_status, interrupt_t *current_interrupt );
+void interrupt_trap_entry ( status_t thread_status, interrupt_t *current_interrupt );
