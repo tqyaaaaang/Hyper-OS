@@ -30,6 +30,7 @@ enum class interrupt_id_t
 	MCHK,
 	SIMDERR,
 
+	DOUBLE_INTERNAL_TEST = 30,
 	INTERNAL_TEST = 31,
 
 	END_OF_INTERRUPT = -1,

@@ -10,7 +10,7 @@
 
 void test()
 {
-	logging::debug << "Testing the system" << logging::log_endl;
+	logging::info << "Testing the system" << logging::log_endl;
 
 	test_interrupt ();
 	debug_pmm();

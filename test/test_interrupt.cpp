@@ -11,6 +11,7 @@
 #include "../src/status/status.h"
 #include "../src/interrupt/interrupt.h"
 #include "../src/interrupt/interrupts/internal_test.h"
+#include "../src/interrupt/interrupts/double_internal_test.h"
 
 void test_interrupt ()
 {
@@ -24,7 +25,11 @@ void test_interrupt ()
 void test_internal_interrupt ()
 {
 	logging::debug << "Testing internal interrupts" << logging::log_endl;
+	int return_value;
 
-	int return_value = interrupt ( new internal_test_interrupt () );
-	logging::debug << "Testing INTERNAL TEST interrupt, return value : " << return_value << logging::log_endl;
+	return_value = interrupt ( new internal_test_interrupt () );
+	logging::info << "Test on INTERNAL TEST interrupt succeeded, return value : " << return_value << logging::log_endl;
+
+	return_value = interrupt ( new double_internal_test_interrupt () );
+	logging::info << "Test on DOUBLE INTERNAL TEST interrupt succeeded, return value : " << return_value << logging::log_endl;
 }
