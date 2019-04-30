@@ -7,6 +7,7 @@
 #include "test_interrupt.h"
 #include "../src/mm/pmm.h"
 #include "../src/logging/logging.h"
+#include "../src/tools/allocator/ffma.h"
 
 void test()
 {
@@ -14,4 +15,5 @@ void test()
 
 	test_interrupt ();
 	debug_pmm();
+	debug_ffma();
 }

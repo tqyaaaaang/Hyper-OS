@@ -1,3 +1,7 @@
+/*
+ * Physical Memory Simulater
+ */
+
 #include "../logging/logging.h"
 #include "../env/env.h"
 #include "../tools/bus.h"
@@ -8,6 +12,9 @@
 #include <thread>
 
 using std::thread;
+using logging::debug;
+using logging::info;
+using logging::log_endl;
 
 class pm_page_frame {
 public:
@@ -41,7 +48,7 @@ private:
 
 // info mmu --> pm
 struct pm_info {
-    enum TYPE {READ, WRITE, SHUTDOWN} ;
+    enum TYPE {READ, WRITE, SHUTDOWN};
 	TYPE type;
 	size_t paddr;
 	char data;
@@ -78,7 +85,8 @@ static pm_result pm_read(size_t paddr)
 	return result;
 }
 
-/* physical memory write, write a byte to @paddr
+/**
+ * physical memory write, write a byte to @paddr
  * used only by memory thread
  * @paddr : physical address to write
  * @data  : data to write
@@ -95,10 +103,12 @@ static pm_result pm_write(size_t paddr, char data)
 	return result;
 }
 
-/* thread to simulate memory
+/**
+ * thread to simulate memory
  * read from bus mmu2pm
  * write from bus pm2mmu
  * --------------------------
+ * Instructions Support:
  * pm_info::READ     : read a byte from pm_info::paddr
  * pm_info::WRITE    : write pm_info::data to pm_info::paddr
  * pm_info::SHUTDOWN : shutdown memory 
@@ -165,7 +175,8 @@ void destroy_pm()
 	
 }
 
-/* interface for mmu, read a byte
+/**
+ * interface for mmu, read a byte
  * @paddr : physical address to read
  */
 size_t read(size_t paddr)
@@ -186,7 +197,8 @@ size_t read(size_t paddr)
 	}
 }
 
-/* interface for mmu, write a byte
+/**
+ * interface for mmu, write a byte
  * @paddr : physical address to write
  * @data  : data to write
  */
@@ -203,4 +215,21 @@ void write(size_t paddr, char data)
 		logging::info << "pm write fail. error code = "
 					  << result.error_code << logging::log_endl;
 	}
+}
+
+/**
+ * debug function for pm
+ */
+void debug_pm()
+{
+	write(10, 1);
+	assert(read(10) == 1);
+	write(1 << 20, 127);
+	write(1 << 29 | 1, 2);
+	assert(read(1 << 20) == 127);
+	assert(read(1 << 29 | 1) == 2);
+	write(10, 0);
+	write(1 << 20, 0);
+	write(1 << 29 | 1, 0);
+	debug << "pm check ok." << log_endl;
 }
