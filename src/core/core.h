@@ -72,6 +72,11 @@ public:
 
 	local_apic & get_lapic ();   // Get the Loacl APIC of this core
 
+	void acquire ();   // Acquire the ownership of this CPU
+	void release ();   // Release the ownership of this CPU
+
+	std::mutex & get_cpu_lock ();   // Get CPU lock mutex
+
 private:
 	bool enabled_flag;
 	bool interrupt_enabled_flag;
@@ -79,5 +84,5 @@ private:
 
 	local_apic lapic;
 
-	std::mutex cpu_owner;
+	std::mutex cpu_lock;
 };

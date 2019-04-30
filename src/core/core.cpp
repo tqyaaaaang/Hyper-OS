@@ -37,7 +37,7 @@ void CPU_core::disable ()
 {
 	logging::info << "Disabling CPU #" << get_core_id () << logging::log_endl;
 	enabled_flag = false;
-	set_enabled ( false );
+	lapic.disable ();
 }
 
 bool CPU_core::is_enabled () const
@@ -84,4 +84,21 @@ int CPU_core::get_core_id () const
 local_apic & CPU_core::get_lapic ()
 {
 	return lapic;
+}
+
+void CPU_core::acquire ()
+{
+	logging::debug << "Acquiring CPU access" << logging::log_endl;
+	get_cpu_lock ().lock ();
+}
+
+void CPU_core::release ()
+{
+	logging::debug << "Releasing CPU access" << logging::log_endl;
+	get_cpu_lock ().unlock ();
+}
+
+std::mutex & CPU_core::get_cpu_lock ()
+{
+	return cpu_lock;
 }

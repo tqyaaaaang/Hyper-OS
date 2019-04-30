@@ -20,6 +20,8 @@ public:
 
 	bool empty ();
 
+	void clear ();
+
 private:
 	std::deque < T > q;
 	mutable std::mutex mut;
@@ -73,4 +75,12 @@ bool thread_safe_queue<T>::empty ()
 {
 	std::unique_lock < std::mutex > lock ( mut );
 	return q.empty ();
+}
+
+template<typename T>
+inline void thread_safe_queue<T>::clear ()
+{
+	std::unique_lock < std::mutex > lock ( mut );
+	cv.notify_all ();
+	q.clear ();
 }
