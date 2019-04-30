@@ -14,7 +14,7 @@ public:
 	struct mmu_result
 	{
 
-	}
+	};
 	void read ( size_t la );
 	void write ( size_t la, char data );
 private:
