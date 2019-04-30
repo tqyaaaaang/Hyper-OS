@@ -177,7 +177,7 @@ void local_apic::schedule ()
 	} else if ( !core->is_interrupt_enabled () ) {
 		logging::debug << "LAPIC schedule failed because interrupt is disabled" << logging::log_endl;
 	} else {
-		logging::debug << "LAPIC schedule failed because no interrupt is waiting" << logging::log_endl;
+		logging::debug << "LAPIC schedule failed because no interrupts are waiting" << logging::log_endl;
 	}
 }
 
