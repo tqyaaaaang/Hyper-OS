@@ -1,3 +1,7 @@
+/*
+ * Physical Memory Simulater
+ */
+
 #include "../logging/logging.h"
 #include "../env/env.h"
 #include "../tools/bus.h"
@@ -81,7 +85,8 @@ static pm_result pm_read(size_t paddr)
 	return result;
 }
 
-/* physical memory write, write a byte to @paddr
+/**
+ * physical memory write, write a byte to @paddr
  * used only by memory thread
  * @paddr : physical address to write
  * @data  : data to write
@@ -98,10 +103,12 @@ static pm_result pm_write(size_t paddr, char data)
 	return result;
 }
 
-/* thread to simulate memory
+/**
+ * thread to simulate memory
  * read from bus mmu2pm
  * write from bus pm2mmu
  * --------------------------
+ * Instructions Support:
  * pm_info::READ     : read a byte from pm_info::paddr
  * pm_info::WRITE    : write pm_info::data to pm_info::paddr
  * pm_info::SHUTDOWN : shutdown memory 
@@ -168,7 +175,8 @@ void destroy_pm()
 	
 }
 
-/* interface for mmu, read a byte
+/**
+ * interface for mmu, read a byte
  * @paddr : physical address to read
  */
 size_t read(size_t paddr)
@@ -189,7 +197,8 @@ size_t read(size_t paddr)
 	}
 }
 
-/* interface for mmu, write a byte
+/**
+ * interface for mmu, write a byte
  * @paddr : physical address to write
  * @data  : data to write
  */
@@ -208,6 +217,7 @@ void write(size_t paddr, char data)
 	}
 }
 
+/
 void debug_pm()
 {
 	write(10, 1);
