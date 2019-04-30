@@ -6,7 +6,8 @@
 #pragma once
 
 #include <string>
-#include "../core/core.h"
+
+class CPU_core;
 
 class status_t
 {
@@ -27,4 +28,5 @@ private:
 
 extern thread_local status_t status;
 
-void init_status ();
+void init_status_phase_1 ();
+void init_status_phase_2 ();

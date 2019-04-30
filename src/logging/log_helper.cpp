@@ -24,7 +24,12 @@ std::string logging::get_time ()
 
 	std::stringstream string_helper;
 
-	string_helper << data->tm_year + 1900 << "-" << data->tm_mon + 1 << "-" << data->tm_mday << " " << data->tm_hour << ":" << data->tm_min << ":" << data->tm_sec << std::endl;
+	string_helper << std::setw ( 4 ) << std::setfill ( '0' ) << data->tm_year + 1900 << "-"
+		<< std::setw ( 2 ) << std::setfill ( '0' ) << data->tm_mon + 1 << "-"
+		<< std::setw ( 2 ) << std::setfill ( '0' ) << data->tm_mday << " "
+		<< std::setw ( 2 ) << std::setfill ( '0' ) << data->tm_hour << ":"
+		<< std::setw ( 2 ) << std::setfill ( '0' ) << data->tm_min << ":"
+		<< std::setw ( 2 ) << std::setfill ( '0' ) << data->tm_sec << std::endl;
 	std::string result;
 	getline ( string_helper, result );
 

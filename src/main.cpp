@@ -5,11 +5,11 @@
 
 #include "init/init.h"
 #include "destroy/destroy.h"
-#include "debug/debug.h"
+#include "../test/test.h"
 
 int main ()
 {
 	init ();
-	debug ();
+	test ();
 	destroy ();
 }

@@ -2,7 +2,6 @@
  * env.h
  * Environment Variables
  */
-#pragma once
 
 #pragma once
 

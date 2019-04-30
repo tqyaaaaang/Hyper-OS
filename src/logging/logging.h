@@ -75,4 +75,5 @@ namespace logging
 	extern log_endl_t log_endl;
 }
 
-void init_logger ();
+void init_logger ();   // Initialize the logger
+void destroy_logger ();   // Destory the logger

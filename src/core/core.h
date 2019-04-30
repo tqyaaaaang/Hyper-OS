@@ -5,6 +5,9 @@
 
 #pragma once
 
+#include <mutex>
+#include "../apic/local_apic.h"
+
 /**
  * class CPU_core
  * Each instance of this class is an unique cpu core
@@ -67,8 +70,19 @@ public:
 	void set_core_id ( int id );   // Set the CPU core id
 	int get_core_id () const;   // Get the CPU core id
 
+	local_apic & get_lapic ();   // Get the Loacl APIC of this core
+
+	void acquire ();   // Acquire the ownership of this CPU
+	void release ();   // Release the ownership of this CPU
+
+	std::mutex & get_cpu_lock ();   // Get CPU lock mutex
+
 private:
 	bool enabled_flag;
 	bool interrupt_enabled_flag;
 	int core_id;
+
+	local_apic lapic;
+
+	std::mutex cpu_lock;
 };
