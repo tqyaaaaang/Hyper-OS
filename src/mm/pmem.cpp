@@ -48,7 +48,7 @@ private:
 
 // info mmu --> pm
 struct pm_info {
-    enum TYPE {READ, WRITE, SHUTDOWN} ;
+    enum TYPE {READ, WRITE, SHUTDOWN};
 	TYPE type;
 	size_t paddr;
 	char data;
@@ -217,7 +217,9 @@ void write(size_t paddr, char data)
 	}
 }
 
-/
+/**
+ * debug function for pm
+ */
 void debug_pm()
 {
 	write(10, 1);

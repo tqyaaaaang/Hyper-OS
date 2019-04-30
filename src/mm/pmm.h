@@ -1,15 +1,26 @@
 #pragma once
 #include "pmem_info.h"
 #include "../env/env.h"
-#include "page_dir.h"
+#include "page_table.h"
 #include <cstdint>
 #include <list>
 #include <cstddef>
 
-struct page_frame {
+class page_frame {
+public:
+		
 	size_t paddr;    // start point of page
 	int length;      // length of the page block
 	bool alloced;    // if alloced
+	page_frame();
+
+	void ref();      // refer counter ++ 
+	void free();     // refer counter --
+	bool die();      // refer counter == 0
+	
+private:
+	
+	int refer;         // ref counter
 } ;
 
 extern page_frame *pages;

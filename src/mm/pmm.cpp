@@ -9,7 +9,7 @@
 #include <cassert>
 #include <mutex>
 #include "pmm.h"
-#include "page_dir.h"
+#include "page_table.h"
 #include "pmem.h"
 #include "../logging/logging.h"
 #include "../env/env.h"
@@ -25,6 +25,28 @@ using std::mutex;
 using std::lock_guard;
 
 typedef allocator::segment segment;
+
+page_frame::page_frame()
+{
+	this->refer = 0;
+	this->alloced = false;
+}
+
+void page_frame::ref()
+{
+	refer++;
+}
+
+void page_frame::free()
+{
+	assert(refer > 0);
+	refer--;
+}
+
+bool page_frame::die()
+{
+	return refer == 0;
+}
 
 // page frames
 page_frame *pages;
@@ -69,7 +91,7 @@ page_frame* alloc_pages(int n)
 	return ret;
 }
  
-inline page_frame* alloc_page()
+page_frame* alloc_page()
 { return alloc_pages(1); }
 
 /* free allocted page frames
@@ -79,12 +101,16 @@ void free_pages(page_frame *pg)
 {
 	lock_guard<mutex> locker(alloc_mutex);
 	assert(pg->alloced);
-	alloc->free(page2id(pg), pg->length);
-	pg->alloced = false;
-	pg->length = 0;
+	assert(!pg->die());
+	pg->free();
+	if (pg->die()) { 
+		alloc->free(page2id(pg), pg->length);
+		pg->alloced = false;
+		pg->length = 0;
+	}
 }
 
-inline void free_page(page_frame *pg)
+void free_page(page_frame *pg)
 { free_pages(pg); }
 
 /* init physical memory and manager */
@@ -108,8 +134,10 @@ void debug_pmm()
 {
 	debug_pm();
 	page_frame* pg[8];
-	for (int i = 0; i < 8; i++) 
+	for (int i = 0; i < 8; i++) { 
 		pg[i] = alloc_pages((i + 1) * 10);
+		pg[i]->ref();
+	}
 	for (int i = 0; i < 8; i++)
 		for (int j = i + 1; j < 8; j++) {
 			assert(page2id(pg[i]) + pg[i]->length <= page2id(pg[j])
