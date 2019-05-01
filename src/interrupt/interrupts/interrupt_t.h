@@ -13,6 +13,7 @@
 class interrupt_t
 {
 public:
+	interrupt_t ( );
 	interrupt_t ( interrupt_id_t id );
 
 	void set_interrupt_id ( interrupt_id_t id );

@@ -6,7 +6,10 @@
 #pragma once
 
 #include <mutex>
+#include "../mmu/mmu.h"
 #include "../apic/local_apic.h"
+
+class CPU_mmu;
 
 /**
  * class CPU_core
@@ -83,6 +86,8 @@ private:
 	int core_id;
 
 	local_apic lapic;
-
+	
 	std::mutex cpu_lock;
+
+	CPU_mmu *mmu;
 };
