@@ -4,7 +4,7 @@
 
 #include "page_table.h"
 #include "../logging/logging.h"
-#include "../tools/panic.h"
+#include "../utils/panic.h"
 #include "pmm.h"
 #include <cassert>
 

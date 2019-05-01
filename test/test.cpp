@@ -5,15 +5,19 @@
 
 #include "test.h"
 #include "test_interrupt.h"
+#include "test_pmm.h"
+#include "test_pm.h"
+#include "test_ffma.h"
 #include "../src/mm/pmm.h"
 #include "../src/logging/logging.h"
-#include "../src/tools/allocator/ffma.h"
+#include "../src/utils/allocator/ffma.h"
 
 void test()
 {
 	logging::info << "Testing the system" << logging::log_endl;
 
 	test_interrupt ();
-	debug_pmm();
-	debug_ffma();
+	test_pm();
+	test_pmm();
+    test_ffma();
 }

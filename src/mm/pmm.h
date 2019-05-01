@@ -27,7 +27,6 @@ extern page_frame *pages;
 
 // init function
 void init_pmm();
-void debug_pmm();
 void destroy_pmm();
 
 // interface for OS 

@@ -20,5 +20,3 @@ public:
 	virtual void free(size_t addr, size_t len);
 };
 
-void debug_ffma();
-

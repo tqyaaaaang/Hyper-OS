@@ -13,9 +13,9 @@
 #include "pmem.h"
 #include "../logging/logging.h"
 #include "../env/env.h"
-#include "../tools/bus.h"
-#include "../tools/allocator/allocator.h"
-#include "../tools/allocator/ffma.h"
+#include "../utils/bus.h"
+#include "../utils/allocator/allocator.h"
+#include "../utils/allocator/ffma.h"
 
 using std::list;
 using logging::debug;
@@ -130,20 +130,3 @@ void destroy_pmm()
 	delete[] pages;
 }
 
-void debug_pmm()
-{
-	debug_pm();
-	page_frame* pg[8];
-	for (int i = 0; i < 8; i++) { 
-		pg[i] = alloc_pages((i + 1) * 10);
-		pg[i]->ref();
-	}
-	for (int i = 0; i < 8; i++)
-		for (int j = i + 1; j < 8; j++) {
-			assert(page2id(pg[i]) + pg[i]->length <= page2id(pg[j])
-				   || page2id(pg[j]) + pg[j]->length <= page2id(pg[i]));
-		}
-	for (int i = 0; i < 8; i++) 
-		free_pages(pg[i]);
-	debug << "pmm check ok." << log_endl;
-}
