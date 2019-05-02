@@ -8,9 +8,6 @@
 
 #include <sstream>
 
-interrupt_t::interrupt_t ( )
-{}
-
 interrupt_t::interrupt_t ( interrupt_id_t id )
 	: interrupt_id ( id )
 {

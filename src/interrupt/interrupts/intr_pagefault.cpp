@@ -7,6 +7,7 @@
  */
 
 #include "intr_pagefault.h"
+#include "../interrupt_id.h"
 #include "../../logging/logging.h"
 #include <string>
 
@@ -48,6 +49,7 @@ string error_info::to_string()
 }
 
 intr_pagefault_t::intr_pagefault_t(const error_info &info)
+	: interrupt_t ( interrupt_id_t::PGFLT )
 {
 	this->info = info;
 }
