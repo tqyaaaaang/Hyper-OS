@@ -39,7 +39,7 @@ void local_apic::enable ()
 
 void local_apic::disable ()
 {
-	logging::debug << "Enabling local APIC for CPU #" << core->get_core_id () << logging::log_endl;
+	logging::debug << "Disabling local APIC for CPU #" << core->get_core_id () << logging::log_endl;
 	enabled = false;
 	lapic_thread.join ();
 
