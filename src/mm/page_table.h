@@ -28,8 +28,8 @@ public:
     page_table();
 	~page_table();
 
-	pte_t* get_pte(size_t la);
-	pte_t* get_pte_try(size_t la);
+	pte_t* get_pte(size_t la);     // get pte, if failed, try swap in
+	pte_t* get_pte_try(size_t la); // get pte, if failed, return nullptr
 	
 private:
 

@@ -5,17 +5,21 @@
 
 #include "core.h"
 #include "../logging/logging.h"
+#include <cassert>
 
 CPU_core::CPU_core ()
 	: enabled_flag ( false )
 	, interrupt_enabled_flag ( false )
 	, lapic ( this )
 {
+	mmu = new CPU_mmu(this);
 }
 
 CPU_core::~CPU_core ()
 {
 	disable ();
+	assert(mmu != nullptr);
+	delete mmu;
 }
 
 void CPU_core::set_enabled ( bool status )

@@ -41,6 +41,7 @@ pte_t* page_table::get_pte(size_t la)
 		}
 		page->ref();
 		table[id].present = 1;
+		table[id].user = 1;
 		if (table[id].paddr != 0) {
 			// swap_in();
 		} else {
