@@ -74,11 +74,10 @@ int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 		return -1;
 	}
 	event_queue.push_back ( current_interrupt );
+	int return_val = 0;
 	if ( blocked ) {
 		core->release ();
-	}
-	int return_val = current_interrupt->get_return_promise ().get_future ().get ();
-	if ( blocked ) {
+		return_val = current_interrupt->get_return_promise ().get_future ().get ();
 		core->acquire ();
 	}
 	return return_val;
