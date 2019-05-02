@@ -14,6 +14,9 @@ extern const int CPU_CORES;   // Number of CPU cores
 // Memory information
 extern const size_t MEMORY_SIZE;   // The size of the physical memory
 
+// Motherboard information
+extern const int MOTHERBOARD_NUM;   // The number of motherboards
+
 // Logging
 extern const char *LOG_FILE_NAME;   // File name to write log, NULL if write to stdout
 

@@ -20,7 +20,8 @@ void init ()
 
 	init_cpus ( CPU_CORES );
 	init_status_phase_2 ();
-	init_io_apic ();
+	init_io_apic ( MOTHERBOARD_NUM );
+
 
 	init_pmm ( );
 }
