@@ -41,6 +41,7 @@ void local_apic::disable ()
 {
 	logging::debug << "Disabling local APIC for CPU #" << core->get_core_id () << logging::log_endl;
 	enabled = false;
+	send_disable_signal ();
 	lapic_thread.join ();
 
 	while ( !isr_stack.empty () ) {

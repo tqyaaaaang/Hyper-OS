@@ -15,6 +15,7 @@ CPU_core::CPU_core ()
 
 CPU_core::~CPU_core ()
 {
+	disable ();
 }
 
 void CPU_core::set_enabled ( bool status )
