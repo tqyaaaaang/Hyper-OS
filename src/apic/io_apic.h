@@ -18,3 +18,5 @@ public:
 
 private:
 };
+
+void init_io_apic ();
