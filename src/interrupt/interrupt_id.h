@@ -34,5 +34,7 @@ enum class interrupt_id_t
 	INTERNAL_TEST = 31,
 
 	END_OF_INTERRUPT = -1,
-	DISABLE_LAPIC = -2
+	DISABLE_LAPIC = -2,
+
+	IO_APIC_END_OF_INTERRUPT = -100
 };

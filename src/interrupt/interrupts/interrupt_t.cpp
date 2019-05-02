@@ -43,6 +43,11 @@ bool interrupt_t::is_lapic_signal () const
 	return false;
 }
 
+bool interrupt_t::is_io_apic_signal () const
+{
+	return false;
+}
+
 std::string interrupt_t::to_string ()
 {
 	std::stringstream string_buf;
