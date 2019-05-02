@@ -32,7 +32,7 @@ public:
 
 	bool is_enabled () const;
 
-	int interrupt ( interrupt_t *current_interrupt );   // @return: whether the interrupt is processed
+	int interrupt ( interrupt_t *current_interrupt, bool blocked = true );   // @return: whether the interrupt is processed
 	void send_end_of_interrupt ();   // send an end_of_interrupt signal
 
 private:

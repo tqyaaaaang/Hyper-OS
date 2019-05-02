@@ -65,7 +65,7 @@ bool local_apic::is_enabled () const
  *          0: ok
  *         -1: error because LAPIC is not enabled
  */
-int local_apic::interrupt ( interrupt_t *current_interrupt )
+int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 {
 	logging::debug << "LAPIC received interrupt request : " << current_interrupt->to_string () << logging::log_endl;
 	if ( !current_interrupt->is_lapic_signal () && !is_enabled () ) {
@@ -74,11 +74,11 @@ int local_apic::interrupt ( interrupt_t *current_interrupt )
 		return -1;
 	}
 	event_queue.push_back ( current_interrupt );
-	if ( !current_interrupt->is_lapic_signal () ) {
+	if ( blocked ) {
 		core->release ();
 	}
 	int return_val = current_interrupt->get_return_promise ().get_future ().get ();
-	if ( !current_interrupt->is_lapic_signal () ) {
+	if ( blocked ) {
 		core->acquire ();
 	}
 	return return_val;
@@ -86,15 +86,15 @@ int local_apic::interrupt ( interrupt_t *current_interrupt )
 
 void local_apic::send_end_of_interrupt ()
 {
-	interrupt ( new end_of_interrupt () );
+	interrupt ( new end_of_interrupt (), false );
 }
-
-
 
 void local_apic::send_disable_signal ()
 {
-	interrupt ( new disable_lapic () );
+	interrupt ( new disable_lapic (), false );
 }
+
+
 
 void local_apic::lapic_thread_entry ( status_t father_thread_status )
 {
