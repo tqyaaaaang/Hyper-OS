@@ -14,6 +14,7 @@
 
 class external_interrupt_t;
 class status_t;
+class motherboard_t;
 
 /**
  * class io_apic
@@ -24,7 +25,7 @@ class io_apic
 {
 public:
 	io_apic ();
-	io_apic ( int _mother_board_id );
+	io_apic ( motherboard_t *_motherboard );
 	~io_apic ();
 
 	void enable ();
@@ -32,8 +33,8 @@ public:
 
 	bool is_enabled () const;
 
-	void set_mother_board_id ( int id );
-	int get_mother_board_id () const;
+	void set_motherboard ( motherboard_t *_motherboard );
+	motherboard_t * get_motherboard () const;
 
 	void interrupt ( external_interrupt_t *current_interrupt );
 
@@ -45,7 +46,7 @@ private:
 
 	bool do_events ( external_interrupt_t *current_interrupt );
 
-	int mother_board_id;   // Motherboard ID
+	motherboard_t *motherboard;   // Motherboard
 
 	bool enabled;   // is I/O APIC enabled
 	std::thread io_apic_thread;   // I/O APIC daemon thread
@@ -53,7 +54,4 @@ private:
 	thread_safe_queue < external_interrupt_t * > event_queue;   // event queue
 };
 
-extern io_apic *io_apic_list;   // List of I/O apics
-
-void init_io_apic ( int n );
-void destroy_io_apic ();
+void init_io_apic ();

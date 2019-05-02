@@ -9,6 +9,7 @@
 #include "../status/status.h"
 #include "../env/env.h"
 #include "../logging/logging.h"
+#include "../motherboard/motherboard.h"
 #include "../apic/io_apic.h"
 #include "../mm/pmm.h"
 
@@ -20,7 +21,8 @@ void init ()
 
 	init_cpus ( CPU_CORES );
 	init_status_phase_2 ();
-	init_io_apic ( MOTHERBOARD_NUM );
+	init_motherboards ( MOTHERBOARD_NUM );
+	init_io_apic ();
 
 
 	init_pmm ( );

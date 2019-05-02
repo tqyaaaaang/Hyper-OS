@@ -11,6 +11,7 @@
 #include "../interrupt/interrupts/io_apic_end_of_interrupt.h"
 #include "interrupt_affinity.h"
 #include "../core/cpus.h"
+#include "../motherboard/motherboard.h"
 #include "../env/env.h"
 #include <sstream>
 
@@ -22,8 +23,8 @@ io_apic::io_apic ()
 {
 }
 
-io_apic::io_apic ( int _mother_board_id )
-	: mother_board_id ( _mother_board_id )
+io_apic::io_apic ( motherboard_t * _motherboard )
+	: motherboard ( _motherboard )
 {
 }
 
@@ -35,14 +36,14 @@ io_apic::~io_apic ()
 
 void io_apic::enable ()
 {
-	logging::debug << "Enabling I/O APIC for Motherboard #" << get_mother_board_id () << logging::log_endl;
+	logging::debug << "Enabling I/O APIC for Motherboard #" << get_motherboard ()->get_id () << logging::log_endl;
 	enabled = true;
 	io_apic_thread = std::thread ( &io_apic::io_apic_thread_entry, this, status );
 }
 
 void io_apic::disable ()
 {
-	logging::debug << "Disabling I/O APIC for Motherboard #" << get_mother_board_id () << logging::log_endl;
+	logging::debug << "Disabling I/O APIC for Motherboard #" << get_motherboard ()->get_id () << logging::log_endl;
 	enabled = false;
 	send_disable_signal ();
 	io_apic_thread.join ();
@@ -55,14 +56,14 @@ bool io_apic::is_enabled () const
 	return enabled;
 }
 
-void io_apic::set_mother_board_id ( int id )
+void io_apic::set_motherboard ( motherboard_t * _motherboard )
 {
-	mother_board_id = id;
+	motherboard = _motherboard;
 }
 
-int io_apic::get_mother_board_id () const
+motherboard_t * io_apic::get_motherboard () const
 {
-	return mother_board_id;
+	return motherboard;
 }
 
 void io_apic::interrupt ( external_interrupt_t * current_interrupt )
@@ -81,9 +82,9 @@ void io_apic::io_apic_thread_entry ( status_t father_thread_status )
 	status = father_thread_status;
 	status.set_core ( NULL );
 	std::stringstream string_helper;
-	string_helper << "I/O APIC of Motherboard #" << get_mother_board_id ();
+	string_helper << "I/O APIC of Motherboard #" << get_motherboard ()->get_id ();
 	status.set_name ( string_helper.str () );
-	logging::debug << "I/O APIC for Motherboard #" << get_mother_board_id () << " created" << logging::log_endl;
+	logging::debug << "I/O APIC for Motherboard #" << get_motherboard ()->get_id () << " created" << logging::log_endl;
 
 	io_apic_thread_event_loop ();
 }
@@ -125,22 +126,7 @@ bool io_apic::do_events ( external_interrupt_t * current_interrupt )
 
 
 
-void init_io_apic ( int n )
+void init_io_apic ()
 {
 	init_interrupt_affinity ();
-
-	logging::info << "Initializing I/O " << n << " APICs" << logging::log_endl;
-	io_apic_list = new io_apic[n];
-	for ( int i = 0; i < n; ++i ) {
-		logging::debug << "Initializing I/O APIC #" << i << logging::log_endl;
-		io_apic_list[i].set_mother_board_id ( i );
-		io_apic_list[i].enable ();
-	}
-}
-
-void destroy_io_apic ()
-{
-	logging::debug << "Destroying I/O APICs" << logging::log_endl;
-
-	delete[] io_apic_list;
 }

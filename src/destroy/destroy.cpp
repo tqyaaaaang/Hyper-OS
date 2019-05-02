@@ -6,13 +6,13 @@
 #include "destroy.h"
 #include "../mm/pmm.h"
 #include "../core/cpus.h"
-#include "../apic/io_apic.h"
+#include "../motherboard/motherboard.h"
 #include "../logging/logging.h"
 
 void destroy ()
 {
 	destroy_pmm ();
-	destroy_io_apic ();
+	destroy_motherboards ();
 	destroy_cpus ();
 
 	destroy_logger ();
