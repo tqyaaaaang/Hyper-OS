@@ -5,6 +5,8 @@
  */
 
 #include "clock_interrupt.h"
+#include "../../status/status.h"
+#include "../../core/core.h"
 #include "../../logging/logging.h"
 
 #include <thread>
@@ -17,5 +19,5 @@ clock_interrupt::clock_interrupt ()
 
 void clock_interrupt::process ()
 {
-	logging::debug << "Clock received a tick" << logging::log_endl;
+	logging::debug << "CPU #" << status.get_core ()->get_core_id () << " received a clock tick" << logging::log_endl;
 }
