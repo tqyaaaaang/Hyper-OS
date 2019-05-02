@@ -62,7 +62,7 @@ static mutex alloc_mutex;
  */
 int page2id(page_frame *pg)
 {
-	assert(pg >= pages && pg - pages < PAGE_NUM);
+	assert(pg >= pages && static_cast < size_t > ( pg - pages ) < PAGE_NUM);
 	return pg - pages;
 }
 
@@ -71,7 +71,7 @@ int page2id(page_frame *pg)
  */
 page_frame* id2page(int id)
 {
-	assert(id >= 0 && id < PAGE_NUM);
+	assert(id >= 0 && static_cast < size_t > ( id ) < PAGE_NUM);
 	return pages + id;
 }
 
