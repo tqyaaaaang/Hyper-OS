@@ -47,6 +47,7 @@ void local_apic::disable ()
 		isr_stack.pop ();
 	}
 	while ( !interrupt_queue.empty () ) {
+		interrupt_queue.front ()->get_return_promise ().set_value ( -1 );
 		interrupt_queue.pop ();
 	}
 	event_queue.clear ();
@@ -67,7 +68,7 @@ bool local_apic::is_enabled () const
 int local_apic::interrupt ( interrupt_t *current_interrupt )
 {
 	logging::debug << "LAPIC received interrupt request : " << current_interrupt->to_string () << logging::log_endl;
-	if ( interrupt_id_is_internal_exception ( current_interrupt->get_interrupt_id () ) && !is_enabled () ) {
+	if ( !interrupt_id_is_signal ( current_interrupt->get_interrupt_id () ) && !is_enabled () ) {
 		logging::warning << "LAPIC received interrupt request after it is disabled : " << current_interrupt->to_string () << logging::log_endl;
 		current_interrupt->get_return_promise ().set_value ( -1 );
 		return -1;
