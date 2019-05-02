@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "interrupt_t.h"
+#include "internal_interrupt_t.h"
 
-class double_internal_test_interrupt : public interrupt_t
+class double_internal_test_interrupt : public internal_interrupt_t
 {
 public:
 	double_internal_test_interrupt ();

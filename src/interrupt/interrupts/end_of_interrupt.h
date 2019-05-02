@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "interrupt_t.h"
+#include "lapic_signal_t.h"
 
-class end_of_interrupt : public interrupt_t
+class end_of_interrupt : public lapic_signal_t
 {
 public:
 	end_of_interrupt ();

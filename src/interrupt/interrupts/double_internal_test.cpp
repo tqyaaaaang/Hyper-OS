@@ -11,7 +11,7 @@
 #include "internal_test.h"
 
 double_internal_test_interrupt::double_internal_test_interrupt ()
-	: interrupt_t ( interrupt_id_t::DOUBLE_INTERNAL_TEST )
+	: internal_interrupt_t ( interrupt_id_t::DOUBLE_INTERNAL_TEST )
 {
 }
 

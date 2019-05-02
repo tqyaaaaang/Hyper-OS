@@ -9,7 +9,7 @@
 #include "../../logging/logging.h"
 
 internal_test_interrupt::internal_test_interrupt ()
-	: interrupt_t ( interrupt_id_t::INTERNAL_TEST )
+	: internal_interrupt_t ( interrupt_id_t::INTERNAL_TEST )
 {
 }
 

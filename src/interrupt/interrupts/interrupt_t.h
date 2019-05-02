@@ -20,6 +20,11 @@ public:
 
 	std::promise < int > & get_return_promise ();
 
+	virtual bool is_internal_interrupt () const;   // check whether the interrupt is an internal CPU exception
+	virtual bool is_external_interrupt () const;   // check whether the interrupt is an external CPU exception
+	virtual bool is_lapic_signal () const;         // check whether the interrupt is a signal to Local APIC
+	virtual bool is_io_apic_signal () const;       // check whether the interrupt is a signal to I/O APIC
+
 	virtual void process () = 0;
 
 	virtual std::string to_string ();
