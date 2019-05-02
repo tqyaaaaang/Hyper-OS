@@ -10,7 +10,6 @@
 #include <condition_variable>
 #include <stack>
 #include <queue>
-#include <functional>
 #include "../utils/thread_safe_queue/thread_safe_queue.h"
 
 class CPU_core;
@@ -33,7 +32,7 @@ public:
 
 	bool is_enabled () const;
 
-	int interrupt ( interrupt_t *current_interrupt, bool blocked = true, std::function < void ( interrupt_t * ) > call_back = std::function < void ( interrupt_t * ) > () );   // @return: whether the interrupt is processed
+	int interrupt ( interrupt_t *current_interrupt, bool blocked = true );   // @return: whether the interrupt is processed
 	void send_end_of_interrupt ();   // send an end_of_interrupt signal
 
 private:

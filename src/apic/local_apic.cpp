@@ -65,7 +65,7 @@ bool local_apic::is_enabled () const
  *          0: ok
  *         -1: error because LAPIC is not enabled
  */
-int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked, std::function < void ( interrupt_t * ) > call_back )
+int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 {
 	logging::debug << "LAPIC received interrupt request : " << current_interrupt->to_string () << logging::log_endl;
 	if ( !current_interrupt->is_lapic_signal () && !is_enabled () ) {
@@ -80,9 +80,6 @@ int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked, std::f
 	int return_val = current_interrupt->get_return_promise ().get_future ().get ();
 	if ( blocked ) {
 		core->acquire ();
-	}
-	if ( call_back ) {
-		call_back ( current_interrupt );
 	}
 	return return_val;
 }
