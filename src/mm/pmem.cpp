@@ -4,7 +4,7 @@
 
 #include "../logging/logging.h"
 #include "../env/env.h"
-#include "../utils/bus.h"
+#include "../utils/bus/bus.h"
 #include "../status/status.h"
 #include "pmem_info.h"
 #include <cstdint>
