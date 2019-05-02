@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "interrupt_t.h"
+#include "internal_interrupt_t.h"
 
-class intr_pagefault_t : public interrupt_t {
+class intr_pagefault_t : public internal_interrupt_t {
 public:
 
 	struct error_info {

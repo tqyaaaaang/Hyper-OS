@@ -7,7 +7,7 @@
 #include "disable_lapic.h"
 
 disable_lapic::disable_lapic ()
-	: interrupt_t ( interrupt_id_t::DISABLE_LAPIC )
+	: lapic_signal_t ( interrupt_id_t::DISABLE_LAPIC )
 {
 }
 

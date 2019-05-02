@@ -7,7 +7,7 @@
 #include "end_of_interrupt.h"
 
 end_of_interrupt::end_of_interrupt ()
-	: interrupt_t ( interrupt_id_t::END_OF_INTERRUPT )
+	: lapic_signal_t ( interrupt_id_t::END_OF_INTERRUPT )
 {
 }
 

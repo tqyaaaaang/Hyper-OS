@@ -68,17 +68,17 @@ bool local_apic::is_enabled () const
 int local_apic::interrupt ( interrupt_t *current_interrupt )
 {
 	logging::debug << "LAPIC received interrupt request : " << current_interrupt->to_string () << logging::log_endl;
-	if ( !interrupt_id_is_signal ( current_interrupt->get_interrupt_id () ) && !is_enabled () ) {
+	if ( !current_interrupt->is_lapic_signal () && !is_enabled () ) {
 		logging::warning << "LAPIC received interrupt request after it is disabled : " << current_interrupt->to_string () << logging::log_endl;
 		current_interrupt->get_return_promise ().set_value ( -1 );
 		return -1;
 	}
 	event_queue.push_back ( current_interrupt );
-	if ( !interrupt_id_is_signal ( current_interrupt->get_interrupt_id () ) ) {
+	if ( !current_interrupt->is_lapic_signal () ) {
 		core->release ();
 	}
 	int return_val = current_interrupt->get_return_promise ().get_future ().get ();
-	if ( !interrupt_id_is_signal ( current_interrupt->get_interrupt_id () ) ) {
+	if ( !current_interrupt->is_lapic_signal () ) {
 		core->acquire ();
 	}
 	return return_val;
@@ -112,11 +112,11 @@ void local_apic::lapic_thread_event_loop ()
 	while ( true ) {
 		interrupt_t *current_interrupt = event_queue.pop_front ();
 
-		if ( interrupt_id_is_signal ( current_interrupt->get_interrupt_id () ) ) {   // signals sent to LAPIC
+		if ( current_interrupt->is_lapic_signal () ) {   // signals sent to LAPIC
 			if ( do_events ( current_interrupt ) ) {
 				return;
 			}
-		} else if ( interrupt_id_is_internal_exception ( current_interrupt->get_interrupt_id () ) ) {   // internal CPU exceptions
+		} else if ( current_interrupt->is_internal_interrupt () ) {   // internal CPU exceptions
 			logging::debug << "LAPIC received new interrupt request : " << current_interrupt->to_string () << logging::log_endl;
 			run_isr ( current_interrupt );
 		} else {   // hardware interrupts
