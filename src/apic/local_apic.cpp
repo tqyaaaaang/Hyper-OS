@@ -122,6 +122,9 @@ void local_apic::lapic_thread_event_loop ()
 		} else {   // hardware interrupts
 			logging::debug << "LAPIC received new interrupt request : " << current_interrupt->to_string () << logging::log_endl;
 			interrupt_queue.push ( current_interrupt );
+			if ( isr_stack.empty () ) {
+				schedule ();
+			}
 		}
 	}
 }
