@@ -33,6 +33,8 @@ enum class interrupt_id_t
 	DOUBLE_INTERNAL_TEST = 30,
 	INTERNAL_TEST = 31,
 
+	CLOCK_INTERRUPT = 32,
+
 	END_OF_INTERRUPT = -1,
 	DISABLE_LAPIC = -2,
 

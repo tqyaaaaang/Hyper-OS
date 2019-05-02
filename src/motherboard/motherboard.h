@@ -18,6 +18,8 @@ public:
 
 	io_apic & get_io_apic ();
 
+	void send_interrupt ( external_interrupt_t *current_interrupt );
+
 private:
 	io_apic ioapic;
 	int id;

@@ -31,6 +31,11 @@ io_apic & motherboard_t::get_io_apic ()
 	return ioapic;
 }
 
+void motherboard_t::send_interrupt ( external_interrupt_t * current_interrupt )
+{
+	get_io_apic ().interrupt ( current_interrupt );
+}
+
 
 
 void init_motherboards ( int n )
