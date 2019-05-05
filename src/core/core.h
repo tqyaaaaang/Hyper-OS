@@ -8,6 +8,7 @@
 #include <mutex>
 #include "../mmu/mmu.h"
 #include "../apic/local_apic.h"
+#include "../context/context.h"
 
 class CPU_mmu;
 
@@ -80,6 +81,9 @@ public:
 
 	std::mutex & get_cpu_lock ();   // Get CPU lock mutex
 
+	void set_context(const context_t &context);
+	context_t get_context() const;
+	
 private:
 	bool enabled_flag;
 	bool interrupt_enabled_flag;
@@ -90,4 +94,5 @@ private:
 	std::mutex cpu_lock;
 
 	CPU_mmu *mmu;
+	context_t context;
 };

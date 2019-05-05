@@ -107,3 +107,13 @@ std::mutex & CPU_core::get_cpu_lock ()
 {
 	return cpu_lock;
 }
+
+context_t CPU_core::get_context() const
+{
+	return context;
+}
+
+void CPU_core::set_context(const context_t &context)
+{
+	this->context = context;
+}

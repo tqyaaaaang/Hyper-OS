@@ -34,17 +34,6 @@ std::string status_t::get_name () const
 	return name;
 }
 
-
-void status_t::set_page_table(page_table *pgt)
-{
-	this->pgt = pgt;	
-}
-
-page_table * status_t::get_page_table() const
-{
-	return this->pgt;
-}
-
 thread_local status_t status;
 
 void init_status_phase_1 ()

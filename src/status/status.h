@@ -6,7 +6,6 @@
 #pragma once
 
 #include <string>
-#include "../mm/page_table.h"
 
 class CPU_core;
 
@@ -20,14 +19,9 @@ public:
 
 	void set_name ( std::string _name );
 	std::string get_name () const;
-
-	void set_page_table( page_table *pg );
-	page_table * get_page_table() const;
 	
 private:
 	CPU_core *current_core;
-
-	page_table *pgt;
 	
 	std::string name;
 };
