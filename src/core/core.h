@@ -93,6 +93,6 @@ private:
 	
 	std::mutex cpu_lock;
 
-	CPU_mmu *mmu;
+	CPU_mmu mmu;
 	context_t context;
 };

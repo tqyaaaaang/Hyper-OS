@@ -6,6 +6,8 @@
 
 using logging::debug;
 using logging::log_endl;
+using pm::read;
+using pm::write;
 
 void test_pm()
 {

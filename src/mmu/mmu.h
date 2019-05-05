@@ -7,7 +7,6 @@
 #pragma once
 #include <cstdint>
 #include <cstddef>
-#include "../core/core.h"
 #include "../mm/page_table.h"
 
 class CPU_core;

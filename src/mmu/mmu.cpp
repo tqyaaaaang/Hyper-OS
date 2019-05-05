@@ -15,6 +15,7 @@
 #include "../interrupt/interrupt.h"
 #include "../status/status.h"
 #include "../mm/pmem.h"
+#include "../core/core.h"
 
 CPU_mmu::CPU_mmu()
 {}

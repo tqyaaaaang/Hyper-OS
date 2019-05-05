@@ -14,10 +14,18 @@ class program;
 template<typename T>
 class handle {
 public:
-	
+	handle();
+	handle(program *prog);
+	handle(size_t addr, program *prog);
+	handle& operator = (const handle &val);
+	handle& operator = (const T &val);
+	operator T() const;
+	size_t get_addr() const;
+	program* get_prog() const;
+	  
 private:
     size_t addr;       // start address of T 
-    program *prog;     // program containing this handle    
+    program *prog;     // program containing this handle
 };
 
 /**
@@ -71,6 +79,10 @@ public:
     handle<T> alloc_heap();
 	// alloc memory in heap
 
+	// temp
+	char prog_read(size_t addr);
+	void prog_write(size_t addr, char data);
+	
 private:
 	size_t text_size;
 	size_t data_size;
@@ -86,4 +98,5 @@ private:
 	// stack operation
 	void stack_push(size_t data);
 	void stack_pop();
+
 };

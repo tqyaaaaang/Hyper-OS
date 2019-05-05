@@ -12,14 +12,12 @@ CPU_core::CPU_core ()
 	, interrupt_enabled_flag ( false )
 	, lapic ( this )
 {
-	mmu = new CPU_mmu(this);
+	mmu = CPU_mmu(this);
 }
 
 CPU_core::~CPU_core ()
 {
 	disable ();
-	assert(mmu != nullptr);
-	delete mmu;
 }
 
 void CPU_core::set_enabled ( bool status )

@@ -6,12 +6,79 @@
 #include <cassert>
 #include "program.h"
 #include "../mm/pmem_info.h"
+#include "../mm/pmem.h"
 #include "../env/env.h"
 #include "../utils/panic.h"
+
+template<typename T>
+handle<T>::handle()
+{
+	prog = nullptr;
+	addr = 0;
+}
+
+template<typename T>
+handle<T>::handle(program *prog)
+{
+	this->prog = prog;
+}
+
+template<typename T>
+handle<T>::handle(size_t addr, program *prog)
+{
+	this->prog = prog;
+	this->addr = addr;
+}
+
+/* set handle to val */
+template<typename T>
+handle<T>& handle<T>::operator = (const handle<T> &val)
+{
+	for (size_t i = 0; i < sizeof(T); i++)
+		prog->prog_write(addr + i,
+						 prog->prog_read(val.get_addr() + i));
+	return *this;
+}
+
+/* set handle to val */
+template<typename T>
+handle<T>& handle<T>::operator = (const T &val)
+{
+	const char* buf = &val;
+	for (size_t i = 0; i < sizeof(T); i++)
+		prog->prog_write(addr + i, buf[i]);
+	return *this;
+}
+
+/* get T from handle */
+template<typename T>
+handle<T>::operator T() const
+{
+	char *buf = new char[sizeof(T)];
+	for (size_t i = 0; i < sizeof(T); i++)
+		buf[i] = prog->prog_read(addr + i);
+	delete[] buf;
+	T *buf_T = (T*) buf;
+	return *buf;
+}
+
+template<typename T>
+size_t handle<T>::get_addr() const
+{
+	return this->addr;
+}
+
+template<typename T>
+program* handle<T>::get_prog() const
+{
+	return this->prog;
+}
 
 program::program()
 {
 	data = nullptr;
+	text_size = data_size = bss_size = 0;
+	running = false;
 	this->static_init(); // init static info
 	compile();           // simulate compile
 }
@@ -54,15 +121,25 @@ bool program::is_running() const
 
 void program::compile()
 {
-	long long tot_static = this->text_size
-	    + this->bss_size
-		+ this->data_size;
+	long long tot_static = (long long)this->text_size
+	    + (long long)this->bss_size
+		+ (long long)this->data_size;
 	if (tot_static >= VM_SIZE)
-		panic("compile failed.");
+		panic("compile failed : MLE");
 	this->stack_size = VM_SIZE - tot_static;
 }
 
 void program::static_init()
 {
 	
+}
+
+char program::prog_read(size_t addr)
+{
+	return pm::read(addr);
+}
+
+void program::prog_write(size_t addr, char data)
+{
+	return pm::write(addr, data);
 }

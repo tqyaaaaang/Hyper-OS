@@ -175,6 +175,8 @@ void destroy_pm()
 	
 }
 
+namespace pm {
+
 /**
  * interface for mmu, read a byte
  * @paddr : physical address to read
@@ -215,5 +217,7 @@ void write(size_t paddr, char data)
 		logging::info << "pm write fail. error code = "
 					  << result.error_code << logging::log_endl;
 	}
+}
+
 }
 
