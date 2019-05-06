@@ -138,13 +138,31 @@ bool program::is_compiling() const
 
 void program::compile()
 {
-	long long tot_static = (long long)this->text_size
-	    + (long long)this->bss_size
-		+ (long long)this->data_size;
+	long long tot_static = 0;
+	if (!add_check(text_size, bss_size)) {
+		panic("compile failed : MLE");
+	}
+	tot_static = text_size + bss_size;
+	if (!add_check(tot_static, data_size)) {
+		panic("compile failed : MLE");
+	}
+	tot_static += data_size;
 	if (tot_static >= VM_SIZE)
 		panic("compile failed : MLE");
 	this->stack_size = VM_SIZE - tot_static;
+	do_redirect();
 	compiling = false;
+}
+
+/**
+ * do redirect for handle in .bss
+ */
+void program::do_redirect()
+{
+	for (auto addr : redr_table) {
+		*addr += data_size;
+	}
+	redr_table.clear();
 }
 
 void program::static_init()

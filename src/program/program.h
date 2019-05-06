@@ -157,5 +157,7 @@ private:
 	void stack_push(size_t data);
 	void stack_pop();
 
+	void do_redirect();
+
 	std::vector<size_t*> redr_table;
 };
