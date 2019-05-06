@@ -32,9 +32,10 @@ public:
 	handle(program *prog);                  // init with prog
 	handle(size_t addr, program *prog,
 		   handle_type::type t);            // init with address, prog and type
+
 	handle& operator = (const handle &val); // copy (T)val to this->addr
 	handle& operator = (const T &val);      // handle assign
-	handle operator [] (int n);             // handle array access
+	handle operator [] (size_t n);          // handle array access
 	operator T() const;                     // auto unzip
 
 	size_t get_addr() const;
@@ -47,8 +48,9 @@ public:
 	void set_type(handle_type::type t);     // set type
 	
 private:
-    size_t addr;       // start address of T 
-    program *prog;     // program containing this handle
+	
+	size_t addr;       // start address of T 
+	program *prog;     // program containing this handle
 	handle_type::type this_type;
 };
 

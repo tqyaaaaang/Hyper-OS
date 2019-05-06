@@ -34,7 +34,10 @@ handle<T>::handle(size_t addr, program *prog, type t)
 	this->this_type = t;
 }
 
-/* set handle to val */
+/**
+ * set handle to val
+ * copy memory of (T)val to this->addr
+ */
 template<typename T>
 handle<T>& handle<T>::operator = (const handle<T> &val)
 {
@@ -64,6 +67,16 @@ handle<T>::operator T() const
 	delete[] buf;
 	T *buf_T = (T*) buf;
 	return *buf;
+}
+
+/**
+ * get handle addr + sizeof(T) * id
+ * for array access
+ */
+template<typename T>
+handle<T> handle<T>::operator [] (size_t id)
+{
+	return handle<T>(addr + sizeof(T) * id, prog, this_type);
 }
 
 template<typename T>
