@@ -5,8 +5,20 @@
 #pragma once
 #include <cstddef>
 #include <cstdint>
+#include <vector>
 
 class program;
+
+namespace handle_type {
+	
+	enum type {
+		STATIC,
+		BSS,
+		STACK,
+		HEAP
+	};
+
+}
 
 /**
  * handle of type T
@@ -14,18 +26,24 @@ class program;
 template<typename T>
 class handle {
 public:
-	handle();
-	handle(program *prog);
-	handle(size_t addr, program *prog);
-	handle& operator = (const handle &val);
-	handle& operator = (const T &val);
-	operator T() const;
+	handle();                               // construct
+	handle(program *prog);                  // init with prog
+	handle(size_t addr, program *prog);     // init with address and prog
+	handle& operator = (const handle &val); // handle copy
+	handle& operator = (const T &val);      // handle assign
+	handle operator [] (int n);             // handle array access
+	operator T() const;                     // auto unzip
 	size_t get_addr() const;
+	size_t* get_addr_addr();                // for redirect
 	program* get_prog() const;
-	  
+	
+	handle_type::type get_type() const;     // get type
+	void set_type(handle_type::type t);     // set type
+	
 private:
     size_t addr;       // start address of T 
     program *prog;     // program containing this handle
+	handle_type::type this_type;
 };
 
 /**
@@ -68,17 +86,36 @@ public:
 	// alloc memory in data segment
 
 	template<typename T>
+	handle<T> alloc_static(size_t n);
+	// alloc continious memory for T * n on data
+	// return handle to first T
+
+	template<typename T>
 	handle<T> alloc_bss();
 	// alloc memory in bss segment
+
+	template<typename T>
+    handle<T> alloc_bss(size_t n);
+	// alloc continious memory for T * n on bss
+	// return handle to first T
 	
 	template<typename T>
     handle<T> alloc_stack();
 	// alloc memory in stack
-
+	
 	template<typename T>
     handle<T> alloc_heap();
 	// alloc memory in heap
 
+	template<typename T>
+	handle<T> alloc_heap(size_t n);
+	// alloc continious memory for T * n on heap
+	// return handle of first T 
+
+	template<typename T>
+	void free_heap(handle<T> ptr);
+	// free continious memory start from ptr 
+	
 	// temp
 	char prog_read(size_t addr);
 	void prog_write(size_t addr, char data);
@@ -99,4 +136,5 @@ private:
 	void stack_push(size_t data);
 	void stack_pop();
 
+	std::vector<size_t*> redr_table;
 };

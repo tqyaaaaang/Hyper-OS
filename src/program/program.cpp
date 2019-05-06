@@ -74,6 +74,12 @@ program* handle<T>::get_prog() const
 	return this->prog;
 }
 
+template<typename T>
+size_t* handle<T>::get_addr_addr()
+{
+	return &addr;
+}
+
 program::program()
 {
 	data = nullptr;
