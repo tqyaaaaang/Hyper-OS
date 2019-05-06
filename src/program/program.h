@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <vector>
+#include <string>
 
 class program;
 
@@ -79,6 +80,9 @@ public:
 	size_t get_bss_size() const;           // size of bss segment
 	size_t get_stack_size() const;         // size of stack/heap segment
 
+	std::string get_name() const;               // get name of program
+	void set_name(const std::string &str);      // set name for program
+	
 	void run();                            // set running
 	
 	bool is_running() const;               // check if the process is running
@@ -86,6 +90,7 @@ public:
 	
 	virtual void static_init();            // init static info & data
     virtual void main() = 0;               // program entry
+
 	void compile();                        // simulate compile
 
 	void add_redirect_bss(size_t *addr);   // add addr into bss redirect table
@@ -138,6 +143,8 @@ private:
 
 	bool running;
 	bool compiling;
+
+	std::string name;
 	
 	size_t alloc_static_area(size_t len);
 	size_t alloc_bss_area(size_t len);

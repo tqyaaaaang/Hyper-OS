@@ -8,19 +8,10 @@
 #include <cassert>
 #include <vector>
 #include "../utils/panic.h"
+#include "../utils/check.h"
 
 using handle_type::type;
 using std::vector;
-
-static bool add_check(size_t a, size_t b)
-{
-	return b <= (size_t)(-1) - a;
-}
-
-static bool mul_check(size_t a, size_t b)
-{
-	return (size_t)(-1) / a <= b;
-}
 
 template<typename T> 
 type handle<T>::get_type() const
@@ -115,6 +106,10 @@ size_t program::alloc_bss_area(size_t len)
 	return bss_size - len;
 }
 
+/**
+ * add into redirect table of .bss
+ * @addr : position waiting for redirect
+ */
 void program::add_redirect_bss(size_t *addr)
 {
 	redr_table.push_back(addr);

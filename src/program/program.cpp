@@ -9,6 +9,7 @@
 #include "../mm/pmem.h"
 #include "../env/env.h"
 #include "../utils/panic.h"
+#include "../utils/check.h"
 
 using handle_type::type;
 
@@ -87,6 +88,7 @@ program::program()
 {
 	compiling = true;
 	data = nullptr;
+	name = "null";
 	text_size = data_size = bss_size = 0;
 	running = false;
 	this->static_init(); // init static info
@@ -159,3 +161,4 @@ void program::prog_write(size_t addr, char data)
 {
 	return pm::write(addr, data);
 }
+
