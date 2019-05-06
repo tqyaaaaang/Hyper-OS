@@ -10,6 +10,8 @@
 #include "../env/env.h"
 #include "../utils/panic.h"
 
+using handle_type::type;
+
 template<typename T>
 handle<T>::handle()
 {
@@ -24,10 +26,11 @@ handle<T>::handle(program *prog)
 }
 
 template<typename T>
-handle<T>::handle(size_t addr, program *prog)
+handle<T>::handle(size_t addr, program *prog, type t)
 {
 	this->prog = prog;
 	this->addr = addr;
+	this->this_type = t;
 }
 
 /* set handle to val */
@@ -82,6 +85,7 @@ size_t* handle<T>::get_addr_addr()
 
 program::program()
 {
+	compiling = true;
 	data = nullptr;
 	text_size = data_size = bss_size = 0;
 	running = false;
@@ -122,7 +126,12 @@ void program::run()
 
 bool program::is_running() const
 {
-	return this->running;
+	return running;
+}
+
+bool program::is_compiling() const
+{
+	return compiling;
 }
 
 void program::compile()
@@ -133,6 +142,7 @@ void program::compile()
 	if (tot_static >= VM_SIZE)
 		panic("compile failed : MLE");
 	this->stack_size = VM_SIZE - tot_static;
+	compiling = false;
 }
 
 void program::static_init()
