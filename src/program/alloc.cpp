@@ -52,7 +52,11 @@ void handle<T>::alias(const handle<T> &val)
 {
 	prog = val.get_prog();
 	addr = val.get_addr();
-	this_type = val.get_type();
+	if (val.get_type() == type::STACK) {
+		this_type = type::ALIAS;
+	} else {
+		this_type = val.get_type();
+	}
 	if (prog->is_compiling() && this_type == type::BSS) {
 		prog->add_redirect_bss(&(addr));
 	}

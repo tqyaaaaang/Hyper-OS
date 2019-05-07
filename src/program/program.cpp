@@ -35,6 +35,19 @@ handle<T>::handle(size_t addr, program *prog, type t)
 }
 
 /**
+ * STACK Variable : pop stack
+ */
+template<typename T>
+handle<T>::~handle()
+{
+	if (prog == nullptr)
+		return;
+	if (this_type == type::STACK) {
+		prog->stack_pop(sizeof(T));
+	}
+}
+
+/**
  * set handle to val
  * copy memory of (T)val to this->addr
  * only in running time

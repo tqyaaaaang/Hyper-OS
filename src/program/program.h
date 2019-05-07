@@ -16,7 +16,8 @@ namespace handle_type {
 		STATIC,
 		BSS,
 		STACK,
-		HEAP
+		HEAP,
+		ALIAS
 	};
 
 }
@@ -38,6 +39,8 @@ public:
 	handle operator [] (size_t n);          // handle array access
 	operator T() const;                     // auto unzip
 
+	virtual ~handle();                      // destory
+	
 	size_t get_addr() const;
 	size_t* get_addr_addr();                // for redirect
 	program* get_prog() const;
@@ -161,10 +164,11 @@ private:
 	void heap_free(size_t addr);
 
 	// stack operation
-	void stack_push(size_t data);
-	void stack_pop();
+	void stack_push(size_t size);
+	void stack_pop(size_t size);
 
 	void do_redirect();
 
 	std::vector<size_t*> redr_table;
 };
+
