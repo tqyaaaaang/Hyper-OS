@@ -50,7 +50,7 @@ public:
 	handle_type::type get_type() const;     // get type
 	void set_type(handle_type::type t);     // set type
 
-	void modify_in_compile(const T &val);   // modify in compile time
+	void modify_in_compile(const T &val);   // modify in compile time, .data only
 	
 private:
 	
@@ -137,7 +137,7 @@ public:
 	// return handle of first T 
 
 	template<typename T>
-	void free_heap(handle<T> ptr);
+	void free_heap(const handle<T> &ptr);
 	// free continious memory start from ptr 
 	
 	// temp
@@ -160,10 +160,12 @@ private:
 	size_t alloc_bss_area(size_t len);
 	
     // heap operation
+	// TODO 
 	size_t heap_malloc(size_t size);
 	void heap_free(size_t addr);
 
 	// stack operation
+	// TODO
 	void stack_push(size_t size);
 	void stack_pop(size_t size);
 

@@ -182,3 +182,38 @@ handle<T> program::alloc_bss(size_t n)
 	return ret;
 }
 
+/**
+ * alloc an object of type T in heap
+ * @return : the handle of the object
+ */
+template<typename T>
+handle<T> program::alloc_heap()
+{
+	return handle<T>(heap_malloc(sizeof(T)), this, type::HEAP);
+}
+
+/**
+ * alloc n objects of type T in heap
+ * @n : the number of objects to alloc
+ * @return : the handle of the first object
+ */
+template<typename T>
+handle<T> program::alloc_heap(size_t n)
+{
+	if (!mul_check(n, sizeof(T))) {
+		panic("runtime error. malloc failed.");
+	}
+	size_t len = n * sizeof(T);
+	return handle<T>(heap_malloc(len), this, type::HEAP);
+}
+
+/**
+ * free objects the handle point to
+ * @ptr : the handle to free
+ */
+template<typename T>
+void program::free_heap(const handle<T> &ptr)
+{
+    heap_free(ptr.get_addr());
+}
+

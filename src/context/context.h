@@ -2,6 +2,7 @@
  * context/context.h
  * running context of cpu
  */
+#pragma once
 #include "../mm/page_table.h"
 
 class context_t {
