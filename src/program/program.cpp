@@ -37,30 +37,40 @@ handle<T>::handle(size_t addr, program *prog, type t)
 /**
  * set handle to val
  * copy memory of (T)val to this->addr
+ * only in running time
  */
 template<typename T>
 handle<T>& handle<T>::operator = (const handle<T> &val)
 {
+	assert(prog->is_running());
 	for (size_t i = 0; i < sizeof(T); i++)
 		prog->prog_write(addr + i,
 						 prog->prog_read(val.get_addr() + i));
 	return *this;
 }
 
-/* set handle to val */
+/**
+ * set handle to val
+ * only in running time
+ */
 template<typename T>
 handle<T>& handle<T>::operator = (const T &val)
 {
+	assert(prog->is_running());
 	const char* buf = &val;
 	for (size_t i = 0; i < sizeof(T); i++)
 		prog->prog_write(addr + i, buf[i]);
 	return *this;
 }
 
-/* get T from handle */
+/**
+ * get T from handle
+ * only in running time
+ */
 template<typename T>
 handle<T>::operator T() const
 {
+	assert(prog->is_running());
 	char *buf = new char[sizeof(T)];
 	for (size_t i = 0; i < sizeof(T); i++)
 		buf[i] = prog->prog_read(addr + i);
@@ -72,6 +82,7 @@ handle<T>::operator T() const
 /**
  * get handle addr + sizeof(T) * id
  * for array access
+ * can be used in compile & runnning time.
  */
 template<typename T>
 handle<T> handle<T>::operator [] (size_t id)

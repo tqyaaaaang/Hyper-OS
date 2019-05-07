@@ -46,6 +46,8 @@ public:
 	
 	handle_type::type get_type() const;     // get type
 	void set_type(handle_type::type t);     // set type
+
+	void modify_in_compile(const T &val);   // modify in compile time
 	
 private:
 	
@@ -77,27 +79,30 @@ public:
 	~program();
 
 	// data/text/bss size is set during compiling ( static_init )
-	size_t get_text_size() const;          // size of text(code) segment
-	size_t get_data_size() const;          // size of data segment
-	size_t get_bss_size() const;           // size of bss segment
-	size_t get_stack_size() const;         // size of stack/heap segment
+	size_t get_text_size() const;               // size of text(code) segment
+	size_t get_data_size() const;               // size of data segment
+	size_t get_bss_size() const;                // size of bss segment
+	size_t get_stack_size() const;              // size of stack/heap segment
 
 	std::string get_name() const;               // get name of program
 	void set_name(const std::string &str);      // set name for program
 	
-	void run();                            // set running
+	void run();                                 // set running
 	
-	bool is_running() const;               // check if the process is running
-	bool is_compiling() const;             // check if the program is compiling
+	bool is_running() const;                    // check if the process is running
+	bool is_compiling() const;                  // check if the program is compiling
 	
-	virtual void static_init();            // init static info & data
-    virtual void main() = 0;               // program entry
+	virtual void static_init();                 // init static info & data
+    virtual void main() = 0;                    // program entry
 
-	void compile();                        // simulate compile
+	void compile();                             // simulate compile
 
-	void add_redirect_bss(size_t *addr);   // add addr into bss redirect table
-	
+	void add_redirect_bss(size_t *addr);        // add addr into bss redirect table
+
 	template<typename T>
+	void modify_data(size_t addr, const T &val);// modify .data
+
+    template<typename T>
 	handle<T> alloc_static();
 	// alloc memory in data segment
 

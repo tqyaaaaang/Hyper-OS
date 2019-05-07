@@ -26,8 +26,24 @@ void handle<T>::set_type(type t)
 }
 
 /**
+ * modify the data of the handle in compile
+ * @val : source
+ */
+template<typename T>
+void handle<T>::modify_in_compile(const T &val)
+{
+	if (prog == nullptr) {
+		panic("modify null pointer");
+	}
+	if (this_type != type::STATIC) {
+		panic("compile fail. only data in .data can be modified in compile");
+	}
+	prog->modify_data(addr, val);
+}
+
+/**
  * let this handle be an alias of val
- * @val : src
+ * @val : source
  * -------------
  * can be used in either compile or running time. 
  */
@@ -40,6 +56,7 @@ void handle<T>::alias(const handle<T> &val)
 	if (prog->is_compiling() && this_type == type::BSS) {
 		prog->add_redirect_bss(&(addr));
 	}
+	// need to be redirect
 }
 
 /**
@@ -113,6 +130,21 @@ size_t program::alloc_bss_area(size_t len)
 void program::add_redirect_bss(size_t *addr)
 {
 	redr_table.push_back(addr);
+}
+
+/**
+ * modify .data
+ * @addr : modify data in data[addr]
+ * @val  : data to storage
+ */
+template<typename T>
+void program::modify_data(size_t addr, const T &val)
+{
+	if (!add_check(addr, sizeof(T)) || addr + sizeof(T) > data_size) {
+		panic("compile fail. bad modify in compile");
+	}
+	T *pt = (T*)(data + addr);
+	*pt = val;
 }
 
 /**
