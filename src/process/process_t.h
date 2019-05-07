@@ -19,6 +19,7 @@ class process_t {
 public:
 
 	enum state {
+		UNINIT,
 		SLEEPING,
 		RUNABLE,
 		RUNNING,
@@ -42,6 +43,12 @@ public:
 
 	context_t get_context() const;
 	void set_context(const context_t &context);
+
+	void add_chl(size_t pid);
+	void set_par(size_t pid);
+
+	bool tick();
+	void set_slice(size_t slice);
 	
 private:
 
@@ -51,12 +58,9 @@ private:
 	state pstat;
 	context_t context;
 	bool need_resched;
-
-	process_t* ptr_fa;
-	std::set<process_t*> ptr_chl;
-
-	bool wait_all;
-	std::list<size_t> wait_list;
-
+	size_t slice;
+	
+	size_t ptr_par;
+	std::set<size_t> ptr_chl;
 	
 };

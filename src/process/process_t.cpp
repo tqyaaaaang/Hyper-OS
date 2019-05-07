@@ -12,7 +12,7 @@ process_t::process_t()
 {
 	prog = nullptr;
 	name = "<default>";
-	ptr_fa;
+	ptr_par = 0;
 }
 
 process_t::~process_t()
@@ -51,5 +51,25 @@ void process_t::exec()
 	if (prog != nullptr) {
 		prog->main();
 	}
+}
+
+void process_t::add_chl(size_t pid)
+{
+	ptr_chl.insert(pid);
+}
+
+void process_t::set_par(size_t pid)
+{
+	ptr_par = pid;
+}
+
+bool process_t::tick()
+{
+	return (slice--) == 0;
+}
+
+void process_t::set_slice(size_t slice)
+{
+	this->slice = slice;
 }
 
