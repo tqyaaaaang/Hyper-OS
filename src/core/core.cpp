@@ -6,6 +6,7 @@
 #include "core.h"
 #include "../logging/logging.h"
 #include <cassert>
+#include "../process/process_t.h"
 
 CPU_core::CPU_core ()
 	: enabled_flag ( false )
@@ -114,4 +115,14 @@ context_t CPU_core::get_context() const
 void CPU_core::set_context(const context_t &context)
 {
 	this->context = context;
+}
+
+process_t* CPU_core::get_current() const
+{
+	return current;
+}
+
+void CPU_core::set_current(process_t* current)
+{
+	this->current = current;
 }

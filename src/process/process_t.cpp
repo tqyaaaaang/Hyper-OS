@@ -5,8 +5,10 @@
 
 #include "process_t.h"
 #include "../utils/panic.h"
+#include <string>
 
 typedef process_t::state state;
+using std::string;
 
 process_t::process_t()
 {
@@ -46,10 +48,24 @@ void process_t::set_prog(program *prog)
 	this->prog = prog;
 }
 
+void process_t::set_name(const string &name)
+{
+	this->name = name;
+}
+
+string process_t::get_name() const
+{
+	return name;
+}
+
 void process_t::exec()
 {
+	// TODO : memory layout
+	// TODO : page table
+	// link to cpu
+	// waiting for schedule
 	if (prog != nullptr) {
-		prog->main();
+		// prog->main();
 	}
 }
 

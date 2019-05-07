@@ -125,7 +125,7 @@ program::program()
 {
 	compiling = true;
 	data = nullptr;
-	name = "null";
+	name = "<default>";
 	text_size = data_size = bss_size = 0;
 	running = false;
 	this->static_init(); // init static info

@@ -13,6 +13,7 @@
 #include "../apic/io_apic.h"
 #include "../mm/pmm.h"
 #include "../../dev/device.h"
+#include "../process/process.h"
 
 void init ()
 {
@@ -28,4 +29,6 @@ void init ()
 	init_devices ();
 
 	init_pmm ( );
+
+	init_proc();
 }

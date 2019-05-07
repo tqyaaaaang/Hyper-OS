@@ -12,7 +12,6 @@
 #include <mutex>
 #include <condition_variable>
 #include "../context/context.h"
-#include "../core/core.h"
 #include "../program/program.h"
 
 class process_t {
@@ -49,7 +48,7 @@ public:
 
 	bool tick();
 	void set_slice(size_t slice);
-	
+
 private:
 
 	size_t pid;

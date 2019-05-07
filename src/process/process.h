@@ -1,6 +1,6 @@
 /**
- * process/process_t.h
- * basic information of process_t 
+ * process/process.h
+ * operations to processes
  */
 
 #pragma once
@@ -8,5 +8,7 @@
 #include "process_t.h"
 
 size_t create_process();
-void exec_process(size_t pid, program *prog);
+void exec_program(size_t pid, program *prog);
 
+void init_proc();
+void destroy_proc();

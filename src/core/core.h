@@ -9,6 +9,7 @@
 #include "../mmu/mmu.h"
 #include "../apic/local_apic.h"
 #include "../context/context.h"
+#include "../process/process_t.h"
 
 class CPU_mmu;
 
@@ -83,6 +84,9 @@ public:
 
 	void set_context(const context_t &context);
 	context_t get_context() const;
+
+	void set_current(process_t *current);
+	process_t* get_current() const;
 	
 private:
 	bool enabled_flag;
@@ -95,4 +99,5 @@ private:
 
 	CPU_mmu mmu;
 	context_t context;
+	process_t *current;
 };
