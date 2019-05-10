@@ -10,6 +10,7 @@
 #include "../apic/local_apic.h"
 #include "../context/context.h"
 #include "../process/process_t.h"
+#include "../process/process.h"
 
 class CPU_mmu;
 

@@ -8,7 +8,7 @@
 #include "process_t.h"
 
 size_t create_process();
-void exec_program(size_t pid, program *prog);
+int exec_program(size_t pid, program *prog);
 
 void init_proc();
 void destroy_proc();

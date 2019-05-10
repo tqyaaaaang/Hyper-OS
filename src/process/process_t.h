@@ -11,8 +11,11 @@
 #include <string>
 #include <mutex>
 #include <condition_variable>
+#include <future>
 #include "../context/context.h"
 #include "../program/program.h"
+
+class CPU_core;
 
 class process_t {
 public:
@@ -21,7 +24,6 @@ public:
 		UNINIT,
 		SLEEPING,
 		RUNABLE,
-		RUNNING,
 		ZOMBIE
 	};
 	
@@ -38,7 +40,7 @@ public:
 	std::string get_name() const;
 
 	void set_prog(program *prog);
-	void exec();
+	void exec(std::promise<int> &fin_code);
 
 	context_t get_context() const;
 	void set_context(const context_t &context);
@@ -49,6 +51,18 @@ public:
 	bool tick();
 	void set_slice(size_t slice);
 
+	void set_core(CPU_core *core);
+	CPU_core get_core() const;
+
+	std::condition_variable cond_var;
+	std::mutex cond_mutex;
+	std::list<process_t*>::iterator linker;
+	
+	void init_context();
+	void init_data();
+	void init_bss();
+	void init_dmm();
+	
 private:
 
 	size_t pid;
@@ -56,10 +70,12 @@ private:
 	program *prog;
 	state pstat;
 	context_t context;
+
 	bool need_resched;
 	size_t slice;
 	
 	size_t ptr_par;
 	std::set<size_t> ptr_chl;
-	
+
+	CPU_core *core;
 };

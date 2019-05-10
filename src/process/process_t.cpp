@@ -6,9 +6,14 @@
 #include "process_t.h"
 #include "../utils/panic.h"
 #include <string>
+#include <cassert>
+#include <mutex>
 
 typedef process_t::state state;
 using std::string;
+using std::promise;
+using std::unique_lock;
+using std::mutex;
 
 process_t::process_t()
 {
@@ -58,15 +63,13 @@ string process_t::get_name() const
 	return name;
 }
 
-void process_t::exec()
+void process_t::exec(promise<int> &fin_code)
 {
-	// TODO : memory layout
-	// TODO : page table
-	// link to cpu
-	// waiting for schedule
-	if (prog != nullptr) {
-		// prog->main();
-	}
+	assert(prog != nullptr);
+    unique_lock<mutex> lk(this->cond_mutex);
+	fin_code.set_value(0);
+	this->cond_var.wait(lk);
+	this->prog->main();
 }
 
 void process_t::add_chl(size_t pid)
@@ -88,4 +91,3 @@ void process_t::set_slice(size_t slice)
 {
 	this->slice = slice;
 }
-
