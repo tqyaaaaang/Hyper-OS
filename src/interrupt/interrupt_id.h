@@ -35,6 +35,8 @@ enum class interrupt_id_t
 
 	CLOCK_INTERRUPT = 32,
 
+	SYSCALL = 80,
+
 	END_OF_INTERRUPT = -1,
 	DISABLE_LAPIC = -2,
 
