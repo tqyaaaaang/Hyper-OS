@@ -78,12 +78,13 @@ page_frame* id2page(int id)
 /**
  * alloc n page frames
  * return page_frame pointer of first page frame(s)
- * @n : number of pages 
+ * @n : number of pages
+ * TODO : fail handle
  */
 page_frame* alloc_pages(int n)
 {
 	lock_guard<mutex> locker(alloc_mutex);
-	int start = alloc->malloc(n);
+	size_t start = alloc->malloc(n);
 	page_frame *ret = pages + start;
 	ret->paddr = 0;
 	ret->alloced = true;
@@ -96,6 +97,7 @@ page_frame* alloc_page()
 
 /* free allocted page frames
  * @pg : first page_frame of continuous pages
+ * TODO : fail handle
  */
 void free_pages(page_frame *pg)
 {
