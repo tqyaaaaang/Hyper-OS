@@ -86,12 +86,14 @@ int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 
 void local_apic::send_end_of_interrupt ()
 {
-	interrupt ( new end_of_interrupt (), false );
+	end_of_interrupt current_interrupt;
+	interrupt ( &current_interrupt, false );
 }
 
 void local_apic::send_disable_signal ()
 {
-	interrupt ( new disable_lapic (), false );
+	disable_lapic current_interrupt;
+	interrupt ( &current_interrupt, false );
 }
 
 
