@@ -34,7 +34,8 @@ char CPU_mmu::read(size_t la)
 	pte_t *pte = pg->get_pte_try(la);
 	if (check(la, pte, false)) { // check passed
 		return read(la);
-	} 
+	}
+	return 0;
 }
 
 void CPU_mmu::write(size_t la, char c)

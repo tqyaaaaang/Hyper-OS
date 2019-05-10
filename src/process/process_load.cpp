@@ -23,13 +23,13 @@ void process_t::init_context()
  */
 void process_t::init_data()
 {
+	size_t data_size = prog->get_data_size();
 	assert(data_size % PAGE_SIZE == 0);
 	assert(prog != nullptr);
 	size_t page_number = data_size / PAGE_SIZE;
 	page_table *pt = context.get_page_table();
 	assert(pt != nullptr);
-	char *dt = prog->data;
-	char *ed = prog->data + prog->data_size;
+	size_t id = 0;
 	for (size_t i = 0; i < page_number; i++) {
 		pte_t pte;
 		page_frame *pf = alloc_page();
@@ -37,11 +37,11 @@ void process_t::init_data()
 		pte.present = true;
 		pte.access = pte.dirty = false;
 		pte.write = pte.user = true;
-		pte.paddr = pt->paddr;
+		pte.paddr = pf->paddr;
 		pf->ref();
-		for (size_t j = 0; j < PAGE_SIZE && dt < ed; j++) {
-			pm::write(pf->paddr + j, *dt);
-			dt++;
+		for (size_t j = 0; j < PAGE_SIZE && id < data_size; j++) {
+			pm::write(pf->paddr + j, prog->get_data(id));
+			id++;
 		}
 	}
 }
@@ -51,6 +51,7 @@ void process_t::init_data()
  */
 void process_t::init_bss()
 {
+	size_t bss_size = prog->get_bss_size();
 	assert(bss_size % PAGE_SIZE == 0);
 	assert(prog != nullptr);
 	size_t page_number = bss_size / PAGE_SIZE;
@@ -63,7 +64,7 @@ void process_t::init_bss()
 		pte.present = true;
 		pte.access = pte.dirty = false;
 		pte.write = pte.user = true;
-		pte.paddr = pt->paddr;
+		pte.paddr = pf->paddr;
 		pf->ref();
 		for (size_t j = 0; j < PAGE_SIZE; j++) {
 			pm::write(pf->paddr + j, 0);

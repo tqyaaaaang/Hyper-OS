@@ -158,6 +158,11 @@ size_t program::get_stack_size() const
 	return this->stack_size;
 }
 
+char program::get_data(size_t id) const
+{
+	return data[id];
+}
+
 void program::run()
 {
 	this->running = true;
@@ -181,7 +186,7 @@ static void round(size_t &size)
 
 void program::compile()
 {
-	long long tot_static = 0;
+	size_t tot_static = 0;
 	round(text_size);
 	round(bss_size);
 	round(data_size);

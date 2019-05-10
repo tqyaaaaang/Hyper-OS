@@ -144,6 +144,8 @@ public:
 	char prog_read(size_t addr);
 	void prog_write(size_t addr, char data);
 
+	char get_data(size_t id) const;
+	
 private:
 	size_t text_size;
 	size_t data_size;
