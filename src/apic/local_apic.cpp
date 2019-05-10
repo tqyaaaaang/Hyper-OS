@@ -27,6 +27,14 @@ local_apic::~local_apic ()
 		enabled = false;
 		send_disable_signal ();
 		lapic_thread.join ();
+		while ( !interrupt_queue.empty () ) {
+			if ( interrupt_queue.front ()->is_lapic_signal () ) {
+				delete interrupt_queue.front ();
+			} else {
+				interrupt_queue.front ()->get_return_promise ().set_value ( -1 );
+			}
+			interrupt_queue.pop ();
+		}
 	}
 }
 
@@ -48,7 +56,11 @@ void local_apic::disable ()
 		isr_stack.pop ();
 	}
 	while ( !interrupt_queue.empty () ) {
-		interrupt_queue.front ()->get_return_promise ().set_value ( -1 );
+		if ( interrupt_queue.front ()->is_lapic_signal () ) {
+			delete interrupt_queue.front ();
+		} else {
+			interrupt_queue.front ()->get_return_promise ().set_value ( -1 );
+		}
 		interrupt_queue.pop ();
 	}
 	event_queue.clear ();
@@ -86,14 +98,12 @@ int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 
 void local_apic::send_end_of_interrupt ()
 {
-	end_of_interrupt current_interrupt;
-	interrupt ( &current_interrupt, false );
+	interrupt ( new end_of_interrupt (), false );
 }
 
 void local_apic::send_disable_signal ()
 {
-	disable_lapic current_interrupt;
-	interrupt ( &current_interrupt, false );
+	interrupt ( new disable_lapic (), false );
 }
 
 
@@ -141,16 +151,17 @@ void local_apic::lapic_thread_event_loop ()
 bool local_apic::do_events ( interrupt_t * current_interrupt )
 {
 	logging::debug << "LAPIC received signal : " << current_interrupt->to_string () << logging::log_endl;
+	bool return_value = false;
 	switch ( current_interrupt->get_interrupt_id () ) {
 	case interrupt_id_t::END_OF_INTERRUPT:
 		logging::debug << "LAPIC received EOI signal from ISR : " << isr_stack.top ().first->to_string () << logging::log_endl;
-		current_interrupt->get_return_promise ().set_value ( 0 );
 		isr_stack.top ().second.join ();
 		isr_stack.top ().first->get_return_promise ().set_value ( 0 );
 		isr_stack.pop ();
 		if ( isr_stack.empty () ) {
 			if ( !is_enabled () ) {   // LAPIC disabled
-				return true;
+				return_value = true;
+				break;
 			}
 			schedule ();
 		}
@@ -158,20 +169,20 @@ bool local_apic::do_events ( interrupt_t * current_interrupt )
 
 	case interrupt_id_t::DISABLE_LAPIC:
 		logging::debug << "LAPIC received DISABLE signal" << logging::log_endl;
-		current_interrupt->get_return_promise ().set_value ( 0 );
 		if ( isr_stack.empty () ) {
 			if ( !is_enabled () ) {
-				return true;
+				return_value = true;
+				break;
 			}
 		}
 		break;
 
 	default:
 		logging::error << "LAPIC do_events : unknown event id " << static_cast < int > ( current_interrupt->get_interrupt_id () ) << logging::log_endl;
-		current_interrupt->get_return_promise ().set_value ( 0 );
 		break;
 	}
-	return false;
+	delete current_interrupt;
+	return return_value;
 }
 
 void local_apic::schedule ()
