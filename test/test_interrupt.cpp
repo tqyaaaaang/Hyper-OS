@@ -27,9 +27,15 @@ void test_internal_interrupt ()
 	logging::debug << "Testing internal interrupts" << logging::log_endl;
 	int return_value;
 
-	return_value = interrupt ( new internal_test_interrupt () );
-	logging::info << "Test on INTERNAL TEST interrupt succeeded, return value : " << return_value << logging::log_endl;
+	{
+		internal_test_interrupt current_interrupt;
+		return_value = interrupt ( &current_interrupt );
+		logging::info << "Test on INTERNAL TEST interrupt succeeded, return value : " << return_value << logging::log_endl;
+	}
 
-	return_value = interrupt ( new double_internal_test_interrupt () );
-	logging::info << "Test on DOUBLE INTERNAL TEST interrupt succeeded, return value : " << return_value << logging::log_endl;
+	{
+		double_internal_test_interrupt current_interrupt;
+		return_value = interrupt ( &current_interrupt );
+		logging::info << "Test on DOUBLE INTERNAL TEST interrupt succeeded, return value : " << return_value << logging::log_endl;
+	}
 }
