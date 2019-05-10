@@ -15,7 +15,6 @@ void process_t::init_context()
 
 void process_t::init_data()
 {
-	
 }
 
 void process_t::init_bss()
