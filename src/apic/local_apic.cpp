@@ -130,7 +130,11 @@ void local_apic::lapic_thread_event_loop ()
 			}
 		} else if ( current_interrupt->is_internal_interrupt () ) {   // internal CPU exceptions
 			logging::debug << "LAPIC received new interrupt request : " << current_interrupt->to_string () << logging::log_endl;
-			run_isr ( current_interrupt );
+			if ( isr_stack.empty () || isr_stack.top ().first->is_internal_interrupt () ) {
+				run_isr ( current_interrupt );
+			} else {
+				interrupt_queue.push ( current_interrupt );
+			}
 		} else {   // hardware interrupts
 			logging::debug << "LAPIC received new interrupt request : " << current_interrupt->to_string () << logging::log_endl;
 			interrupt_queue.push ( current_interrupt );
