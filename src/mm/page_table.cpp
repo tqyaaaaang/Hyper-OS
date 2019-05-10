@@ -73,3 +73,8 @@ void page_table::free_pte(size_t id)
 	}
 }
 
+void page_table::set_pte(size_t id, const pte_t &pte)
+{
+	assert(id < VPAGE_NUM);
+	table[id] = pte;
+}
