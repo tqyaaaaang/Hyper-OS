@@ -145,6 +145,11 @@ public:
 	void prog_write(size_t addr, char data);
 
 	char get_data(size_t id) const;
+
+	// stack operation
+	// TODO
+	void stack_push(size_t size);
+	void stack_pop(size_t size);
 	
 private:
 	size_t text_size;
@@ -166,13 +171,11 @@ private:
 	size_t heap_malloc(size_t size);
 	void heap_free(size_t addr);
 
-	// stack operation
-	// TODO
-	void stack_push(size_t size);
-	void stack_pop(size_t size);
-
 	void do_redirect();
 
 	std::vector<size_t*> redr_table;
 };
+
+extern handle<int> handle_int;
+extern handle<char> handle_char;
 

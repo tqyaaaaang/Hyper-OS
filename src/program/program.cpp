@@ -13,6 +13,9 @@
 
 using handle_type::type;
 
+template class handle<int>;
+template class handle<char>;
+
 template<typename T>
 handle<T>::handle()
 {
@@ -42,9 +45,9 @@ handle<T>::~handle()
 {
 	if (prog == nullptr)
 		return;
-	if (this_type == type::STACK) {
+	/* if (this_type == type::STACK) {
 		prog->stack_pop(sizeof(T));
-	}
+		}*/
 }
 
 /**
@@ -70,7 +73,7 @@ template<typename T>
 handle<T>& handle<T>::operator = (const T &val)
 {
 	assert(prog->is_running());
-	const char* buf = &val;
+	const char* buf = (const char*)(&val);
 	for (size_t i = 0; i < sizeof(T); i++)
 		prog->prog_write(addr + i, buf[i]);
 	return *this;
@@ -230,4 +233,3 @@ void program::prog_write(size_t addr, char data)
 {
 	return pm::write(addr, data);
 }
-

@@ -28,14 +28,14 @@ public:
 	virtual void main()
 	{
 		for (size_t i = 0; i < 12; i++)
-			info << str[i];
+			info << (char)str[i];
 		info << log_endl;
 		assert(ptr == 0);
 		ptr = 10;
 		for (size_t i = 0; i < 12; i++)
-			info << str[i];
+			info << (char)str[i];
 		info << log_endl;
-		info << ptr << log_endl;
+		info << (int)ptr << log_endl;
 	}
 	
 };

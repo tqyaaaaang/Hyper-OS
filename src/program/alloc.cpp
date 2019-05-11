@@ -13,6 +13,9 @@
 using handle_type::type;
 using std::vector;
 
+template class handle<int>;
+template class handle<char>;
+
 template<typename T> 
 type handle<T>::get_type() const
 {
@@ -217,3 +220,21 @@ void program::free_heap(const handle<T> &ptr)
     heap_free(ptr.get_addr());
 }
 
+/* temp */
+size_t program::heap_malloc(size_t len)
+{
+	
+}
+
+/* temp */
+void program::heap_free(size_t ptr)
+{
+	
+}
+
+template handle<int> program::alloc_static<int>();
+template handle<int> program::alloc_bss<int>();
+template handle<int> program::alloc_heap<int>();
+template handle<char> program::alloc_static<char>();
+template handle<char> program::alloc_bss<char>();
+template handle<char> program::alloc_heap<char>();
