@@ -52,7 +52,7 @@ public:
 	void set_slice(size_t slice);
 
 	void set_core(CPU_core *core);
-	CPU_core get_core() const;
+	CPU_core* get_core() const;
 
 	std::condition_variable cond_var;
 	std::mutex cond_mutex;
@@ -62,6 +62,9 @@ public:
 	void init_data();
 	void init_bss();
 	void init_dmm();
+	
+	void set_resched(bool resch);
+	bool get_resched() const;
 	
 private:
 

@@ -91,3 +91,23 @@ void process_t::set_slice(size_t slice)
 {
 	this->slice = slice;
 }
+
+void process_t::set_resched(bool resch)
+{
+	need_resched = resch;
+}
+
+bool process_t::get_resched() const
+{
+	return need_resched;
+}
+
+void process_t::set_core(CPU_core *core)
+{
+	this->core = core;
+}
+
+CPU_core* process_t::get_core() const
+{
+	return core;
+}

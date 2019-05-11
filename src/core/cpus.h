@@ -10,6 +10,13 @@
 extern CPU_core *cores;   // List of CPU cores
 
 /**
+ * get_core_num ()
+ * @return: number of cores
+ */
+
+int get_core_num();
+
+/**
  * init_cpus ( int n )
  * Arguments
  * @n: the number of cpus

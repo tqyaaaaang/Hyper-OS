@@ -84,13 +84,12 @@ int exec_program(size_t pid, program *prog)
 	proc->init_bss();
 	proc->init_dmm();
 
-    sched_set_runable(proc);
     sched_set_core(proc);
+    sched_set_runable(proc);
 
 	promise<int> fin_code;
 	future<int> fut = fin_code.get_future();
 
-	
 	thread th(proc_main, proc, std::ref(fin_code));
 	th.detach();
 
