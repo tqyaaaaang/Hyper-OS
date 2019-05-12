@@ -12,6 +12,7 @@
 #include <cassert>
 #include <future>
 #include "../schedule/schedule.h"
+#include "../status/status.h"
 
 using std::promise;
 using std::future;
@@ -26,7 +27,7 @@ static mutex pid_mutex;
 
 static void proc_main(process_t *proc, promise<int> &fin_code)
 {
-	logging::info << "proc : " << proc->get_name() << " is on." << logging::log_endl;
+	status.set_name(proc->get_name());
 	proc->exec(fin_code);
 }
 
@@ -80,6 +81,7 @@ int exec_program(size_t pid, program *prog)
 	process_t *proc = proc_table[pid];
 	
 	proc->set_prog(prog);
+	proc->set_name(prog->get_name());
 	
 	proc->init_data();
 	proc->init_bss();

@@ -94,15 +94,13 @@ template<typename T>
 handle<T>::operator T() const
 {
 	assert(prog != nullptr);
-	debug << "QAQ " << prog->is_running() << log_endl;
 	assert(prog->is_running());
 	char *buf = new char[sizeof(T)];
-	debug << "QAQ" << log_endl;
 	for (size_t i = 0; i < sizeof(T); i++)
 		buf[i] = prog->prog_read(addr + i);
+	T buf_T = *((T*) buf);
 	delete[] buf;
-	T *buf_T = (T*) buf;
-	return *buf;
+	return buf_T;
 }
 
 /**
@@ -238,14 +236,13 @@ void program::do_redirect()
 char program::prog_read(size_t addr)
 {
 	assert(cur_proc != nullptr);
-	info << "prog read : addr = " << addr << log_endl;
 	return cur_proc->vm_read(addr);
 }
 
 void program::prog_write(size_t addr, char data)
 {
 	assert(cur_proc != nullptr);
-	return cur_proc->vm_write(addr, data);
+	cur_proc->vm_write(addr, data);
 }
 
 void program::set_name(const string &name)

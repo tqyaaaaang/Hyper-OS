@@ -164,7 +164,7 @@ void destroy_pm()
 	} else {
 		logging::info << "pm error while shutting down."
 			<< "error code : "
-			<< result.error_code
+					  << result.error_code
 			<< logging::log_endl;
 	}
 

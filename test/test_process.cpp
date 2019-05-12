@@ -23,7 +23,6 @@ public:
 	virtual void static_init()
 	{
 		set_name("hello, world");
-		info << "STATIC INIT " << get_name() << log_endl;
 		char s[13] = "hello, world";
 		for (size_t i = 0; i < 12; i++) {
 			str[i].alias(alloc_static<char>());
@@ -36,18 +35,16 @@ public:
 	virtual void main()
 	{
 		info << "QWQ !! " << log_endl;
-		info << (int)str[0] << log_endl;
-		/*
 		for (size_t i = 0; i < 12; i++)
-			info << (int)str[i];
+			info << (char)str[i];
 		info << log_endl;
 		assert(ptr == 0);
+		info << (int)ptr << log_endl;
 		ptr = 10;
 		for (size_t i = 0; i < 12; i++)
 			info << (char)str[i];
 		info << log_endl;
 		info << (int)ptr << log_endl;
-		*/
 	}
 	
 };

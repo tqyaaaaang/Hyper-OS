@@ -34,13 +34,9 @@ CPU_mmu::CPU_mmu(CPU_core *core)
 
 char CPU_mmu::read(size_t la)
 {
-	info << "MMU READ " << la << log_endl;
 	page_table *pg = core->get_context().get_page_table();
-	info << "QWQ" << log_endl;
 	pte_t *pte = pg->get_pte_try(la);
-	info << "QWQ" << log_endl;
 	if (check(la, pte, false)) { // check passed
-	    info << "MMU READ at pm : " << pte->paddr + (la % PAGE_SIZE) << log_endl;
 		return pm::read(pte->paddr + (la % PAGE_SIZE));
 	}
 	return 0;
@@ -63,8 +59,6 @@ bool CPU_mmu::check(size_t la, pte_t *pte, bool write)
 {
 	int info = 0;
 	bool bug = false;
-	
-	logging::info << "CHECK : " << info << " " << bug << log_endl;
 	if (!pte->user) {
 		info |= intr_pagefault_t::E_SUPER;
 		bug = true;
@@ -76,7 +70,6 @@ bool CPU_mmu::check(size_t la, pte_t *pte, bool write)
 	if (!pte->present) {
 		info |= intr_pagefault_t::E_PRESENT;
 	}
-	logging::info << "CHECK : " << info << " " << bug << log_endl;
 	if (bug) {
 		error_info einfo(la, info);
 		while (interrupt(new intr_pagefault_t(einfo)) != 0);

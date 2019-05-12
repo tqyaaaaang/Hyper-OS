@@ -132,7 +132,7 @@ void process_t::set_context(const context_t &context)
 
 char process_t::vm_read(size_t addr)
 {
-	core->vm_read(addr);
+	return core->vm_read(addr);
 }
 
 void process_t::vm_write(size_t addr, char data)
