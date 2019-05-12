@@ -55,11 +55,7 @@ pte_t* page_table::get_pte_try(size_t la)
 {
 	size_t id = la / PAGE_SIZE;
 	assert(id < VPAGE_NUM);
-	if (table[id].present) {
-		return table + la;
-	} else {
-		return nullptr;
-	}
+	return table + id;
 }
 
 void page_table::free_pte(size_t id)

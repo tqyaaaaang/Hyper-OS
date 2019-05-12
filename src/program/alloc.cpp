@@ -54,6 +54,7 @@ template<typename T>
 void handle<T>::alias(const handle<T> &val)
 {
 	prog = val.get_prog();
+	assert(prog != nullptr);
 	addr = val.get_addr();
 	if (val.get_type() == type::STACK) {
 		this_type = type::ALIAS;
@@ -162,8 +163,7 @@ template<typename T>
 handle<T> program::alloc_bss()
 {
 	handle<T> ret(alloc_bss_area(sizeof(T)), this, type::BSS); 
-    add_redirect_bss(ret.get_addr_addr());
-	// insert into redirect table
+    // don't insert into redirect table
 	return ret;
 }
 

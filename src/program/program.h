@@ -9,6 +9,7 @@
 #include <string>
 
 class program;
+class process_t;
 
 namespace handle_type {
 	
@@ -81,6 +82,8 @@ public:
     program();
 	~program();
 
+	void build(); // build program
+	
 	// data/text/bss size is set during compiling ( static_init )
 	size_t get_text_size() const;               // size of text(code) segment
 	size_t get_data_size() const;               // size of data segment
@@ -95,7 +98,7 @@ public:
 	bool is_running() const;                    // check if the process is running
 	bool is_compiling() const;                  // check if the program is compiling
 	
-	virtual void static_init();                 // init static info & data
+	virtual void static_init()=0;               // init static info & data
     virtual void main() = 0;                    // program entry
 
 	void compile();                             // simulate compile
@@ -150,6 +153,8 @@ public:
 	// TODO
 	void stack_push(size_t size);
 	void stack_pop(size_t size);
+
+	process_t *cur_proc;
 	
 private:
 	size_t text_size;

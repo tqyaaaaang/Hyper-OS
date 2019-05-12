@@ -86,7 +86,6 @@ page_frame* alloc_pages(int n)
 	lock_guard<mutex> locker(alloc_mutex);
 	size_t start = alloc->malloc(n);
 	page_frame *ret = pages + start;
-	ret->paddr = 0;
 	ret->alloced = true;
 	ret->length = n;
 	return ret;
@@ -122,6 +121,8 @@ void init_pmm()
 	init_pm();
 	pages = new page_frame[PAGE_NUM];
 	alloc = new ffma(PAGE_NUM);
+	for (size_t i = 0; i < PAGE_NUM; i++)
+		pages[i].paddr = i * PAGE_SIZE;
 }
 
 /* shutdown physical memory and manager */

@@ -88,6 +88,9 @@ public:
 
 	void set_current(process_t *current);
 	process_t* get_current() const;
+
+	char vm_read(size_t addr);
+	void vm_write(size_t addr, char data);
 	
 private:
 	bool enabled_flag;

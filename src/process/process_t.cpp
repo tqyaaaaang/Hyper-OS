@@ -5,6 +5,7 @@
 
 #include "process_t.h"
 #include "../utils/panic.h"
+#include "../core/core.h"
 #include <string>
 #include <cassert>
 #include <mutex>
@@ -51,6 +52,13 @@ void process_t::set_state(state stat)
 void process_t::set_prog(program *prog)
 {
 	this->prog = prog;
+	prog->cur_proc = this;
+ 
+}
+
+program* process_t::get_prog() const
+{
+	return prog;
 }
 
 void process_t::set_name(const string &name)
@@ -111,3 +119,24 @@ CPU_core* process_t::get_core() const
 {
 	return core;
 }
+
+context_t process_t::get_context() const
+{
+	return context;
+}
+
+void process_t::set_context(const context_t &context)
+{
+	this->context = context;
+}
+
+char process_t::vm_read(size_t addr)
+{
+	core->vm_read(addr);
+}
+
+void process_t::vm_write(size_t addr, char data)
+{
+	core->vm_write(addr, data);
+}
+

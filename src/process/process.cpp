@@ -78,8 +78,9 @@ int exec_program(size_t pid, program *prog)
 		return -1;
 	}
 	process_t *proc = proc_table[pid];
-
+	
 	proc->set_prog(prog);
+	
 	proc->init_data();
 	proc->init_bss();
 	proc->init_dmm();

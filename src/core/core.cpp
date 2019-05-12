@@ -14,6 +14,7 @@ CPU_core::CPU_core ()
 	, lapic ( this )
 {
 	mmu = CPU_mmu(this);
+	current = nullptr;
 }
 
 CPU_core::~CPU_core ()
@@ -125,4 +126,14 @@ process_t* CPU_core::get_current() const
 void CPU_core::set_current(process_t* current)
 {
 	this->current = current;
+}
+
+char CPU_core::vm_read(size_t addr)
+{
+	return mmu.read(addr);
+}
+
+void CPU_core::vm_write(size_t addr, char data)
+{
+	mmu.write(addr, data);
 }

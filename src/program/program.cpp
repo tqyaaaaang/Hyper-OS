@@ -4,14 +4,21 @@
  */
 #include <cstdlib>
 #include <cassert>
+#include <string>
 #include "program.h"
+#include "../process/process.h"
 #include "../mm/pmem_info.h"
 #include "../mm/pmem.h"
 #include "../env/env.h"
 #include "../utils/panic.h"
 #include "../utils/check.h"
+#include "../logging/logging.h"
 
 using handle_type::type;
+using std::string;
+using logging::debug;
+using logging::log_endl;
+using logging::info;
 
 template class handle<int>;
 template class handle<char>;
@@ -86,8 +93,11 @@ handle<T>& handle<T>::operator = (const T &val)
 template<typename T>
 handle<T>::operator T() const
 {
+	assert(prog != nullptr);
+	debug << "QAQ " << prog->is_running() << log_endl;
 	assert(prog->is_running());
 	char *buf = new char[sizeof(T)];
+	debug << "QAQ" << log_endl;
 	for (size_t i = 0; i < sizeof(T); i++)
 		buf[i] = prog->prog_read(addr + i);
 	delete[] buf;
@@ -126,6 +136,11 @@ size_t* handle<T>::get_addr_addr()
 
 program::program()
 {
+}
+
+void program::build()
+{
+	debug << "BUILDING" << log_endl;
 	compiling = true;
 	data = nullptr;
 	name = "<default>";
@@ -133,6 +148,7 @@ program::program()
 	running = false;
 	this->static_init(); // init static info
 	compile();           // simulate compile
+	debug << "BUILDING FINISH" << log_endl;
 }
 
 program::~program()
@@ -219,17 +235,25 @@ void program::do_redirect()
 	redr_table.clear();
 }
 
-void program::static_init()
-{
-	
-}
-
 char program::prog_read(size_t addr)
 {
-	return pm::read(addr);
+	assert(cur_proc != nullptr);
+	info << "prog read : addr = " << addr << log_endl;
+	return cur_proc->vm_read(addr);
 }
 
 void program::prog_write(size_t addr, char data)
 {
-	return pm::write(addr, data);
+	assert(cur_proc != nullptr);
+	return cur_proc->vm_write(addr, data);
+}
+
+void program::set_name(const string &name)
+{
+	this->name = name;
+}
+
+string program::get_name() const
+{
+	return name;
 }

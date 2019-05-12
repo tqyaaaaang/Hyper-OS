@@ -9,6 +9,7 @@
 #include "../context/context.h"
 #include <cassert>
 #include "../mm/pmem.h"
+#include "../logging/logging.h"
 
 /**
  * alloc page table for @this
@@ -38,8 +39,10 @@ void process_t::init_data()
 		pte.access = pte.dirty = false;
 		pte.write = pte.user = true;
 		pte.paddr = pf->paddr;
+		pt->set_pte(i, pte);
 		pf->ref();
 		for (size_t j = 0; j < PAGE_SIZE && id < data_size; j++) {
+			logging::info << " PM INIT : " << pf->paddr + j << " " << prog->get_data(id) << logging::log_endl;
 			pm::write(pf->paddr + j, prog->get_data(id));
 			id++;
 		}
@@ -52,6 +55,7 @@ void process_t::init_data()
 void process_t::init_bss()
 {
 	size_t bss_size = prog->get_bss_size();
+	size_t start = prog->get_data_size() / PAGE_SIZE;
 	assert(bss_size % PAGE_SIZE == 0);
 	assert(prog != nullptr);
 	size_t page_number = bss_size / PAGE_SIZE;
@@ -65,8 +69,10 @@ void process_t::init_bss()
 		pte.access = pte.dirty = false;
 		pte.write = pte.user = true;
 		pte.paddr = pf->paddr;
+		pt->set_pte(start + i, pte);
 		pf->ref();
 		for (size_t j = 0; j < PAGE_SIZE; j++) {
+			logging::info << " PM INIT : " << pf->paddr + j << " " << 0 << logging::log_endl;
 			pm::write(pf->paddr + j, 0);
 		}
 	}

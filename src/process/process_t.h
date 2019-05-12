@@ -40,6 +40,8 @@ public:
 	std::string get_name() const;
 
 	void set_prog(program *prog);
+	program* get_prog() const;
+	
 	void exec(std::promise<int> &fin_code);
 
 	context_t get_context() const;
@@ -65,6 +67,9 @@ public:
 	
 	void set_resched(bool resch);
 	bool get_resched() const;
+
+	char vm_read(size_t addr);
+	void vm_write(size_t addr, char data);
 	
 private:
 

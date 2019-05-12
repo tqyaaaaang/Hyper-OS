@@ -6,6 +6,7 @@
 #include "schedule.h"
 #include "../process/process_t.h"
 #include "../core/cpus.h"
+#include "../logging/logging.h"
 #include <list>
 #include <mutex>
 #include <cassert>
@@ -13,6 +14,9 @@
 using std::mutex;
 using std::lock_guard;
 using std::list;
+using logging::debug;
+using logging::log_endl;
+
 typedef process_t::state state;
 
 struct state_list_t {
@@ -93,9 +97,32 @@ void sched_set_runable(process_t *proc)
 	case state::RUNABLE:
 		break;
 	}
+	proc->get_prog()->run();
 }
 
-void schedule(int core_id)
+void schedule(int id)
 {
+	process_t *proc = cores[id].get_current();
+	debug << "SCH " << id << " " << (proc == nullptr) << log_endl;
+	if (proc == nullptr || proc->get_resched()) {
+		if (proc != nullptr) {
+			proc->set_resched(0);
+			proc->set_slice(2);
+			state_list[id].running.erase(proc->linker);
+			state_list[id].running.push_front(proc);
+			proc->linker = state_list[id].running.begin();
+		}
+
+		// next proc
+		process_t *nxt_proc = state_list[id].running.back();
+		if (nxt_proc != nullptr) {
+			cores[id].set_current(nxt_proc);
+			cores[id].set_context(nxt_proc->get_context());
+			// awake
+			nxt_proc->cond_var.notify_one();
+		}
+
+	}
+	debug << "SCH " << id << " finished" << log_endl;
 	
 }

@@ -16,6 +16,10 @@
 #include "../status/status.h"
 #include "../mm/pmem.h"
 #include "../core/core.h"
+#include "../logging/logging.h"
+
+using logging::info;
+using logging::log_endl;
 
 CPU_mmu::CPU_mmu()
 {}
@@ -30,10 +34,14 @@ CPU_mmu::CPU_mmu(CPU_core *core)
 
 char CPU_mmu::read(size_t la)
 {
+	info << "MMU READ " << la << log_endl;
 	page_table *pg = core->get_context().get_page_table();
+	info << "QWQ" << log_endl;
 	pte_t *pte = pg->get_pte_try(la);
+	info << "QWQ" << log_endl;
 	if (check(la, pte, false)) { // check passed
-		return read(la);
+	    info << "MMU READ at pm : " << pte->paddr + (la % PAGE_SIZE) << log_endl;
+		return pm::read(pte->paddr + (la % PAGE_SIZE));
 	}
 	return 0;
 }
@@ -43,7 +51,7 @@ void CPU_mmu::write(size_t la, char c)
 	page_table *pg = core->get_context().get_page_table();
 	pte_t *pte = pg->get_pte_try(la);
 	if (check(la, pte, true)) { // check passed
-		write(la, c);
+		pm::write(pte->paddr + (la % PAGE_SIZE), c);
 	}
 }
 
@@ -54,17 +62,25 @@ typedef intr_pagefault_t::error_info error_info;
 bool CPU_mmu::check(size_t la, pte_t *pte, bool write)
 {
 	int info = 0;
+	bool bug = false;
+	
+	logging::info << "CHECK : " << info << " " << bug << log_endl;
 	if (!pte->user) {
 		info |= intr_pagefault_t::E_SUPER;
+		bug = true;
 	}
 	if (!pte->write && write) {
 		info |= intr_pagefault_t::E_WRITE;
+		bug = true;
 	}
 	if (!pte->present) {
 		info |= intr_pagefault_t::E_PRESENT;
 	}
-	error_info einfo(la, info);
-	while (interrupt(new intr_pagefault_t(einfo)) != 0);
-	// todo check kill
+	logging::info << "CHECK : " << info << " " << bug << log_endl;
+	if (bug) {
+		error_info einfo(la, info);
+		while (interrupt(new intr_pagefault_t(einfo)) != 0);
+		// todo check kill
+	}
 	return true;
 }

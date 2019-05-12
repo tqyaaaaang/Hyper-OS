@@ -10,6 +10,7 @@
 #include "../logging/logging.h"
 #include "../core/core.h"
 #include "../process/process_t.h"
+#include "../schedule/schedule.h"
 
 /**
  * schedule process
@@ -17,11 +18,7 @@
  */
 static void trap_exit()
 {
-	process_t *proc = status.get_core()->get_current();
-	if (proc != nullptr && proc->get_resched()) {
-		proc->set_resched(false);
-		//	proc->set_
-	}
+	schedule(status.get_core()->get_core_id());
 }
 
 /**
