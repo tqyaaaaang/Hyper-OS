@@ -223,7 +223,7 @@ void program::free_heap(const handle<T> &ptr)
 /* temp */
 size_t program::heap_malloc(size_t len)
 {
-	
+	return 0;
 }
 
 /* temp */
