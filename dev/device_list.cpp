@@ -10,5 +10,5 @@
 
 std::vector < device_t * > device_list ( {
 	new dev_null ( 0 ),
-	new dev_clock ( 0, std::chrono::milliseconds ( 1000 ) )
+	new dev_clock ( 0, std::chrono::milliseconds ( 100 ) )
 } );
