@@ -36,7 +36,7 @@ public:
 		while (1) {
 			tick = tick + 1;
 			if (tick % 100000 == 0) {
-				info << "tick from " << this_id << log_endl;
+				info << "tick " << tick << " from " << this_id << log_endl;
 			}
 		}
 	}
