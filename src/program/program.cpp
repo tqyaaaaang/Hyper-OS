@@ -40,15 +40,13 @@ void tail_check(program *prog)
 	assert(proc->get_core() == status.get_core());
 	if (status.get_core()->get_intr()) {
 		// interrupt occurs
-		info << "proc " << proc->get_name() << " release cpu because interrupt" << log_endl;
+		info << "proc " << proc->get_name() << " release cpu because interrupt, => " << status.get_core()->get_intr() << log_endl;
 		unique_lock<mutex> lk (proc->cond_mutex);
 		status.get_core()->release();
 		proc->cond_var.wait(lk);
 		status.get_core()->acquire();
-		
-		info << "proc " << proc->get_name() << " return from interrupt" << log_endl;
 		// release cpu & wait in condition variable
-	}
+	} 
 }
 
 template<typename T>

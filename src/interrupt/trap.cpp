@@ -19,7 +19,6 @@
 static void trap_exit()
 {
 	schedule(status.get_core()->get_core_id());
-	status.get_core ()->release ();
 }
 
 /**
@@ -39,14 +38,19 @@ void interrupt_trap_entry ( status_t thread_status, interrupt_t * current_interr
 
 	if (cur != nullptr) {
 		//make sure current proc slept successfully
-		cur->cond_mutex.lock();
-		cur->cond_mutex.unlock();
-	
+
 		status.get_core ()->acquire ();
-		logging::info << "CPU #" << status.get_core()->get_core_id() << " trap into kernel mode" << logging::log_endl;
+		
+		cur->cond_mutex.lock();
+
+		logging::info << "CPU #" << status.get_core()->get_core_id() << " trap into kernel mode of " << cur->get_name()  << logging::log_endl;
+		
+		cur->cond_mutex.unlock();
+		
 		current_interrupt->process ();
 		status.get_core ()->unmark_intr();
 		trap_exit();
+		status.get_core ()->release ();
 	}
 	
 	status.get_core ()->get_lapic ().send_end_of_interrupt ();

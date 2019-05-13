@@ -87,7 +87,7 @@ public:
 	/**
 	 * Get Interrupt Bit
 	 */
-	bool get_intr();
+	int get_intr();
 
 	
 	void set_core_id ( int id );   // Set the CPU core id
@@ -122,6 +122,6 @@ private:
 	context_t context;
 	process_t *current;
 
-	bool intr_bit;
+	int intr_bit;
 	std::mutex intr_mutex;
 };

@@ -42,7 +42,6 @@ void process_t::init_data()
 		pt->set_pte(i, pte);
 		pf->ref();
 		for (size_t j = 0; j < PAGE_SIZE && id < data_size; j++) {
-			logging::info << " PM INIT : " << pf->paddr + j << " " << prog->get_data(id) << logging::log_endl;
 			pm::write(pf->paddr + j, prog->get_data(id));
 			id++;
 		}
@@ -72,7 +71,6 @@ void process_t::init_bss()
 		pt->set_pte(start + i, pte);
 		pf->ref();
 		for (size_t j = 0; j < PAGE_SIZE; j++) {
-			logging::info << " PM INIT : " << pf->paddr + j << " " << 0 << logging::log_endl;
 			pm::write(pf->paddr + j, 0);
 		}
 	}

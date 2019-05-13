@@ -19,7 +19,7 @@ CPU_core::CPU_core ()
 {
 	mmu = CPU_mmu(this);
 	current = nullptr;
-	intr_bit = false;
+	intr_bit = 0;
 }
 
 CPU_core::~CPU_core ()
@@ -146,18 +146,18 @@ void CPU_core::vm_write(size_t addr, char data)
 void CPU_core::mark_intr()
 {
 	lock_guard<mutex> lk(intr_mutex);
-	intr_bit = true;
+	intr_bit++;
 }
 
 void CPU_core::unmark_intr()
 {
 	lock_guard<mutex> lk(intr_mutex);
-	intr_bit = false;
+	intr_bit--;
 }
 
-bool CPU_core::get_intr()
+int CPU_core::get_intr()
 {
 	lock_guard<mutex> lk(intr_mutex);
-    bool d = intr_bit;
+    int d = intr_bit;
 	return d;
 }
