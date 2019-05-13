@@ -73,6 +73,23 @@ public:
 	 */
 	bool is_interrupt_enabled () const;
 
+	/**
+	 * Mark Interrupt Bit
+	 * Process get mark and yeild in tail-check
+	 */
+	void mark_intr();
+
+	/**
+	 * Unmark Interrupt Bit
+	 */
+	void unmark_intr();
+
+	/**
+	 * Get Interrupt Bit
+	 */
+	bool get_intr();
+
+	
 	void set_core_id ( int id );   // Set the CPU core id
 	int get_core_id () const;   // Get the CPU core id
 
@@ -104,4 +121,7 @@ private:
 	CPU_mmu mmu;
 	context_t context;
 	process_t *current;
+
+	bool intr_bit;
+	std::mutex intr_mutex;
 };

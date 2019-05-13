@@ -7,6 +7,10 @@
 #include "../logging/logging.h"
 #include <cassert>
 #include "../process/process_t.h"
+#include <mutex>
+
+using std::mutex;
+using std::lock_guard;
 
 CPU_core::CPU_core ()
 	: enabled_flag ( false )
@@ -15,6 +19,7 @@ CPU_core::CPU_core ()
 {
 	mmu = CPU_mmu(this);
 	current = nullptr;
+	intr_bit = false;
 }
 
 CPU_core::~CPU_core ()
@@ -136,4 +141,23 @@ char CPU_core::vm_read(size_t addr)
 void CPU_core::vm_write(size_t addr, char data)
 {
 	mmu.write(addr, data);
+}
+
+void CPU_core::mark_intr()
+{
+	lock_guard<mutex> lk(intr_mutex);
+	intr_bit = true;
+}
+
+void CPU_core::unmark_intr()
+{
+	lock_guard<mutex> lk(intr_mutex);
+	intr_bit = false;
+}
+
+bool CPU_core::get_intr()
+{
+	lock_guard<mutex> lk(intr_mutex);
+    bool d = intr_bit;
+	return d;
 }

@@ -3,6 +3,8 @@
 #include "../src/process/process.h"
 #include "../src/logging/logging.h"
 #include "../src/schedule/schedule.h"
+#include "../src/status/status.h"
+#include "../src/core/core.h"
 #include <cassert>
 
 using logging::info;
@@ -34,7 +36,7 @@ public:
 
 	virtual void main()
 	{
-		info << "QWQ !! " << log_endl;
+		info << "Running on Core : " << status.get_core()->get_core_id() << log_endl;
 		for (size_t i = 0; i < 12; i++)
 			info << (char)str[i];
 		info << log_endl;
@@ -45,6 +47,9 @@ public:
 			info << (char)str[i];
 		info << log_endl;
 		info << (int)ptr << log_endl;
+		while (1) {
+			ptr = ptr + 1;
+		}
 	}
 	
 };

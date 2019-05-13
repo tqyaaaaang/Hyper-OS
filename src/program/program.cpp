@@ -5,8 +5,12 @@
 #include <cstdlib>
 #include <cassert>
 #include <string>
+#include <mutex>
 #include "program.h"
+#include "../core/core.h"
+#include "../process/process_t.h"
 #include "../process/process.h"
+#include "../status/status.h"
 #include "../mm/pmem_info.h"
 #include "../mm/pmem.h"
 #include "../env/env.h"
@@ -14,6 +18,8 @@
 #include "../utils/check.h"
 #include "../logging/logging.h"
 
+using std::mutex;
+using std::unique_lock;
 using handle_type::type;
 using std::string;
 using logging::debug;
@@ -22,6 +28,28 @@ using logging::info;
 
 template class handle<int>;
 template class handle<char>;
+
+/**
+ * tail check
+ * if an interrupt occurs, trap into kernel mode
+ */
+void tail_check(program *prog)
+{
+	process_t *proc = prog->cur_proc;
+	assert(proc != nullptr);
+	assert(proc->get_core() == status.get_core());
+	if (status.get_core()->get_intr()) {
+		// interrupt occurs
+		info << "proc " << proc->get_name() << " release cpu because interrupt" << log_endl;
+		unique_lock<mutex> lk (proc->cond_mutex);
+		status.get_core()->release();
+		proc->cond_var.wait(lk);
+		status.get_core()->acquire();
+		
+		info << "proc " << proc->get_name() << " return from interrupt" << log_endl;
+		// release cpu & wait in condition variable
+	}
+}
 
 template<typename T>
 handle<T>::handle()
@@ -54,7 +82,7 @@ handle<T>::~handle()
 		return;
 	/* if (this_type == type::STACK) {
 		prog->stack_pop(sizeof(T));
-		}*/
+    }*/
 }
 
 /**
@@ -69,6 +97,7 @@ handle<T>& handle<T>::operator = (const handle<T> &val)
 	for (size_t i = 0; i < sizeof(T); i++)
 		prog->prog_write(addr + i,
 						 prog->prog_read(val.get_addr() + i));
+	tail_check(this->prog);
 	return *this;
 }
 
@@ -83,6 +112,7 @@ handle<T>& handle<T>::operator = (const T &val)
 	const char* buf = (const char*)(&val);
 	for (size_t i = 0; i < sizeof(T); i++)
 		prog->prog_write(addr + i, buf[i]);
+	tail_check(this->prog);
 	return *this;
 }
 
@@ -100,6 +130,7 @@ handle<T>::operator T() const
 		buf[i] = prog->prog_read(addr + i);
 	T buf_T = *((T*) buf);
 	delete[] buf;
+	tail_check(this->prog);
 	return buf_T;
 }
 
@@ -111,6 +142,7 @@ handle<T>::operator T() const
 template<typename T>
 handle<T> handle<T>::operator [] (size_t id)
 {
+	tail_check(this->prog);
 	return handle<T>(addr + sizeof(T) * id, prog, this_type);
 }
 

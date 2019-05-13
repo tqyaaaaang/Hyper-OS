@@ -13,6 +13,7 @@
 #include <future>
 #include "../schedule/schedule.h"
 #include "../status/status.h"
+#include "../core/core.h"
 
 using std::promise;
 using std::future;
@@ -28,6 +29,7 @@ static mutex pid_mutex;
 static void proc_main(process_t *proc, promise<int> &fin_code)
 {
 	status.set_name(proc->get_name());
+	status.set_core(proc->get_core());
 	proc->exec(fin_code);
 }
 

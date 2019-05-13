@@ -77,7 +77,9 @@ void process_t::exec(promise<int> &fin_code)
     unique_lock<mutex> lk(this->cond_mutex);
 	fin_code.set_value(0);
 	this->cond_var.wait(lk);
+	core->acquire();
 	this->prog->main();
+	core->release();
 }
 
 void process_t::add_chl(size_t pid)

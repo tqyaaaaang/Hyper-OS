@@ -118,6 +118,10 @@ void schedule(int id)
 		if (nxt_proc != nullptr) {
 			cores[id].set_current(nxt_proc);
 			cores[id].set_context(nxt_proc->get_context());
+			nxt_proc->cond_mutex.lock();
+			nxt_proc->cond_mutex.unlock();
+			// make sure nxt_proc sleep sucessfully
+
 			// awake
 			nxt_proc->cond_var.notify_one();
 		}
