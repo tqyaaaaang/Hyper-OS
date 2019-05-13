@@ -43,7 +43,7 @@ void interrupt_trap_entry ( status_t thread_status, interrupt_t * current_interr
 		
 		cur->cond_mutex.lock();
 
-		logging::info << "CPU #" << status.get_core()->get_core_id() << " trap into kernel mode of " << cur->get_name()  << logging::log_endl;
+		logging::debug << "CPU #" << status.get_core()->get_core_id() << " trap into kernel mode of " << cur->get_name()  << logging::log_endl;
 		
 		cur->cond_mutex.unlock();
 		
