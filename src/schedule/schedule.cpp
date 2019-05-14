@@ -103,11 +103,13 @@ void sched_set_runable(process_t *proc)
 
 void schedule(int id)
 {
+	
 	process_t *proc = cores[id].get_current();
+	
 	if (proc == nullptr || proc->get_resched()) {
 		if (proc != nullptr) {
 			proc->set_resched(0);
-			proc->set_slice(2);
+			proc->set_slice(1);
 			state_list[id].running.erase(proc->linker);
 			state_list[id].running.push_front(proc);
 			proc->linker = state_list[id].running.begin();
@@ -128,5 +130,6 @@ void schedule(int id)
 		}
 	} else {
 	    proc->cond_var.notify_one();
-	}	
+	}
+
 }

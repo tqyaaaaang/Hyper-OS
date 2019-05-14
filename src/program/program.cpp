@@ -3,6 +3,7 @@
  * abstract base class of all user-mode programs
  */
 #include <cstdlib>
+#include <ctime>
 #include <cassert>
 #include <string>
 #include <mutex>
@@ -111,7 +112,7 @@ handle<T>& handle<T>::operator = (const T &val)
 	const char* buf = (const char*)(&val);
 	for (size_t i = 0; i < sizeof(T); i++)
 		prog->prog_write(addr + i, buf[i]);
-	tail_check(this->prog);
+	tail_check(this->prog); 
 	return *this;
 }
 

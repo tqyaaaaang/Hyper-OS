@@ -6,9 +6,12 @@
 #include "../src/status/status.h"
 #include "../src/core/core.h"
 #include <cassert>
+#include <iostream>
 
 using logging::info;
 using logging::log_endl;
+using std::cout;
+using std::endl;
 
 static int id = 0;
 
@@ -22,6 +25,7 @@ public:
 	tick_prog()
 	{
 		this_id = id++;
+		info << "build " << id << log_endl;
 		build();
 	}
 	
@@ -33,10 +37,12 @@ public:
 
 	virtual void main()
 	{
+		cout << this_id << " start." << endl;
 		while (1) {
 			tick = tick + 1;
-			if (tick % 100000 == 0) {
-				info << "tick " << tick << " from " << this_id << log_endl;
+			if (tick % 10000 == 0) {
+				int tmp = tick;
+				cout << "tick " << tmp << " from " << this_id << endl;
 			}
 		}
 	}
@@ -45,11 +51,20 @@ public:
 void test_multiproc()
 {
 	info << "start multi process test" << log_endl;
-	program *prox = new tick_prog;
-	program *proy = new tick_prog;
-	size_t x = create_process(), y = create_process();
-	int ok = exec_program(x, prox);
-	ok = exec_program(y, proy);
+	program *prox[10];
+	for (int i = 0; i < 10; i++)
+		prox[i] = new tick_prog;
+	size_t x[10];
+	for (int i = 0; i < 10; i++) {
+		x[i] = create_process();
+	}
+	for (int i = 0; i < 10; i++)
+		assert(prox[i]->get_data_size() == 0);
+	for (int i = 0; i < 10; i++) {
+		int ok = exec_program(x[i], prox[i]);
+	}
 	schedule(0);
-	while (1);
+	while (1) {
+	    std::this_thread::yield();
+	}
 }

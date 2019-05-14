@@ -84,7 +84,7 @@ int exec_program(size_t pid, program *prog)
 	
 	proc->set_prog(prog);
 	proc->set_name(prog->get_name());
-	
+
 	proc->init_data();
 	proc->init_bss();
 	proc->init_dmm();
