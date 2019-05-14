@@ -16,6 +16,7 @@ using std::lock_guard;
 using std::list;
 using logging::debug;
 using logging::log_endl;
+using logging::info;
 
 typedef process_t::state state;
 
@@ -103,7 +104,6 @@ void sched_set_runable(process_t *proc)
 void schedule(int id)
 {
 	process_t *proc = cores[id].get_current();
-	debug << "SCH " << id << " " << (proc == nullptr) << log_endl;
 	if (proc == nullptr || proc->get_resched()) {
 		if (proc != nullptr) {
 			proc->set_resched(0);
@@ -118,11 +118,15 @@ void schedule(int id)
 		if (nxt_proc != nullptr) {
 			cores[id].set_current(nxt_proc);
 			cores[id].set_context(nxt_proc->get_context());
+
+			nxt_proc->cond_mutex.lock();
+			nxt_proc->cond_mutex.unlock();
+			// make sure nxt_proc sleep sucessfully
+
 			// awake
 			nxt_proc->cond_var.notify_one();
 		}
-
-	}
-	debug << "SCH " << id << " finished" << log_endl;
-	
+	} else {
+	    proc->cond_var.notify_one();
+	}	
 }
