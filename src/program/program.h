@@ -144,8 +144,8 @@ public:
 	// free continious memory start from ptr 
 	
 	// temp
-	char prog_read(size_t addr);
-	void prog_write(size_t addr, char data);
+	void prog_read(char *buf, size_t la_begin, size_t la_end);
+	void prog_write(size_t addr, const char *buf_begin, const char *buf_end);
 
 	char get_data(size_t id) const;
 

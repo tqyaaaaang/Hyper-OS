@@ -133,13 +133,13 @@ void process_t::set_context(const context_t &context)
 	this->context = context;
 }
 
-char process_t::vm_read(size_t addr)
+void process_t::vm_read(char *buf, size_t la_begin, size_t la_end)
 {
-	return core->vm_read(addr);
+	core->vm_read(buf, la_begin, la_end);
 }
 
-void process_t::vm_write(size_t addr, char data)
+void process_t::vm_write(size_t addr, const char *buf_begin, const char *buf_end)
 {
-	core->vm_write(addr, data);
+	core->vm_write(addr, buf_begin, buf_end);
 }
 

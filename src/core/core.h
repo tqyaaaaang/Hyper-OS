@@ -105,9 +105,9 @@ public:
 
 	void set_current(process_t *current);
 	process_t* get_current() const;
-
-	char vm_read(size_t addr);
-	void vm_write(size_t addr, char data);
+	
+	void vm_read(char *buf, size_t la_begin, size_t la_end);
+	void vm_write(size_t addr, const char *buf_begin, const char *buf_end);	
 	
 private:
 	bool enabled_flag;

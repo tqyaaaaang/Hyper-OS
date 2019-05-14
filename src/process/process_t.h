@@ -68,10 +68,10 @@ public:
 	void set_resched(bool resch);
 	bool get_resched() const;
 
-	char vm_read(size_t addr);
-	void vm_write(size_t addr, char data);
-	
-private:
+	void vm_read(char *buf, size_t la_begin, size_t la_end);
+	void vm_write(size_t addr, const char *buf_begin, const char *buf_end);	
+
+ private:
 
 	size_t pid;
 	std::string name;

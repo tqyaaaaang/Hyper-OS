@@ -94,10 +94,7 @@ template<typename T>
 handle<T>& handle<T>::operator = (const handle<T> &val)
 {
 	assert(prog->is_running());
-	for (size_t i = 0; i < sizeof(T); i++)
-		prog->prog_write(addr + i,
-						 prog->prog_read(val.get_addr() + i));
-	tail_check(this->prog);
+	*this = (T)val;
 	return *this;
 }
 
@@ -110,8 +107,7 @@ handle<T>& handle<T>::operator = (const T &val)
 {
 	assert(prog->is_running());
 	const char* buf = (const char*)(&val);
-	for (size_t i = 0; i < sizeof(T); i++)
-		prog->prog_write(addr + i, buf[i]);
+	prog->prog_write(addr, buf, buf + sizeof(T));
 	tail_check(this->prog); 
 	return *this;
 }
@@ -126,8 +122,7 @@ handle<T>::operator T() const
 	assert(prog != nullptr);
 	assert(prog->is_running());
 	char *buf = new char[sizeof(T)];
-	for (size_t i = 0; i < sizeof(T); i++)
-		buf[i] = prog->prog_read(addr + i);
+	prog->prog_read(buf, addr, addr + sizeof(T));
 	T buf_T = *((T*) buf);
 	delete[] buf;
 	tail_check(this->prog);
@@ -265,16 +260,16 @@ void program::do_redirect()
 	redr_table.clear();
 }
 
-char program::prog_read(size_t addr)
+void program::prog_read(char *buf, size_t la_begin, size_t la_end)
 {
 	assert(cur_proc != nullptr);
-	return cur_proc->vm_read(addr);
+	return cur_proc->vm_read(buf, la_begin, la_end);
 }
 
-void program::prog_write(size_t addr, char data)
+void program::prog_write(size_t addr, const char *buf_begin, const char *buf_end)
 {
 	assert(cur_proc != nullptr);
-	cur_proc->vm_write(addr, data);
+	cur_proc->vm_write(addr, buf_begin, buf_end);
 }
 
 void program::set_name(const string &name)

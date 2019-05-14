@@ -133,14 +133,18 @@ void CPU_core::set_current(process_t* current)
 	this->current = current;
 }
 
-char CPU_core::vm_read(size_t addr)
+void CPU_core::vm_read(char *buf, size_t la_begin, size_t la_end)
 {
-	return mmu.read(addr);
+	for (size_t la = la_begin; la != la_end; la++, buf++) {
+		*buf = mmu.read(la);
+	}
 }
 
-void CPU_core::vm_write(size_t addr, char data)
+void CPU_core::vm_write(size_t addr, const char *buf_begin, const char *buf_end)	
 {
-	mmu.write(addr, data);
+	for (const char *p = buf_begin; p != buf_end; p++, addr++) {
+		mmu.write(addr, *p);
+	}
 }
 
 void CPU_core::mark_intr()

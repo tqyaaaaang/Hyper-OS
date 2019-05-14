@@ -38,13 +38,14 @@ public:
 	virtual void main()
 	{
 		cout << this_id << " start." << endl;
-		while (1) {
+		while (tick < 100000) {
 			tick = tick + 1;
 			if (tick % 10000 == 0) {
 				int tmp = tick;
 				cout << "tick " << tmp << " from " << this_id << endl;
 			}
 		}
+		cout << "tick " << this_id << " finished." << endl;
 	}
 };
 
