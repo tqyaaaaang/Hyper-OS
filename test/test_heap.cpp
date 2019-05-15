@@ -22,7 +22,6 @@ class merge_sort : public program {
 private:
 
 	handle<int> arr;
-	handle<int> tmp;
 	int n;
 
 	void merge_sort_fun(handle<int> arr, handle<int> L, handle<int> R)
@@ -33,6 +32,8 @@ private:
 			return;
 		} else {
 			handle<int> mid = alloc_stack<int>();
+			handle<int> tmp = alloc_heap<int>(R - L + 1);
+ 
 			mid = (L+R)>>1;
 			merge_sort_fun(arr, (int)L, (int)mid);
 			merge_sort_fun(arr, (int)mid+1, (int)R);
@@ -62,7 +63,8 @@ private:
 			for (handle<int> i = 0; i < top; i = i + 1) {
 				arr[L + i] = (int)(tmp[i]);
 			}
-		}		
+			free_heap(tmp);
+		}
 	}
 	
 public:
@@ -77,7 +79,6 @@ public:
 		set_name("qwq");
 		n = 10;
 		arr = alloc_static<int>(n);
-		tmp = alloc_bss<int>(n);
 		size_t a = 31, b = 19260817, x = 0;
 		for (size_t i = 0; i < n; i++) {
 			info << (int)x << log_endl;
