@@ -58,13 +58,16 @@ void handle<T>::alias(const handle<T> &val)
 	addr = val.get_addr();
 	if (val.get_type() == type::STACK) {
 		this_type = type::ALIAS;
+	} else if (val.get_type() == type::STACK_UNINIT) {
+		assert(prog->is_running());
+		this_type = type::STACK;
 	} else {
 		this_type = val.get_type();
 	}
 	if (prog->is_compiling() && this_type == type::BSS) {
 		prog->add_redirect_bss(&(addr));
+		// need to be redirect
 	}
-	// need to be redirect
 }
 
 /**
@@ -220,21 +223,27 @@ void program::free_heap(const handle<T> &ptr)
     heap_free(ptr.get_addr());
 }
 
-/* temp */
-size_t program::heap_malloc(size_t len)
+
+/**
+ * alloc an object of type T in stack
+ * this object will be auto-destroyed when the handle is destroyed
+ * @return : the handle of the first object
+ */
+template<typename T>
+handle<T> program::alloc_stack()
 {
-	return 0;
+	return handle<T>(stack_push(sizeof(T)), this, type::STACK_UNINIT);
 }
 
-/* temp */
-void program::heap_free(size_t ptr)
-{
-	
-}
+/* ---------------------------------------------------- */
 
-template handle<int> program::alloc_static<int>();
-template handle<int> program::alloc_bss<int>();
-template handle<int> program::alloc_heap<int>();
-template handle<char> program::alloc_static<char>();
-template handle<char> program::alloc_bss<char>();
-template handle<char> program::alloc_heap<char>();
+#define INST(TYPE) template handle<TYPE> program::alloc_static<TYPE>();	\
+	template handle<TYPE> program::alloc_bss<TYPE>(); 					\
+	template handle<TYPE> program::alloc_heap<TYPE>();					\
+	template handle<TYPE> program::alloc_static<TYPE>(size_t);			\
+	template handle<TYPE> program::alloc_bss<TYPE>(size_t);				\
+	template handle<TYPE> program::alloc_heap<TYPE>(size_t);			\
+	template handle<TYPE> program::alloc_stack<TYPE>();					
+
+INST(int)
+INST(char)

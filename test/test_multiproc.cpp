@@ -18,6 +18,7 @@ static int id = 0;
 class tick_prog : public program {
 private:
 	handle<int> tick;
+	handle<char> str;
 	int this_id;
 	
 public:
@@ -33,15 +34,25 @@ public:
 	{
 		set_name("tick-prog");
 		tick.alias(alloc_bss<int>());
+		str.alias(alloc_static<char>(12));
+		char s[] = "hello world";
+		for (int i = 0; i < 11; i++)
+			str[i].modify_in_compile(s[i]);
 	}
 
 	virtual void main()
 	{
 		cout << this_id << " start." << endl;
+		for (int i = 0; i < 11; i++)
+			cout << str[i];
+		cout << endl;
 		while (tick < 100000) {
 			tick = tick + 1;
 			if (tick % 10000 == 0) {
-				int tmp = tick;
+				handle<int> st;
+				st.alias(alloc_stack<int>());
+				st = tick + 1;
+				int tmp = st;
 				cout << "tick " << tmp << " from " << this_id << endl;
 			}
 		}
@@ -57,10 +68,9 @@ void test_multiproc()
 		prox[i] = new tick_prog;
 	size_t x[10];
 	for (int i = 0; i < 10; i++) {
+		info << "cr " << i << log_endl;
 		x[i] = create_process();
 	}
-	for (int i = 0; i < 10; i++)
-		assert(prox[i]->get_data_size() == 0);
 	for (int i = 0; i < 10; i++) {
 		int ok = exec_program(x[i], prox[i]);
 	}

@@ -14,11 +14,22 @@ class process_t;
 namespace handle_type {
 	
 	enum type {
+		/* in .data*/
 		STATIC,
+		/* in .bss*/
 		BSS,
+		/* in stack, object will be auto-free */
 		STACK,
+		/* in heap */
 		HEAP,
-		ALIAS
+		/* alias of a stack object */ 
+		ALIAS,
+		/* alloc_stack<T> will return a stack_uninit object
+		 * stack_uninit handle won't be free when destory  
+		 */
+		STACK_UNINIT,
+		/* null pointer */
+		NIL
 	};
 
 }
@@ -151,8 +162,8 @@ public:
 
 	// stack operation
 	// TODO
-	void stack_push(size_t size);
-	void stack_pop(size_t size);
+	size_t stack_push(size_t size);
+	size_t stack_pop(size_t size);
 
 	process_t *cur_proc;
 	
@@ -179,6 +190,8 @@ private:
 	void do_redirect();
 
 	std::vector<size_t*> redr_table;
+
+	
 };
 
 extern handle<int> handle_int;

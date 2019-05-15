@@ -21,12 +21,15 @@ process_t::process_t()
 	prog = nullptr;
 	name = "<default>";
 	ptr_par = 0;
+	heap_allocator = nullptr;
 }
 
 process_t::~process_t()
 {
 	if (prog != nullptr)
 		delete prog;
+	if (heap_allocator != nullptr)
+		delete heap_allocator;
 }
 
 void process_t::set_pid(size_t pid)

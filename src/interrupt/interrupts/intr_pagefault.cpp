@@ -57,6 +57,7 @@ intr_pagefault_t::intr_pagefault_t(const error_info &info)
 void intr_pagefault_t::process()
 {
 	logging::info << "ISR of #PF started" << logging::log_endl;
+	
 	logging::info << "ISR of #PF finished" << logging::log_endl;
 }
 

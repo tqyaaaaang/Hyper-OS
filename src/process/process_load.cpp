@@ -16,7 +16,11 @@
  */
 void process_t::init_context()
 {
+	logging::info << "init context." << logging::log_endl;
 	context.set_page_table(new page_table);
+	context.esp = VM_SIZE;
+	context.brk = prog->get_data_size() + prog->get_bss_size();
+	logging::info << "init context finish" << logging::log_endl;
 }
 
 /**
@@ -74,13 +78,5 @@ void process_t::init_bss()
 			pm::write(pf->paddr + j, 0);
 		}
 	}
-}
-
-/**
- * init dynamic memory manager
- */
-void process_t::init_dmm()
-{
-	
 }
 

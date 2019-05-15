@@ -14,6 +14,7 @@
 #include <future>
 #include "../context/context.h"
 #include "../program/program.h"
+#include "../utils/allocator/allocator.h"
 
 class CPU_core;
 
@@ -71,7 +72,12 @@ public:
 	void vm_read(char *buf, size_t la_begin, size_t la_end);
 	void vm_write(size_t addr, const char *buf_begin, const char *buf_end);	
 
- private:
+	size_t heap_malloc(size_t len);
+	void heap_free(size_t ptr);
+	size_t stack_push(size_t size);
+	size_t stack_pop(size_t size);
+	
+private:
 
 	size_t pid;
 	std::string name;
@@ -86,4 +92,6 @@ public:
 	std::set<size_t> ptr_chl;
 
 	CPU_core *core;
+	allocator *heap_allocator;
+	
 };

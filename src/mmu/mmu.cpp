@@ -36,19 +36,16 @@ char CPU_mmu::read(size_t la)
 {
 	page_table *pg = core->get_context().get_page_table();
 	pte_t *pte = pg->get_pte_try(la);
-	if (check(la, pte, false)) { // check passed
-		return pm::read(pte->paddr + (la % PAGE_SIZE));
-	}
-	return 0;
+	while (!check(la, pte, false)); // check passed
+	return pm::read(pte->paddr + (la % PAGE_SIZE));
 }
 
 void CPU_mmu::write(size_t la, char c)
 {
 	page_table *pg = core->get_context().get_page_table();
 	pte_t *pte = pg->get_pte_try(la);
-	if (check(la, pte, true)) { // check passed
-		pm::write(pte->paddr + (la % PAGE_SIZE), c);
-	}
+	while (!check(la, pte, true)); // check passed
+	pm::write(pte->paddr + (la % PAGE_SIZE), c);
 }
 
 typedef intr_pagefault_t::error_info error_info;
@@ -72,7 +69,8 @@ bool CPU_mmu::check(size_t la, pte_t *pte, bool write)
 	}
 	if (bug) {
 		error_info einfo(la, info);
-		while (interrupt(new intr_pagefault_t(einfo)) != 0);
+		interrupt(new intr_pagefault_t(einfo));
+		return false;
 		// todo check kill
 	}
 	return true;

@@ -18,6 +18,7 @@
 #include "../utils/panic.h"
 #include "../utils/check.h"
 #include "../logging/logging.h"
+#include "../utils/allocator/ffma.h"
 
 using std::mutex;
 using std::unique_lock;
@@ -56,6 +57,7 @@ handle<T>::handle()
 {
 	prog = nullptr;
 	addr = 0;
+	this_type = handle_type::NIL;
 }
 
 template<typename T>
@@ -80,9 +82,9 @@ handle<T>::~handle()
 {
 	if (prog == nullptr)
 		return;
-	/* if (this_type == type::STACK) {
+	if (this_type == type::STACK) {
 		prog->stack_pop(sizeof(T));
-    }*/
+    }
 }
 
 /**
@@ -137,7 +139,6 @@ handle<T>::operator T() const
 template<typename T>
 handle<T> handle<T>::operator [] (size_t id)
 {
-	tail_check(this->prog);
 	return handle<T>(addr + sizeof(T) * id, prog, this_type);
 }
 
@@ -160,8 +161,7 @@ size_t* handle<T>::get_addr_addr()
 }
 
 program::program()
-{
-}
+{}
 
 void program::build()
 {

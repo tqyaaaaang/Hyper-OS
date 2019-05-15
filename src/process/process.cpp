@@ -57,7 +57,6 @@ size_t create_process()
 	proc_table[id] = proc;
 	pid_mutex.unlock();
 
-	proc->init_context();
 	sched_init_proc(proc);
 	
 	return id;
@@ -85,6 +84,7 @@ int exec_program(size_t pid, program *prog)
 	proc->set_prog(prog);
 	proc->set_name(prog->get_name());
 
+	proc->init_context();
 	proc->init_data();
 	proc->init_bss();
 	proc->init_dmm();
