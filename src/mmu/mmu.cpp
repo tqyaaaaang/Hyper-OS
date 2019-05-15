@@ -56,16 +56,18 @@ bool CPU_mmu::check(size_t la, pte_t *pte, bool write)
 {
 	int info = 0;
 	bool bug = false;
-	if (!pte->user) {
-		info |= intr_pagefault_t::E_SUPER;
-		bug = true;
-	}
-	if (!pte->write && write) {
-		info |= intr_pagefault_t::E_WRITE;
-		bug = true;
-	}
 	if (!pte->present) {
 		info |= intr_pagefault_t::E_PRESENT;
+		bug = true;
+	} else {
+		if (!pte->user) {
+			info |= intr_pagefault_t::E_SUPER;
+			bug = true;
+		}
+		if (!pte->write && write) {
+			info |= intr_pagefault_t::E_WRITE;
+			bug = true;
+		}
 	}
 	if (bug) {
 		error_info einfo(la, info);

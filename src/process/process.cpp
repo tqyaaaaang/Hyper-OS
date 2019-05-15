@@ -49,15 +49,16 @@ void destroy_proc()
 size_t create_process()
 {
 	process_t *proc = new process_t;
-	proc->set_state(state::UNINIT);
 	
+	proc->set_state(state::UNINIT);
+
 	pid_mutex.lock();
 	size_t id = ++next_pid;
 	proc->set_pid(id);
 	proc_table[id] = proc;
 	pid_mutex.unlock();
 
-	sched_init_proc(proc);
+    sched_init_proc(proc);
 	
 	return id;
 }
@@ -84,6 +85,8 @@ int exec_program(size_t pid, program *prog)
 	proc->set_prog(prog);
 	proc->set_name(prog->get_name());
 
+	logging::info << proc->get_name() << " " << prog->get_name() << logging::log_endl;
+	
 	proc->init_context();
 	proc->init_data();
 	proc->init_bss();

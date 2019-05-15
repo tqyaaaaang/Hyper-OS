@@ -183,8 +183,6 @@ handle<T> program::alloc_bss(size_t n)
 	}
 	size_t len = n * sizeof(T);
 	handle<T> ret(alloc_bss_area(len), this, type::BSS);
-	add_redirect_bss(ret.get_addr_addr());
-	// insert into redirect table
 	return ret;
 }
 
@@ -243,7 +241,8 @@ handle<T> program::alloc_stack()
 	template handle<TYPE> program::alloc_static<TYPE>(size_t);			\
 	template handle<TYPE> program::alloc_bss<TYPE>(size_t);				\
 	template handle<TYPE> program::alloc_heap<TYPE>(size_t);			\
-	template handle<TYPE> program::alloc_stack<TYPE>();					
+	template handle<TYPE> program::alloc_stack<TYPE>();					\
+	template void program::free_heap<TYPE>(const handle<TYPE> &ptr);
 
 INST(int)
 INST(char)

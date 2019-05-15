@@ -49,9 +49,9 @@ public:
 		while (tick < 100000) {
 			tick = tick + 1;
 			if (tick % 10000 == 0) {
-				handle<int> st;
-				st.alias(alloc_stack<int>());
-				st = tick + 1;
+				handle<int> st = (int)tick;
+				st = st + 1;
+				// st is in stack
 				int tmp = st;
 				cout << "tick " << tmp << " from " << this_id << endl;
 			}

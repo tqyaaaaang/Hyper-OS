@@ -74,6 +74,20 @@ handle<T>::handle(size_t addr, program *prog, type t)
 	this->this_type = t;
 }
 
+template<typename T>
+handle<T>::handle(const T &val)
+{
+   	process_t *proc = status.get_core()->get_current();
+	alias(proc->get_prog()->alloc_stack<T>());
+	*this = val;
+}
+
+template<typename T>
+handle<T>::handle(const handle<T> &val)
+{
+	alias(val);
+}
+
 /**
  * STACK Variable : pop stack
  */
@@ -88,15 +102,16 @@ handle<T>::~handle()
 }
 
 /**
- * set handle to val
- * copy memory of (T)val to this->addr
- * only in running time
+ * handle copy
  */
 template<typename T>
 handle<T>& handle<T>::operator = (const handle<T> &val)
 {
-	assert(prog->is_running());
-	*this = (T)val;
+	alias(val);
+	info << "QWWQ" << (size_t)(&addr) << log_endl;
+	if (prog != nullptr && prog->is_running()) {
+		tail_check(this->prog);
+	}
 	return *this;
 }
 
@@ -173,7 +188,7 @@ void program::build()
 	running = false;
 	this->static_init(); // init static info
 	compile();           // simulate compile
-	debug << "BUILDING FINISH" << log_endl;
+	info << "BUILDING FINISH" << log_endl;
 }
 
 program::~program()

@@ -56,6 +56,7 @@ static mutex sched_mutex;
  */
 void sched_init_proc(process_t *proc)
 {
+	assert(proc != nullptr);
 	lock_guard<mutex> lk(sched_mutex);
 	uninit.push_front(proc);
 	proc->linker = uninit.begin();

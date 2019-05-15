@@ -1,5 +1,5 @@
 /**
- * test/test.h
+ * test/test.cpp
  * Unittest entry
  */
 
@@ -11,6 +11,7 @@
 #include "test_ffma.h"
 #include "test_process.h"
 #include "test_multiproc.h"
+#include "test_heap.h"
 #include "../src/mm/pmm.h"
 #include "../src/logging/logging.h"
 #include "../src/utils/allocator/ffma.h"
@@ -25,5 +26,5 @@ void test()
 	test_pm();
 	test_pmm();
     test_ffma();
-	test_multiproc();
+	test_heap();
 }
