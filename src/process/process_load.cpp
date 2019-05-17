@@ -76,6 +76,9 @@ void process_t::init_bss()
 		pte.write = pte.user = true;
 		pte.paddr = pf->paddr;
 		pt->set_pte(start + i, pte);
+		pte_t *pte_new = pt->get_pte(i * PAGE_SIZE);
+		assert(pte_new != nullptr);
+		pte_link_pf(pte_new, pf);
 		pf->ref();
 		for (size_t j = 0; j < PAGE_SIZE; j++) {
 			pm::write(pf->paddr + j, 0);
