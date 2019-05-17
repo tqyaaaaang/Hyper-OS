@@ -167,12 +167,19 @@ void swap_out_nlock(page_frame *pg)
 
 void swap_out(page_frame *pg)
 {
+	lock_guard<mutex> lk(alloc_mutex);
+	swap_out_nlock(pg);
+}
+
+void swap_in_nlock(pte_t *pte page_frame *pg)
+{
 	
 }
 
-void swap_in(page_frame *pg)
+void swap_in(pte_t *pte, page_frame *pg)
 {
-	
+	lock_guard<mutex> lk(alloc_mutex);
+	swap_in_nlock(pte, pg);
 }
 
 void pte_link_pf(pte_t *pte, page_frame *pf)

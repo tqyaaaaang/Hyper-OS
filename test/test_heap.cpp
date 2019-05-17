@@ -31,7 +31,7 @@ private:
 		if (L >= R) {
 			return;
 		} else {
-			handle<int> mid = alloc_stack<int>();
+			handle<int> mid = 0;
 			handle<int> tmp = alloc_heap<int>(R - L + 1);
  
 			mid = (L+R)>>1;

@@ -43,7 +43,8 @@ void swap_out_nlock(page_frame* pg);
 /**
  * swap the page @pg into memory
  */
-void swap_in(page_frame *pg);
+void swap_in(pte_t *pte, page_frame *pg);
+void swap_in_nlock(pte_t *pte, page_frame *pg);
 
 page_frame* alloc_pages(int n);
 page_frame* alloc_page();
