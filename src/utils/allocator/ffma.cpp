@@ -22,6 +22,9 @@ ffma::ffma(size_t n)
 	free_list.push_back(segment(0, n));
 }
 
+/**
+ * return -1 if failed
+ */
 size_t ffma::malloc(size_t len)
 {
 	assert(len > 0);
@@ -34,7 +37,7 @@ size_t ffma::malloc(size_t len)
 		}
 	}
 	if (pos == free_list.end()) {
-		panic("memory allocation failed");
+		return -1;
 	}
 	if (pos->length == len) {
 		size_t start = pos->start;

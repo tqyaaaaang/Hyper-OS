@@ -5,6 +5,7 @@
 #include "page_table.h"
 #include "../logging/logging.h"
 #include "../utils/panic.h"
+#include "../utils/pagerepl/fifo.h"
 #include "pmm.h"
 #include <cassert>
 
@@ -20,12 +21,14 @@ pte_t::pte_t()
 page_table::page_table()
 {
 	table = new pte_t[VPAGE_NUM];
+	page_rp = new fifo_repl(PAGE_NUM);
 }
 
 page_table::~page_table()
 {
 	assert(table != nullptr);
 	delete[] table;
+	delete page_rp;
 }
 
 pte_t* page_table::get_pte(size_t la)
@@ -35,15 +38,27 @@ pte_t* page_table::get_pte(size_t la)
 	if (table[id].present) {
 		return table + id;
 	} else {
-		page_frame* page = alloc_page();
-		if (page == NULL) {
-			panic("get_pte alloc page failed");
+		size_t pg;
+		page_frame* page;
+		pmm_require_lock();
+		{
+			if (page_rp->full()) {
+				pg = page_rp->swap_out();
+				swap_out_nlock(pte2page(table + pg));
+				page = alloc_page_nlock();
+			} else {
+				page = alloc_page_nlock();
+				pg = page2id(page);
+			}
 		}
+		pmm_release_lock();
+		assert(page != nullptr);
+		page_rp->swap_in(pg);
 		page->ref();
 		table[id].present = 1;
 		table[id].user = 1;
 		if (table[id].paddr != 0) {
-			// swap_in();
+			swap_in(pte2page(table + pg));
 		} else {
 			table[id].paddr = page2id(page) * PAGE_SIZE;
 		}
@@ -73,4 +88,10 @@ void page_table::set_pte(size_t id, const pte_t &pte)
 {
 	assert(id < VPAGE_NUM);
 	table[id] = pte;
+}
+
+page_frame* pte2page(pte_t *pte)
+{
+	assert(pte->present);
+	return pa2page(pte->paddr);
 }

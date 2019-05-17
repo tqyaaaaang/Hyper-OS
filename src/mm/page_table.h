@@ -5,9 +5,12 @@
 #pragma once
 #include <cstdint>
 #include <cstddef>
+#include <list>
 #include "pmem_info.h"
 #include "../env/env.h"
-#include "pmm.h"
+#include "../utils/pagerepl/pagerepl.h"
+
+class page_frame;
 
 /* type of page table entry */ 
 struct pte_t {
@@ -19,6 +22,7 @@ struct pte_t {
 	size_t paddr;        // if (present) : physical address of the page
 	                     // else         : physical address in swap
 		                 //                if !present && paddr == 0 : uninited
+	std::list<pte_t*>::iterator linker;
     pte_t();
 };
 
@@ -36,6 +40,10 @@ private:
 
     pte_t *table;
 	void free_pte(size_t id);
-	
+
+private:
+
+	page_repl *page_rp;	
 };
 
+page_frame* pte2page(pte_t *pte);

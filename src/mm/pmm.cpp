@@ -75,24 +75,41 @@ page_frame* id2page(int id)
 	return pages + id;
 }
 
+page_frame* pa2page(size_t pa)
+{
+	return id2page(pa / PAGE_SIZE);
+}
+
 /**
  * alloc n page frames
  * return page_frame pointer of first page frame(s)
  * @n : number of pages
  * TODO : fail handle
  */
-page_frame* alloc_pages(int n)
+page_frame* alloc_pages_nlock(int n)
 {
-	lock_guard<mutex> locker(alloc_mutex);
 	size_t start = alloc->malloc(n);
+	start = alloc->malloc(n);
+	if (start == (size_t)(-1)) {
+		return nullptr;
+	}
 	page_frame *ret = pages + start;
 	ret->alloced = true;
 	ret->length = n;
 	return ret;
 }
- 
+
+page_frame* alloc_pages(int n)
+{
+	lock_guard<mutex> locker(alloc_mutex);
+	return alloc_pages_nlock(n);
+}
+
 page_frame* alloc_page()
 { return alloc_pages(1); }
+
+page_frame* alloc_page_nlock()
+{ return alloc_pages_nlock(1); }
 
 /* free allocted page frames
  * @pg : first page_frame of continuous pages
@@ -133,3 +150,33 @@ void destroy_pmm()
 	delete[] pages;
 }
 
+void pmm_require_lock()
+{
+	alloc_mutex.lock();
+}
+
+void pmm_release_lock()
+{
+	alloc_mutex.unlock();
+}
+
+void swap_out_nlock(page_frame *pg)
+{
+	
+}
+
+void swap_out(page_frame *pg)
+{
+	
+}
+
+void swap_in(page_frame *pg)
+{
+	
+}
+
+void pte_link_pf(pte_t *pte, page_frame *pf)
+{
+	pf->link.push_front(pte);
+	pte->linker = pf->link.begin();
+}

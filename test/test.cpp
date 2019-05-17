@@ -23,6 +23,7 @@ void test()
 	// test_interrupt ();
 	// test_syscall ();
 
+
 	test_pm();
 	test_pmm();
     test_ffma();

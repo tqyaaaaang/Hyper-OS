@@ -37,6 +37,7 @@ char CPU_mmu::read(size_t la)
 	page_table *pg = core->get_context().get_page_table();
 	pte_t *pte = pg->get_pte_try(la);
 	while (!check(la, pte, false)); // check passed
+	pte->access = true;
 	return pm::read(pte->paddr + (la % PAGE_SIZE));
 }
 
@@ -45,6 +46,8 @@ void CPU_mmu::write(size_t la, char c)
 	page_table *pg = core->get_context().get_page_table();
 	pte_t *pte = pg->get_pte_try(la);
 	while (!check(la, pte, true)); // check passed
+	pte->access = true;
+	pte->dirty = true;
 	pm::write(pte->paddr + (la % PAGE_SIZE), c);
 }
 
