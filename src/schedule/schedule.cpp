@@ -117,6 +117,9 @@ void schedule(int id)
 		}
 
 		// next proc
+		if (state_list[id].running.empty())
+			return;
+		
 		process_t *nxt_proc = state_list[id].running.back();
 		if (nxt_proc != nullptr) {
 			cores[id].set_current(nxt_proc);
