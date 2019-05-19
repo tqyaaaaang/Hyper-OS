@@ -21,11 +21,11 @@ void test()
 	logging::info << "Testing the system" << logging::log_endl;
 
 	test_interrupt ();
-	// test_syscall ();
+	test_syscall ();
 
 
 	test_pm();
 	test_pmm();
     test_ffma();
-	test_heap();
+	test_multiproc();
 }

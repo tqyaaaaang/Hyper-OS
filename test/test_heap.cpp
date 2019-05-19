@@ -76,7 +76,7 @@ public:
 
 	virtual void static_init()
 	{
-		set_name("qwq");
+		set_name("merge_sort");
 		n = 10;
 		arr = alloc_static<int>(n);
 		size_t a = 31, b = 19260817, x = 0;

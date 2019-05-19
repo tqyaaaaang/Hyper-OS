@@ -33,8 +33,8 @@ public:
 	virtual void static_init()
 	{
 		set_name("tick-prog");
-		tick.alias(alloc_bss<int>());
-		str.alias(alloc_static<char>(12));
+		tick = alloc_bss<int>();
+		str = alloc_static<char>(12);
 		char s[] = "hello world";
 		for (int i = 0; i < 11; i++)
 			str[i].modify_in_compile(s[i]);

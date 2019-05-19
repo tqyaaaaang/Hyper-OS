@@ -38,23 +38,22 @@ void interrupt_trap_entry ( status_t thread_status, interrupt_t * current_interr
 
 	status.get_core ()->mark_intr ();
 	process_t *cur = status.get_core()->get_current();
-
+	
+	status.get_core()->acquire();	
 	if (cur != nullptr) {
 		//make sure current proc slept successfully
-
-		status.get_core ()->acquire ();
-		
 		cur->cond_mutex.lock();
-
-		logging::debug << "CPU #" << status.get_core()->get_core_id() << " trap into kernel mode of " << cur->get_name()  << logging::log_endl;
-		
 		cur->cond_mutex.unlock();
-		
-		current_interrupt->process ();
-		status.get_core ()->unmark_intr();
-		trap_exit();
-		status.get_core ()->release ();
+		logging::debug << "CPU #" << status.get_core()->get_core_id() << " trap into kernel mode of " << cur->get_name() << logging::log_endl;
+	    
+	} else {
+		logging::debug << "CPU #" << status.get_core()->get_core_id() << " trap into kernel mode of idle" << logging::log_endl;
 	}
+
+	current_interrupt->process ();
+	trap_exit();
+	status.get_core()->release ();
+	status.get_core ()->unmark_intr();
 	
 	status.get_core ()->get_lapic ().send_end_of_interrupt ();
 	clock_t e = clock();
