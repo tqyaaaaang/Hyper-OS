@@ -20,7 +20,7 @@ void test()
 {
 	logging::info << "Testing the system" << logging::log_endl;
 
-	// test_interrupt ();
+	test_interrupt ();
 	// test_syscall ();
 
 

@@ -6,12 +6,14 @@
 #include "program.h"
 #include <cstdlib>
 #include <cassert>
+#include <string>
 #include <vector>
 #include "../utils/panic.h"
 #include "../utils/check.h"
 
 using handle_type::type;
 using std::vector;
+using std::string;
 
 template class handle<int>;
 template class handle<char>;
@@ -205,6 +207,7 @@ template<typename T>
 handle<T> program::alloc_heap(size_t n)
 {
 	if (!mul_check(n, sizeof(T))) {
+		logging::debug << n << " " << sizeof(T) << logging::log_endl;
 		panic("runtime error. malloc failed.");
 	}
 	size_t len = n * sizeof(T);

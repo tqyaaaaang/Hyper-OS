@@ -7,6 +7,6 @@ bool add_check(size_t a, size_t b)
 
 bool mul_check(size_t a, size_t b)
 {
-	return (size_t)(-1) / a <= b;
+	return (size_t)(-1) / a >= b;
 }
 

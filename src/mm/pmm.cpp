@@ -171,7 +171,7 @@ void swap_out(page_frame *pg)
 	swap_out_nlock(pg);
 }
 
-void swap_in_nlock(pte_t *pte page_frame *pg)
+void swap_in_nlock(pte_t *pte, page_frame *pg)
 {
 	
 }

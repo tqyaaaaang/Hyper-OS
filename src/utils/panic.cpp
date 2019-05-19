@@ -4,7 +4,7 @@ using std::string;
 
 void panic(const string &str)
 {
-	logging::debug << "System Panic. info = " << logging::log_endl;
+	logging::debug << "System Panic. info = " << str << logging::log_endl;
 }
 
 void panic()
