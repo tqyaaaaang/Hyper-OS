@@ -30,8 +30,9 @@ void page_repl::swap_in(size_t id)
 
 size_t page_repl::swap_out()
 {
-	page_swap_out();
+	size_t return_value = page_swap_out();
 	cur_num--;
+	return return_value;
 }
 
 size_t page_repl::get_page_num() const
