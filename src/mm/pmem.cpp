@@ -10,11 +10,14 @@
 #include <cstdint>
 #include <assert.h>
 #include <thread>
+#include <mutex>
 
 using std::thread;
 using logging::debug;
 using logging::info;
 using logging::log_endl;
+using std::mutex;
+using std::lock_guard;
 
 class pm_page_frame {
 public:
@@ -135,6 +138,7 @@ static void memory_main()
 		default:
 			assert(false);
 		}
+	    
 		pm2mmu.push_back(result);
 	}
 }
@@ -176,12 +180,15 @@ void destroy_pm()
 
 namespace pm {
 
+mutex pm_mut;
+
 /**
  * interface for mmu, read a byte
  * @paddr : physical address to read
  */
 size_t read(size_t paddr)
 {
+	lock_guard<mutex> lk (pm_mut);
 	pm_info info;
 	info.type = pm_info::READ;
 	info.paddr = paddr;
@@ -205,10 +212,12 @@ size_t read(size_t paddr)
  */
 void write(size_t paddr, char data)
 {
+	lock_guard<mutex> lk (pm_mut);
 	pm_info info;
 	info.type = pm_info::WRITE;
 	info.paddr = paddr;
 	info.data = data;
+	// logging::info << "MMU WRITE " << data << logging::log_endl;
 	mmu2pm.push_back(info);
 	pm_result result = pm2mmu.pop_front();
 	// waiting for pm

@@ -38,7 +38,9 @@ char CPU_mmu::read(size_t la)
 	pte_t *pte = pg->get_pte_try(la);
 	while (!check(la, pte, false)); // check passed
 	pte->access = true;
-	return pm::read(pte->paddr + (la % PAGE_SIZE));
+    char result = pm::read(pte->paddr + (la % PAGE_SIZE));
+	// logging::info << "MMU : " << result << " " << logging::log_endl;
+	return result;
 }
 
 void CPU_mmu::write(size_t la, char c)
