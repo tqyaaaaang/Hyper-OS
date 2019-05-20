@@ -28,9 +28,13 @@ bool bus<T>::empty()
 template<typename T>
 T bus<T>::read()
 {
-	while (empty()) 
-		std::this_thread::yield();
-	mutex_lock.lock();
+	while (1) {
+		mutex_lock.lock();
+		if (q.empty()) {
+			mutex_lock.unlock();
+			std::this_thread::yield();
+		} else break;
+	}
 	T cur = q.front();
 	q.pop();
 	mutex_lock.unlock();
