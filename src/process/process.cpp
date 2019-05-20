@@ -110,3 +110,24 @@ int exec_program(size_t pid, program *prog)
 	return fcode;
 }
 
+/**
+ * yeild and give up cpu 
+ */
+int proc_yield()
+{
+	process_t *proc = status.get_core()->get_current();
+	proc->set_resched(1);
+}
+
+int proc_wait(size_t pid)
+{
+	process_t *proc = status.get_core()->get_current();
+	sched_set_wait(proc, pid);
+}
+
+int proc_exit()
+{
+	process_t *proc = status.get_core()->get_current();
+	sched_set_exit(proc);
+}
+

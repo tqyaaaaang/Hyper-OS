@@ -7,5 +7,12 @@
 
 enum class syscall_id_t
 {
-	SYSCALL_TEST = 0
+	SYSCALL_TEST = 0,
+		CREATE_PROC,
+		EXEC_PROGRAM,
+		YIELD,
+		WAIT,
+		EXIT,
+		READ,
+		WRITE
 };

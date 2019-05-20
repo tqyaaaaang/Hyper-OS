@@ -9,7 +9,8 @@
 void sched_init_proc(process_t *proc);
 void sched_set_core(process_t *proc);
 void sched_set_runable(process_t *proc);
-void sched_kill_process(process_t *proc);
+void sched_set_wait(process_t *proc, size_t pid);
+void sched_set_exit(process_t *proc);
 
 void schedule(int core_id);
 
