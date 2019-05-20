@@ -4,7 +4,7 @@
 
 #include "../logging/logging.h"
 #include "../env/env.h"
-#include "../utils/bus/bus.h"
+#include "../utils/thread_safe_queue/thread_safe_queue.h"
 #include "../status/status.h"
 #include "pmem_info.h"
 #include <cstdint>
@@ -53,7 +53,7 @@ struct pm_info {
 	size_t paddr;
 	char data;
 };
-static bus<pm_info> mmu2pm;
+static thread_safe_queue<pm_info> mmu2pm;
 
 // info pm --> mmu
 struct pm_result {
@@ -62,7 +62,7 @@ struct pm_result {
 	char data;
 	size_t error_code;
 };
-static bus<pm_result> pm2mmu;
+static thread_safe_queue<pm_result> pm2mmu;
 
 static pm_page_frame *pm_pages = nullptr;
 // pm page array
@@ -105,8 +105,8 @@ static pm_result pm_write(size_t paddr, char data)
 
 /**
  * thread to simulate memory
- * read from bus mmu2pm
- * write from bus pm2mmu
+ * read from thread_safe_queue mmu2pm
+ * write from thread_safe_queue pm2mmu
  * --------------------------
  * Instructions Support:
  * pm_info::READ     : read a byte from pm_info::paddr
@@ -118,7 +118,7 @@ static void memory_main()
 	status.set_name("memory");
 	logging::info << "physical memory online." << logging::log_endl;
 	while (1) {
-		pm_info info = mmu2pm.read();
+		pm_info info = mmu2pm.pop_front();
 		pm_result result;
 		switch(info.type) {
 	    case pm_info::READ:
@@ -130,12 +130,12 @@ static void memory_main()
 		case pm_info::SHUTDOWN:
 			logging::info << "physical memory offline." << logging::log_endl;
 			result.type = pm_result::OK;
-			pm2mmu.write(result);
+			pm2mmu.push_back(result);
 			return;
 		default:
 			assert(false);
 		}
-		pm2mmu.write(result);
+		pm2mmu.push_back(result);
 	}
 }
 
@@ -155,9 +155,9 @@ void destroy_pm()
 	// shutdown memory thread
 	pm_info info;
 	info.type = pm_info::SHUTDOWN;
-	mmu2pm.write(info);
+	mmu2pm.push_back(info);
 	pm_result result;
-	result = pm2mmu.read();
+	result = pm2mmu.pop_front();
 	if (result.type == pm_result::OK) {
 		logging::info << "pm offline."
 					  << logging::log_endl;
@@ -185,8 +185,8 @@ size_t read(size_t paddr)
 	pm_info info;
 	info.type = pm_info::READ;
 	info.paddr = paddr;
-	mmu2pm.write(info);
-	pm_result result = pm2mmu.read();
+	mmu2pm.push_back(info);
+	pm_result result = pm2mmu.pop_front();
 	// waiting for pm
 	if (result.type == pm_result::OK) {
 		return result.data;
@@ -209,8 +209,8 @@ void write(size_t paddr, char data)
 	info.type = pm_info::WRITE;
 	info.paddr = paddr;
 	info.data = data;
-	mmu2pm.write(info);
-	pm_result result = pm2mmu.read();
+	mmu2pm.push_back(info);
+	pm_result result = pm2mmu.pop_front();
 	// waiting for pm
 	if (result.type == pm_result::ERR) {
 		logging::info << "pm write fail. error code = "
