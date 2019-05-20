@@ -14,3 +14,8 @@ SET ( EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
 ADD_EXECUTABLE ( ${prog_name} ${src_list} )
 
 target_link_libraries( ${prog_name} pthread )
+
+if(CMAKE_COMPILER_IS_GNUCXX)
+  set(CMAKE_CXX_FLAGS "-Wall -fsanitize=address ${CMAKE_CXX_FLAGS}")
+endif(CMAKE_COMPILER_IS_GNUCXX)
+
