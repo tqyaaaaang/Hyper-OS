@@ -7,6 +7,7 @@
 #include <cassert>
 #include <string>
 #include <mutex>
+#include <exception>
 #include "program.h"
 #include "../core/core.h"
 #include "../process/process_t.h"
@@ -27,6 +28,7 @@ using std::string;
 using logging::debug;
 using logging::log_endl;
 using logging::info;
+using std::terminate;
 
 template class handle<int>;
 template class handle<char>;
@@ -237,18 +239,12 @@ bool program::is_compiling() const
 	return compiling;
 }
 
-static void round(size_t &size)
-{
-	size = (size / PAGE_SIZE
-			+ (size % PAGE_SIZE != 0)) * PAGE_SIZE;
-}
-
 void program::compile()
 {
 	size_t tot_static = 0;
-	round(text_size);
-	round(bss_size);
-	round(data_size);
+	round2page(text_size);
+	round2page(bss_size);
+	round2page(data_size);
 	if (!add_check(text_size, bss_size)) {
 		panic("compile failed : MLE");
 	}

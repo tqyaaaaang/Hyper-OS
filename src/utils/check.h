@@ -5,4 +5,4 @@
 
 bool add_check(size_t a, size_t b);
 bool mul_check(size_t a, size_t b);
-
+void round2page(size_t &size);
