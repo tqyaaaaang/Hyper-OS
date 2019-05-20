@@ -59,9 +59,10 @@ pte_t* page_table::get_pte(size_t la)
 		table[id].user = 1;
 		if (table[id].paddr != 0) {
 			swap_in(table + pg, page);
-			table[pg].paddr = page2id(page) * PAGE_SIZE;
+			table[id].paddr = page->paddr;
 		} else {
-			table[id].paddr = page2id(page) * PAGE_SIZE;
+			table[id].paddr = page->paddr;
+			logging::info << "SET TABLE : id " << id << ", paddr = " << (page-pages)*PAGE_SIZE << "," << page->paddr << logging::log_endl;
 		}
 		return table + id;
 	}

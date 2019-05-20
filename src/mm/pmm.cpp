@@ -89,10 +89,10 @@ page_frame* pa2page(size_t pa)
 page_frame* alloc_pages_nlock(int n)
 {
 	size_t start = alloc->malloc(n);
-	start = alloc->malloc(n);
 	if (start == (size_t)(-1)) {
 		return nullptr;
 	}
+	logging::info << "ALLOC PAGE : " << n << " at " << start << logging::log_endl;
 	page_frame *ret = pages + start;
 	ret->alloced = true;
 	ret->length = n;

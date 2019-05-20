@@ -49,6 +49,7 @@ size_t ffma::malloc(size_t len)
 		auto nxt = pos; 
 		free_list.insert(++nxt, remained);
 		free_list.erase(pos);
+		logging::info << "malloc : " << start << logging::log_endl;
 		return start;
 	}
 }
