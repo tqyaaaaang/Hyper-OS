@@ -113,7 +113,9 @@ void local_apic::send_disable_signal ()
 
 int local_apic::wait_interrupt_return ( interrupt_t * current_interrupt )
 {
-	return current_interrupt->get_return_promise ().get_future ().get ();
+	int return_value = current_interrupt->get_return_promise ().get_future ().get ();
+	delete current_interrupt;
+	return return_value;
 }
 
 
