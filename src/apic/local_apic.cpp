@@ -197,6 +197,7 @@ bool local_apic::do_events ( interrupt_t * current_interrupt )
 		logging::error << "LAPIC do_events : unknown event id " << static_cast < int > ( current_interrupt->get_interrupt_id () ) << logging::log_endl;
 		break;
 	}
+	current_interrupt->get_return_promise ().set_value ( 0 );
 	return return_value;
 }
 
