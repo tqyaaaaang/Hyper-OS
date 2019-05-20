@@ -9,6 +9,5 @@
 
 int syscall ( syscall_t * current_syscall )
 {
-	syscall_interrupt current_interrupt ( current_syscall );
-	return interrupt ( &current_interrupt );
+	return interrupt ( new syscall_interrupt ( current_syscall ) );
 }

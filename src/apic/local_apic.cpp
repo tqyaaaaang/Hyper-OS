@@ -90,8 +90,11 @@ int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 	int return_val = 0;
 	if ( blocked ) {
 		core->release ();
-		return_val = current_interrupt->get_return_promise ().get_future ().get ();
+		return_val = wait_interrupt_return ( current_interrupt );
 		core->acquire ();
+	} else {
+		std::thread wait_thread ( &local_apic::wait_interrupt_return, this, current_interrupt );
+		wait_thread.detach ();
 	}
 	return return_val;
 }
@@ -104,6 +107,13 @@ void local_apic::send_end_of_interrupt ()
 void local_apic::send_disable_signal ()
 {
 	interrupt ( new disable_lapic (), false );
+}
+
+
+
+int local_apic::wait_interrupt_return ( interrupt_t * current_interrupt )
+{
+	return current_interrupt->get_return_promise ().get_future ().get ();
 }
 
 
@@ -185,7 +195,6 @@ bool local_apic::do_events ( interrupt_t * current_interrupt )
 		logging::error << "LAPIC do_events : unknown event id " << static_cast < int > ( current_interrupt->get_interrupt_id () ) << logging::log_endl;
 		break;
 	}
-	delete current_interrupt;
 	return return_value;
 }
 

@@ -36,6 +36,8 @@ public:
 	void send_end_of_interrupt ();   // send an end_of_interrupt signal
 
 private:
+	int wait_interrupt_return ( interrupt_t *current_interrupt );
+
 	void send_disable_signal ();   // send disable LAPIC signal
 
 	void lapic_thread_entry ( status_t father_thread_status );   // LAPIC daemon thread entry
