@@ -83,9 +83,10 @@ size_t program::alloc_static_area(size_t len)
 		panic("compile fail. static size is too large");
 	}
 	data_size += len;
-	round2page(data_size);
-	if (data == nullptr) data = (char*)malloc(data_size);
-	else data = (char*)realloc(data, data_size);
+	size_t l = data_size;
+	round2page(l);
+	if (data == nullptr) data = (char*)malloc(l);
+	else data = (char*)realloc(data, l);
 	return data_size - len;
 }
 
