@@ -16,6 +16,7 @@
 #include "../syscall/syscalls/sys_wait.h"
 #include "../syscall/syscalls/sys_yield.h"
 #include "../interrupt/interrupts/syscall_interrupt.h"
+#include "../logging/logging.h"
 #include "program.h"
 
 using std::string;
@@ -31,6 +32,7 @@ int sys_t::intr(syscall_t *sys)
 	int return_value = sys->get_return_value();
 	delete sys;
 	if (result == -2) {
+		logging::info << "program " << this->prog->get_name() << " need sleep" << logging::log_endl;
 		sleep_program(this->prog);
 	}
 	return return_value;
