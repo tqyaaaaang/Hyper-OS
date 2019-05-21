@@ -6,6 +6,7 @@
 #include "sys_t.h"
 #include "program_manager.h"
 #include "../process/process.h"
+#include "../process/process_t.h"
 #include "../interrupt/interrupt.h"
 #include "../syscall/syscall.h"
 #include "../syscall/syscalls/sys_create_proc.h"
@@ -15,17 +16,24 @@
 #include "../syscall/syscalls/sys_wait.h"
 #include "../syscall/syscalls/sys_yield.h"
 #include "../interrupt/interrupts/syscall_interrupt.h"
+#include "program.h"
 
 using std::string;
 
-static int intr(syscall_t *sys)
+sys_t::sys_t(program *prog)
 {
-	if (interrupt(new syscall_interrupt(sys)) == 0) {
-		int return_value = sys->get_return_value();
-		delete sys;
-		return return_value;
+	this->prog = prog;
+}
+
+int sys_t::intr(syscall_t *sys)
+{
+	int result = interrupt(new syscall_interrupt(sys));
+	int return_value = sys->get_return_value();
+	delete sys;
+	if (result == -2) {
+		sleep_program(this->prog);
 	}
-	return -1;
+	return return_value;
 }
 
 int sys_t::create_process()

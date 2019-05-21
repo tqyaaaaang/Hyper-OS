@@ -22,6 +22,7 @@ process_t::process_t()
 	name = "<default>";
 	ptr_par = 0;
 	heap_allocator = nullptr;
+	need_resched = false;
 }
 
 process_t::~process_t()
@@ -49,6 +50,7 @@ state process_t::get_state() const
 
 void process_t::set_state(state stat)
 {
+	logging::info << "process " << get_name() << " switch to " << stat << logging::log_endl;
 	pstat = stat;
 }
 

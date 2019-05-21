@@ -38,6 +38,18 @@ template class handle<char>;
  * tail check
  * if an interrupt occurs, trap into kernel mode
  */
+
+void sleep_program(program *prog)
+{
+	process_t *proc = prog->cur_proc;
+	debug << "proc " << proc->get_name() << " release cpu because of interrupt, => " << status.get_core()->get_intr() << log_endl;
+	unique_lock<mutex> lk (proc->cond_mutex);
+	status.get_core()->release();
+	proc->cond_var.wait(lk);
+	status.get_core()->acquire();
+	debug << "proc " << proc->get_name() << " return frome interrupt, => " << status.get_core()->get_intr() << log_endl;
+}
+
 void tail_check(program *prog)
 {
 	process_t *proc = prog->cur_proc;
@@ -45,13 +57,7 @@ void tail_check(program *prog)
 	assert(proc->get_core() == status.get_core());
 	if (status.get_core()->get_intr()) {
 		// interrupt occurs
-		debug << "proc " << proc->get_name() << " release cpu because of interrupt, => " << status.get_core()->get_intr() << log_endl;
-		unique_lock<mutex> lk (proc->cond_mutex);
-		status.get_core()->release();
-		proc->cond_var.wait(lk);
-		status.get_core()->acquire();
-		debug << "proc " << proc->get_name() << " return frome interrupt, => " << status.get_core()->get_intr() << log_endl;
-		// release cpu & wait in condition variable
+		sleep_program(prog);
 	} 
 }
 
@@ -181,13 +187,13 @@ size_t* handle<T>::get_addr_addr()
 
 program::program()
 {
-	sys = new sys_t;
+	sys = new sys_t(this);
 	hos_std = new hos_std_t(this);
 }
 
 void program::reset_stdlib()
 {
-	sys = new sys_t;
+	sys = new sys_t(this);
 	hos_std = new hos_std_t(this);
 }
 

@@ -28,8 +28,13 @@ public:
 		int pid = sys->create_process();
 		logging::info << "pid : " << pid << logging::log_endl;
 		sys->exec_program(pid, "prog b");
-		pid = sys->create_process();
+		sys->wait(pid);
+		logging::info << "prog b finished." << logging::log_endl;
+		hos_std->println("prog b finish.");
+	    pid = sys->create_process();
 		sys->exec_program(pid, "prog b");
+		sys->wait(pid);
+		hos_std->println("prog b finish.");
 	}
 
 };
@@ -52,7 +57,8 @@ public:
 
 	virtual void main()
 	{
-	    hos_std->println("prog b start.");
+		logging::info << "prog b start." << logging::log_endl;
+		hos_std->println("prog b start.");
 	}
 };
 

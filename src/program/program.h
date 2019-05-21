@@ -204,3 +204,4 @@ private:
 	
 };
 
+void sleep_program(program *prog);

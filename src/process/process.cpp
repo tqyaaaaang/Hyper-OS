@@ -22,7 +22,7 @@ using std::mutex;
 using std::thread;
 typedef process_t::state state;
 
-static unordered_map<size_t, process_t*> proc_table;
+unordered_map<int, process_t*> proc_table;
 static int next_pid;
 static mutex pid_mutex;
 
