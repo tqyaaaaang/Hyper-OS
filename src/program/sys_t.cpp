@@ -12,6 +12,8 @@
 #include "../syscall/syscalls/sys_exec_prog.h"
 #include "../syscall/syscalls/sys_write.h"
 #include "../syscall/syscalls/sys_exit.h"
+#include "../syscall/syscalls/sys_wait.h"
+#include "../syscall/syscalls/sys_yield.h"
 #include "../interrupt/interrupts/syscall_interrupt.h"
 
 using std::string;
