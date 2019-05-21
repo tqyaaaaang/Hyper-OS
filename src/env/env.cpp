@@ -18,4 +18,4 @@ const int MOTHERBOARD_NUM = 1;   // The number of motherboards
 // Logging
 const char *LOG_FILE_NAME = NULL;   // File name to write log, NULL if write to stdout
 
-const int LOG_LEVEL = LOGGING_LEVEL::DEBUG;   // Logging level to be used
+const int LOG_LEVEL = LOGGING_LEVEL::INFO;   // Logging level to be used

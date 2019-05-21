@@ -24,4 +24,4 @@ void register_program(std::string name, program *prog, size_t size);
 
 program* get_program(std::string name);
 
-void destory_program_manager();
+void destroy_program_manager();

@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <vector>
 #include <string>
+#include <mutex>
 
 class program;
 class process_t;
@@ -93,7 +94,7 @@ class program {
 public:
 
     program();
-	~program();
+	virtual ~program();
 
 	void build(); // build program
 	
@@ -192,6 +193,7 @@ private:
 
 	std::vector<size_t*> redr_table;
 
+	std::mutex del_mutex;
 	
 };
 

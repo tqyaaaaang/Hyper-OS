@@ -29,6 +29,7 @@ using logging::debug;
 using logging::log_endl;
 using logging::info;
 using std::terminate;
+using std::lock_guard;
 
 template class handle<int>;
 template class handle<char>;
@@ -101,6 +102,7 @@ handle<T>::~handle()
 	if (this_type == type::STACK) {
 		prog->stack_pop(sizeof(T));
     }
+	
 }
 
 /**
@@ -195,8 +197,11 @@ void program::build()
 
 program::~program()
 {
-	assert(data != nullptr);
-	free(data);
+	lock_guard<mutex> lk (del_mutex);
+    if (data != nullptr) {
+		free(data);
+		data = nullptr;
+	}
 }
 
 size_t program::get_text_size() const

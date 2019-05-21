@@ -31,3 +31,10 @@ program* get_program(string name)
 	memcpy(new_prog, prog, size);
 	return (program*)new_prog;
 }
+
+void destroy_program_manager()
+{
+	for (auto i : prog_table) {
+		delete i.second.second;
+	}
+}

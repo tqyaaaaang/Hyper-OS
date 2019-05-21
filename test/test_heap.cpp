@@ -26,8 +26,6 @@ private:
 
 	void merge_sort_fun(handle<int> arr, handle<int> L, handle<int> R)
 	{
-		int Lp = L, Rp = R;
-		cout << L <<  " " << R << endl;
 		if (L >= R) {
 			return;
 		} else {
