@@ -185,7 +185,6 @@ private:
 	size_t alloc_bss_area(size_t len);
 	
     // heap operation
-	// TODO 
 	size_t heap_malloc(size_t size);
 	void heap_free(size_t addr);
 
@@ -195,7 +194,4 @@ private:
 
 	
 };
-
-extern handle<int> handle_int;
-extern handle<char> handle_char;
 

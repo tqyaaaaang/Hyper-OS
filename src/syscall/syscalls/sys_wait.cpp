@@ -7,6 +7,7 @@
 #include "../../process/process.h"
 
 sys_wait::sys_wait(size_t pid)
+	:syscall_t(syscall_id_t::WAIT)
 {
 	this->pid = pid;
 }

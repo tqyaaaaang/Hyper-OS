@@ -1,12 +1,12 @@
 /**
  * syscall/syscalls/sys_wait.h
- * create_proc syscall
+ * wait syscall
  */
 #pragma once
 
 #include "../../process/process.h"
 
-class sys_wait {
+class sys_wait : public syscall_t {
 public:
 
     sys_wait(size_t pid);

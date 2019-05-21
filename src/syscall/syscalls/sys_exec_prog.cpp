@@ -5,8 +5,9 @@
 #include "sys_exec_prog.h"
 
 sys_exec_prog::sys_exec_prog(size_t pid, program *prog)
+	: syscall_t(syscall_id_t::EXEC_PROGRAM)
 {
-	this->pid;
+	this->pid = pid;
 	this->prog = prog;
 }
 

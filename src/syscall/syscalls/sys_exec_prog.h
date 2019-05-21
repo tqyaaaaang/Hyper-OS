@@ -4,9 +4,10 @@
  */
 #pragma once
 
+#include "syscall_t.h"
 #include "../../process/process.h"
 
-class sys_exec_prog {
+class sys_exec_prog : public syscall_t {
 public:
 
 	sys_exec_prog(size_t pid, program *prog);
