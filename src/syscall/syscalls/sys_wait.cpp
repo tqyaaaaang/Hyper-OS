@@ -3,7 +3,7 @@
  * create_proc syscall
  */
 
-#include "sys_yield.h"
+#include "sys_wait.h"
 #include "../../process/process.h"
 
 sys_wait::sys_wait(int pid)

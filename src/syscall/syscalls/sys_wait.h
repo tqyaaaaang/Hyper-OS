@@ -5,6 +5,7 @@
 #pragma once
 
 #include "../../process/process.h"
+#include "syscall_t.h"
 
 class sys_wait : public syscall_t {
 public:
