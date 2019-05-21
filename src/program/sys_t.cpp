@@ -10,13 +10,19 @@
 #include "../syscall/syscall.h"
 #include "../syscall/syscalls/sys_create_proc.h"
 #include "../syscall/syscalls/sys_exec_prog.h"
+#include "../syscall/syscalls/sys_write.h"
 #include "../interrupt/interrupts/syscall_interrupt.h"
 
 using std::string;
 
-static int intr(syscall_t *_sys)
+static int intr(syscall_t *sys)
 {
-	return interrupt(new syscall_interrupt(_sys));
+	if (interrupt(new syscall_interrupt(sys)) == 0) {
+		int return_value = sys->get_return_value();
+		delete sys;
+		return return_value;
+	}
+	return -1;
 }
 
 int sys_t::create_process()
@@ -49,8 +55,8 @@ int sys_t::read(int device)
 	return 0;
 }
 
-int sys_t::write(int device, char data)
+int sys_t::write(dev_output *device, char data)
 {
-	return 0;
+	return intr(new sys_write(device, data));
 }
 

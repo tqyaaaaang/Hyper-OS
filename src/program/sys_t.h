@@ -4,6 +4,8 @@
  */
 #pragma once
 #include <string>
+#include "../../dev/device_list.h"
+#include "../../dev/devices/output/output.h"
 
 class sys_t {
 public:
@@ -14,5 +16,9 @@ public:
 	int exit();
     int wait(int pid);
 	int read(int device);
-	int write(int device, char data);
+	int write(dev_output *device, char data);
+
+	dev_output* stdout();
+	
 };
+
