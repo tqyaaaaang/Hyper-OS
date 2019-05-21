@@ -12,3 +12,5 @@ CMakeCache.txt
 Makefile
 
 *~
+
+*.log
