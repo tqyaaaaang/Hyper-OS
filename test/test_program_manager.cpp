@@ -19,12 +19,14 @@ public:
 	virtual void static_init()
 	{
 		set_name("prog_a");
-		logging::info << "prog_a start." << logging::log_endl;
 	}
 	
 	virtual void main()
 	{
 		logging::info << "prog_a start." << logging::log_endl;
+		int pid = sys.create_process();
+		logging::info << "pid : " << pid << logging::log_endl;
+		sys.exec_program(pid, "prog b");
 	}
 
 };

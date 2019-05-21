@@ -2,6 +2,7 @@
  * program/sys_t.h
  * syscall interface for user-mode programs
  */
+#pragma once
 #include <string>
 
 class sys_t {

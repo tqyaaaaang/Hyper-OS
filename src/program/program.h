@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <mutex>
+#include "sys_t.h"
 
 class program;
 class process_t;
@@ -169,6 +170,7 @@ public:
 	size_t stack_pop(size_t size);
 
 	process_t *cur_proc;
+	sys_t sys;
 	
 private:
 	size_t text_size;
