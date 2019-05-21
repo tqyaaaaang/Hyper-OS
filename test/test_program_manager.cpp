@@ -2,6 +2,7 @@
 #include "../src/program/program.h"
 #include "../src/process/process.h"
 #include "../src/program/program_manager.h"
+#include "../src/program/lib.h"
 #include "../src/logging/logging.h"
 #include <thread>
 
@@ -23,10 +24,12 @@ public:
 	
 	virtual void main()
 	{
-		logging::info << "prog_a start." << logging::log_endl;
-		int pid = sys.create_process();
+	    hos_std->println("prog a start.");
+		int pid = sys->create_process();
 		logging::info << "pid : " << pid << logging::log_endl;
-		sys.exec_program(pid, "prog b");
+		sys->exec_program(pid, "prog b");
+		pid = sys->create_process();
+		sys->exec_program(pid, "prog b");
 	}
 
 };
@@ -49,7 +52,7 @@ public:
 
 	virtual void main()
 	{
-		logging::info << "prog_b start." << logging::log_endl;
+	    hos_std->println("prog b start.");
 	}
 };
 

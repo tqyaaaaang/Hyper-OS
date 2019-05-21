@@ -60,3 +60,7 @@ int sys_t::write(dev_output *device, char data)
 	return intr(new sys_write(device, data));
 }
 
+dev_output* sys_t::std_output()
+{
+	return device_desc::standard_output;
+}

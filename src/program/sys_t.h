@@ -18,7 +18,7 @@ public:
 	int read(int device);
 	int write(dev_output *device, char data);
 
-	dev_output* stdout();
+	dev_output* std_output();
 	
 };
 

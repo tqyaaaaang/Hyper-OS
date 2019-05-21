@@ -9,6 +9,7 @@
 #include <string>
 #include <mutex>
 #include "sys_t.h"
+#include "lib.h"
 
 class program;
 class process_t;
@@ -170,7 +171,11 @@ public:
 	size_t stack_pop(size_t size);
 
 	process_t *cur_proc;
-	sys_t sys;
+
+	void reset_stdlib();
+	
+	sys_t *sys;
+	hos_std_t *hos_std;
 	
 private:
 	size_t text_size;

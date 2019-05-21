@@ -29,7 +29,9 @@ program* get_program(string name)
 	program *prog = prog_table[name].second;
 	char *new_prog = (char*)malloc(size);
 	memcpy(new_prog, prog, size);
-	return (program*)new_prog;
+    program *pg = (program*)new_prog;
+	pg->reset_stdlib();
+	return pg;
 }
 
 void destroy_program_manager()

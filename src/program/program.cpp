@@ -180,7 +180,16 @@ size_t* handle<T>::get_addr_addr()
 }
 
 program::program()
-{}
+{
+	sys = new sys_t;
+	hos_std = new hos_std_t(this);
+}
+
+void program::reset_stdlib()
+{
+	sys = new sys_t;
+	hos_std = new hos_std_t(this);
+}
 
 void program::build()
 {
@@ -201,6 +210,14 @@ program::~program()
     if (data != nullptr) {
 		free(data);
 		data = nullptr;
+	}
+	if (sys != nullptr) {
+		delete sys;
+		sys = nullptr;
+	}
+	if (hos_std != nullptr) {
+		delete hos_std;
+		hos_std = nullptr;
 	}
 }
 
