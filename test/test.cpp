@@ -6,6 +6,7 @@
 #include "test.h"
 #include "test_interrupt.h"
 #include "test_syscall.h"
+#include "test_devices.h"
 #include "test_pmm.h"
 #include "test_pm.h"
 #include "test_ffma.h"
@@ -25,6 +26,7 @@ void test()
 	test_interrupt ();
 	test_syscall ();
 
+	test_devices ();
 
 	test_pm();
 	test_pmm();
