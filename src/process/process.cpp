@@ -111,7 +111,7 @@ int proc_exec_program(int pid, program *prog)
 }
 
 /**
- * yeild and give up cpu 
+ * yield and give up cpu 
  */
 int proc_yield()
 {

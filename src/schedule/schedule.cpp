@@ -99,6 +99,7 @@ void sched_set_runable(process_t *proc)
 	case state::RUNABLE:
 		break;
 	}
+	proc->set_state(state::RUNABLE);
 	proc->get_prog()->run();
 }
 
@@ -107,14 +108,31 @@ void sched_set_wait(process_t *proc, int pid)
 	
 }
 
+/**
+ * set process @proc to zombie
+ */
 void sched_set_exit(process_t *proc)
 {
+	lock_guard<mutex> lk(sched_mutex);
+
+	assert(proc == status.get_core()->get_current());
+	assert(proc->get_state() == state::RUNABLE);
+
+	proc->set_state(state::ZOMBIE);
 	
+	int id = status.get_core()->get_core_id();
+
+	state_list[id].running.erase(proc->linker);
+	zombie.push_front(proc);
+	proc->linker = zombie.begin();
+	
+	status.get_core()->set_current(nullptr);
+
+	logging::info << "process " << proc->get_name() << " exit." << log_endl;
 }
 
 void schedule(int id)
-{
-	
+{	
 	process_t *proc = cores[id].get_current();
 	
 	if (proc == nullptr || proc->get_resched()) {

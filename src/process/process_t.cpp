@@ -83,6 +83,7 @@ void process_t::exec(promise<int> &fin_code)
 	lk.unlock();
 	core->acquire();
 	this->prog->main();
+	prog->sys->exit();
 	core->release();
 }
 

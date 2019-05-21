@@ -11,6 +11,7 @@
 #include "../syscall/syscalls/sys_create_proc.h"
 #include "../syscall/syscalls/sys_exec_prog.h"
 #include "../syscall/syscalls/sys_write.h"
+#include "../syscall/syscalls/sys_exit.h"
 #include "../interrupt/interrupts/syscall_interrupt.h"
 
 using std::string;
@@ -37,17 +38,17 @@ int sys_t::exec_program(int pid, const string & name)
 
 int sys_t::yield()
 {
-	return 0;
+	return intr(new sys_yield());
 }
 
 int sys_t::exit()
 {
-	return 0;
+	return intr(new sys_exit());
 }
 
 int sys_t::wait(int pid)
 {
-	return 0;
+	return intr(new sys_wait(pid));
 }
 
 int sys_t::read(int device)
