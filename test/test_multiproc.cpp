@@ -69,10 +69,10 @@ void test_multiproc()
 	size_t x[10];
 	for (int i = 0; i < 10; i++) {
 		info << "cr " << i << log_endl;
-		x[i] = create_process();
+		x[i] = proc_create_process();
 	}
 	for (int i = 0; i < 10; i++) {
-		int ok = exec_program(x[i], prox[i]);
+		int ok = proc_exec_program(x[i], prox[i]);
 	}
 	schedule(0);
 	while (1) {

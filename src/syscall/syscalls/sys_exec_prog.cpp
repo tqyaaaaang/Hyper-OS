@@ -13,5 +13,5 @@ sys_exec_prog::sys_exec_prog(int pid, program *prog)
 
 int sys_exec_prog::process()
 {
-	return exec_program(pid, prog);
+	return proc_exec_program(pid, prog);
 }

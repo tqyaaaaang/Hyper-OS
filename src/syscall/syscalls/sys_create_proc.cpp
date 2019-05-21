@@ -10,5 +10,5 @@ sys_create_proc::sys_create_proc()
 
 int sys_create_proc::process()
 {
-	return create_process();
+	return proc_create_process();
 }

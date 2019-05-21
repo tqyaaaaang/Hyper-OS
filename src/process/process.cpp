@@ -46,7 +46,7 @@ void destroy_proc()
 	}
 }
 
-int create_process()
+int proc_create_process()
 {
 	process_t *proc = new process_t;
 	
@@ -70,7 +70,7 @@ int create_process()
  *          -2 program is invalid
  *        else error code of proc_main
  */
-int exec_program(int pid, program *prog)
+int proc_exec_program(int pid, program *prog)
 {
 	if (prog == nullptr) {
 		logging::info << "exec error. program is invalid" << logging::log_endl;
