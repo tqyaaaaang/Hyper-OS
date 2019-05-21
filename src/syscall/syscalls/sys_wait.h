@@ -9,10 +9,10 @@
 class sys_wait : public syscall_t {
 public:
 
-    sys_wait(size_t pid);
+    sys_wait(int pid);
     virtual int process();
 private:
 
-	size_t pid;
+	int pid;
 };
 

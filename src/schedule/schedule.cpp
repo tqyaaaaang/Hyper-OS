@@ -102,7 +102,7 @@ void sched_set_runable(process_t *proc)
 	proc->get_prog()->run();
 }
 
-void sched_set_wait(process_t *proc, size_t pid)
+void sched_set_wait(process_t *proc, int pid)
 {
 	
 }

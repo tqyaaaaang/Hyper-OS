@@ -7,8 +7,10 @@ class sys_t {
 public:
 
 	int create_process();
-	int exec_program(size_t pid, const string &name);
+	int exec_program(int pid, const string &name);
 	int yeild();
 	int exit();
-    
+    int wait(int pid);
+	int read();
+	int write();
 };

@@ -10,11 +10,11 @@
 class sys_exec_prog : public syscall_t {
 public:
 
-	sys_exec_prog(size_t pid, program *prog);
+	sys_exec_prog(int pid, program *prog);
     virtual int process();
 
 private:
-	size_t pid;
+	int pid;
 	program *prog;
 };
 

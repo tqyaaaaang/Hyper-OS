@@ -31,8 +31,8 @@ public:
 	process_t();
 	~process_t();
 
-	void set_pid(size_t pid);
-	size_t get_pid() const;
+	void set_pid(int pid);
+	int get_pid() const;
 
 	state get_state() const;
 	void set_state(state stat);
@@ -48,8 +48,8 @@ public:
 	context_t get_context() const;
 	void set_context(const context_t &context);
 
-	void add_chl(size_t pid);
-	void set_par(size_t pid);
+	void add_chl(int pid);
+	void set_par(int pid);
 
 	bool tick();
 	void set_slice(size_t slice);
@@ -79,7 +79,7 @@ public:
 	
 private:
 
-	size_t pid;
+	int pid;
 	std::string name;
 	program *prog;
 	state pstat;

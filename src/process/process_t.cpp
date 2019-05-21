@@ -32,12 +32,12 @@ process_t::~process_t()
 		delete heap_allocator;
 }
 
-void process_t::set_pid(size_t pid)
+void process_t::set_pid(int pid)
 {
 	this->pid = pid;
 }
 
-size_t process_t::get_pid() const
+int process_t::get_pid() const
 {
 	return this->pid;
 }
@@ -86,12 +86,12 @@ void process_t::exec(promise<int> &fin_code)
 	core->release();
 }
 
-void process_t::add_chl(size_t pid)
+void process_t::add_chl(int pid)
 {
 	ptr_chl.insert(pid);
 }
 
-void process_t::set_par(size_t pid)
+void process_t::set_par(int pid)
 {
 	ptr_par = pid;
 }

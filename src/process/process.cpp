@@ -23,7 +23,7 @@ using std::thread;
 typedef process_t::state state;
 
 static unordered_map<size_t, process_t*> proc_table;
-static size_t next_pid;
+static int next_pid;
 static mutex pid_mutex;
 
 static void proc_main(process_t *proc, promise<int> &fin_code)
@@ -46,14 +46,14 @@ void destroy_proc()
 	}
 }
 
-size_t create_process()
+int create_process()
 {
 	process_t *proc = new process_t;
 	
 	proc->set_state(state::UNINIT);
 
 	pid_mutex.lock();
-	size_t id = ++next_pid;
+	int id = ++next_pid;
 	proc->set_pid(id);
 	proc_table[id] = proc;
 	pid_mutex.unlock();
@@ -70,7 +70,7 @@ size_t create_process()
  *          -2 program is invalid
  *        else error code of proc_main
  */
-int exec_program(size_t pid, program *prog)
+int exec_program(int pid, program *prog)
 {
 	if (prog == nullptr) {
 		logging::info << "exec error. program is invalid" << logging::log_endl;
@@ -117,17 +117,20 @@ int proc_yield()
 {
 	process_t *proc = status.get_core()->get_current();
 	proc->set_resched(1);
+	return 0;
 }
 
-int proc_wait(size_t pid)
+int proc_wait(int pid)
 {
 	process_t *proc = status.get_core()->get_current();
 	sched_set_wait(proc, pid);
+	return 0;
 }
 
 int proc_exit()
 {
 	process_t *proc = status.get_core()->get_current();
 	sched_set_exit(proc);
+	return 0;
 }
 
