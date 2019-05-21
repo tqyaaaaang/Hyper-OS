@@ -13,7 +13,7 @@
 class dev_clock : public device_t
 {
 public:
-	dev_clock ( motherboard_t *_motherboard, std::chrono::nanoseconds _tick_duration = std::chrono::milliseconds ( 1 ) );
+	dev_clock ( int __motherboard_id, std::chrono::nanoseconds _tick_duration = std::chrono::milliseconds ( 1 ) );
 
 	virtual void init ();
 	virtual void destroy ();

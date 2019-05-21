@@ -10,7 +10,7 @@
 class dev_null : public device_t
 {
 public:
-	dev_null ( motherboard_t *_motherboard );
+	dev_null ( int __motherboard_id );
 
 	virtual void init ();
 	virtual void destroy ();

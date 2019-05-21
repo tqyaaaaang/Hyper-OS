@@ -9,8 +9,8 @@
 #include <sstream>
 #include "../../../src/logging/logging.h"
 
-dev_clock::dev_clock ( motherboard_t *_motherboard, std::chrono::nanoseconds _tick_duration )
-	: device_t ( _motherboard )
+dev_clock::dev_clock ( int __motherboard_id, std::chrono::nanoseconds _tick_duration )
+	: device_t ( __motherboard_id )
 	, tick_duration ( _tick_duration )
 {
 }
