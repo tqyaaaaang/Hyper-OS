@@ -20,6 +20,7 @@
 #include "../utils/check.h"
 #include "../logging/logging.h"
 #include "../utils/allocator/ffma.h"
+#include "sys_t.h"
 
 using std::mutex;
 using std::unique_lock;
@@ -147,6 +148,9 @@ template<typename T>
 handle<T>::operator T() const
 {
 	assert(prog != nullptr);
+	if (!prog->is_running()) {
+		logging::info << "handle of prog : " << prog->get_name() << " failed" << logging::log_endl;
+	}
 	assert(prog->is_running());
 	char *buf = new char[sizeof(T)];
 	prog->prog_read(buf, addr, addr + sizeof(T));
@@ -205,7 +209,9 @@ void program::build()
 	name = "<default>";
 	text_size = data_size = bss_size = 0;
 	running = false;
+	debug << "STATIC INIT" << log_endl;
 	this->static_init(); // init static info
+	info << "COMPILE" << log_endl;
 	compile();           // simulate compile
 	info << "BUILDING FINISH" << log_endl;
 }
@@ -213,6 +219,7 @@ void program::build()
 program::~program()
 {
 	lock_guard<mutex> lk (del_mutex);
+	info << "program " << get_name() << " destroy" << log_endl;
     if (data != nullptr) {
 		free(data);
 		data = nullptr;

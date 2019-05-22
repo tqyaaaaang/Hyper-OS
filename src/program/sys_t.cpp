@@ -43,9 +43,12 @@ int sys_t::create_process()
 	return intr(new sys_create_proc());
 }
 
-int sys_t::exec_program(int pid, const string & name)
+int sys_t::exec_program(int pid, handle<char> name)
 {
-	return intr(new sys_exec_prog(pid, get_program(name)));
+	std::string str;
+	for (size_t i = 0; name[i] != '\0'; i++)
+		str = str + (char)name[i];
+	return intr(new sys_exec_prog(pid, get_program(str)));
 }
 
 int sys_t::yield()

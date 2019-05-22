@@ -6,16 +6,17 @@
 #include <string>
 #include "../../dev/device_list.h"
 #include "../../dev/devices/output/output.h"
+#include "program.h"
 
-class program;
 class syscall_t;
+class program;
 
 class sys_t {
 public:
 
 	sys_t(program *prog);
 	int create_process();
-	int exec_program(int pid, const std::string &name);
+	int exec_program(int pid, handle<char> name);
 	int yield();
 	int exit();
     int wait(int pid);

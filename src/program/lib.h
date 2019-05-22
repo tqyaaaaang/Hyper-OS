@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "sys_t.h"
 #include <string>
 
 class program;

@@ -6,6 +6,7 @@
 #include "process_t.h"
 #include "../utils/panic.h"
 #include "../core/core.h"
+#include "../program/sys_t.h"
 #include <string>
 #include <cassert>
 #include <mutex>
@@ -84,6 +85,8 @@ void process_t::exec(promise<int> &fin_code)
 	this->cond_var.wait(lk);
 	lk.unlock();
 	core->acquire();
+	this->prog->run();
+	logging::info << "program " << prog->get_name() << " is set running : " << prog->is_running() << logging::log_endl;
 	this->prog->main();
 	prog->sys->exit();
 	core->release();

@@ -85,8 +85,10 @@ size_t program::alloc_static_area(size_t len)
 	data_size += len;
 	size_t l = data_size;
 	round2page(l);
+	logging::info << "REALLOC : " << len << logging::log_endl;
 	if (data == nullptr) data = (char*)malloc(l);
 	else data = (char*)realloc(data, l);
+	logging::info << "realloc success: " << len << logging::log_endl;
 	return data_size - len;
 }
 

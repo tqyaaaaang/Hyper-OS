@@ -7,6 +7,7 @@
 #include "../process/process_t.h"
 #include "../core/cpus.h"
 #include "../logging/logging.h"
+#include "../status/status.h"
 #include <list>
 #include <mutex>
 #include <cassert>
