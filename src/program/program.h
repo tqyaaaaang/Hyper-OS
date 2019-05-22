@@ -8,11 +8,11 @@
 #include <vector>
 #include <string>
 #include <mutex>
-#include "lib.h"
 
 class program;
 class process_t;
 class sys_t;
+class hos_std_t;
 
 namespace handle_type {
 	

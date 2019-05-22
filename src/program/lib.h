@@ -6,8 +6,7 @@
 #pragma once
 
 #include <string>
-
-class program;
+#include "program.h"
 
 class hos_std_t {
 public:
@@ -16,7 +15,9 @@ public:
 	virtual ~hos_std_t();
 	virtual void println(std::string str);
 	virtual void print(std::string str);
-    
+	virtual void println(handle<char> str);
+	virtual void putchar(handle<char> c);
+	
 private:
 
 	program *prog;

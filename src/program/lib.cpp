@@ -36,3 +36,16 @@ void hos_std_t::print(string str)
 	}
 }
 
+void hos_std_t::putchar(handle<char> c)
+{
+	std::putchar(c);
+}
+
+void hos_std_t::println(handle<char> str)
+{
+	for (size_t i = 0; str[i] != '\0'; i++) {
+		putchar(str[i]);
+	}
+	println("");
+}
+

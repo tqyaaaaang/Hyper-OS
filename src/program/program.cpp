@@ -21,6 +21,7 @@
 #include "../logging/logging.h"
 #include "../utils/allocator/ffma.h"
 #include "sys_t.h"
+#include "lib.h"
 
 using std::mutex;
 using std::unique_lock;

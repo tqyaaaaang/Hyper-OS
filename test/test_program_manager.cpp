@@ -24,22 +24,13 @@ public:
 	    for (size_t i = 0, size = 6; i < size; i++)
 			name[i].modify_in_compile(str[i]);
 	}
-
-	string tostring(char c)
-	{
-		string str;
-		str = str + c;
-		return str;
-	}
 	
 	virtual void main()
 	{
 	    hos_std->println("prog a start.");
 		int pid = sys->create_process();
 		logging::info << "pid : " << pid << logging::log_endl;
-		for (size_t i = 0; i < 6; i++)
-			hos_std->print(tostring(name[i]));
-		hos_std->println("");
+		hos_std->println(name);
 		sys->exec_program(pid, name);
 		sys->wait(pid);
 		logging::info << "prog b finished." << logging::log_endl;
