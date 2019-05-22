@@ -74,8 +74,8 @@ static mutex sched_mutex;
  */
 void sched_init_proc(process_t *proc)
 {
-	assert(proc != nullptr);
 	lock_guard<mutex> lk(sched_mutex);
+	assert(proc != nullptr);
 	uninit.push_front(proc);
 	proc->linker = uninit.begin();
 }
@@ -129,9 +129,8 @@ void sched_set_runable(process_t *proc)
 	sched_set_runable_nlock(proc);
 }
 
-void sched_set_sleep(process_t *proc)
+void sched_set_sleep_nlock(process_t *proc)
 {
-	lock_guard<mutex> lk(sched_mutex);
 	logging::info << "process " << proc->get_name() << " need some sleep." << (proc->get_state() == state::SLEEPING) << log_endl;
 	int core_id = proc->get_core()->get_core_id();
 
@@ -146,10 +145,16 @@ void sched_set_sleep(process_t *proc)
 	logging::info << "process " << proc->get_name() << " slept." << log_endl;
 }
 
+void sched_set_sleep(process_t *proc)
+{
+	lock_guard<mutex> lk(sched_mutex);
+	sched_set_sleep_nlock(proc);
+}
+
 void sched_set_wait(process_t *proc, int pid)
 {
-	sched_set_sleep(proc);
-	lock_guard<mutex> lk(sched_mutex);
+	lock_guard<mutex> lk(sched_mutex);	
+	sched_set_sleep_nlock(proc);
 	assert(proc->get_state() == state::SLEEPING);
 	if (proc_table[pid]->get_state() != state::ZOMBIE) {
 		if (!wait_map.count(pid))
