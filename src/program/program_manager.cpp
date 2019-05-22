@@ -6,10 +6,14 @@
 #include "program_manager.h"
 #include "../logging/logging.h"
 #include "../../user/shell/shell.h"
+#include "../../user/lp/lp.h"
+#include "../../user/elephant/elephant.h"
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
+#include <vector>
 
+using std::vector;
 using std::map;
 using std::pair;
 using std::string;
@@ -17,11 +21,13 @@ using std::make_pair;
 using std::function;
 
 map<string, program* (*)()> prog_table;
+vector<string> prog_name;
 
 void register_program(string name, program* (*gen)() )
 {
 	assert(!prog_table.count(name)); 
 	prog_table[name] = gen;
+	prog_name.push_back(name);
 }
 
 bool is_program(string name)
@@ -45,4 +51,6 @@ void destroy_program_manager()
 void init_program_manager()
 {
 	register_shell();
+	register_lp();
+	register_elephant();
 }

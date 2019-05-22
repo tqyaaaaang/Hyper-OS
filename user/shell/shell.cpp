@@ -113,7 +113,6 @@ void hyper_shell::error()
 
 void hyper_shell::exec()
 {
-	hos_std->println("working!");
 	int pid = sys->create_process();
 	logging::debug << "create process pid" << logging::log_endl;
 	// program *prog = get_program(to_string(argv[0]));
