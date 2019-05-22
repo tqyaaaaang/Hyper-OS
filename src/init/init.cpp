@@ -14,6 +14,7 @@
 #include "../mm/pmm.h"
 #include "../../dev/device.h"
 #include "../process/process.h"
+#include "../program/program_manager.h"
 
 void init ()
 {
@@ -29,6 +30,8 @@ void init ()
 	init_devices ();
 
 	init_pmm ( );
+
+	init_program_manager( );
 
 	init_proc();
 }

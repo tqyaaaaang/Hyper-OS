@@ -4,7 +4,7 @@ SET ( CMAKE_CXX_STANDARD 11 )
 
 PROJECT ( HYPER-OS )
 
-FILE ( GLOB_RECURSE src_list "src/*.cpp" "test/*.cpp" "dev/*.cpp" )
+FILE ( GLOB_RECURSE src_list "user/*.cpp" "src/*.cpp" "test/*.cpp" "dev/*.cpp" )
 
 SET ( prog_name hos )
 

@@ -5,6 +5,7 @@
 
 #include "program_manager.h"
 #include "../logging/logging.h"
+#include "../../user/shell/shell.h"
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
@@ -23,6 +24,11 @@ void register_program(string name, program* (*gen)() )
 	prog_table[name] = gen;
 }
 
+bool is_program(string name)
+{
+	return prog_table.count(name);
+}
+
 program* get_program(string name)
 {
 	assert(prog_table.count(name));
@@ -34,4 +40,9 @@ program* get_program(string name)
 
 void destroy_program_manager()
 {
+}
+
+void init_program_manager()
+{
+	register_shell();
 }

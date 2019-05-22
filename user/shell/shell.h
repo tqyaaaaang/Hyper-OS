@@ -2,8 +2,6 @@
 
 #include "../hyperstd.h"
 #include "../hyperlib.h"
-#include "../../src/program/program_manager.h"
-#include <map>
 #include <string>
 
 class hyper_shell : public program {
@@ -14,18 +12,18 @@ public:
 	virtual void main();
 	virtual void static_init();
 
-	void register_program();
-	
 private:
 
-	struct arg {
-	    handle<char> opt;
-		handle<char> val;
-	};
-	
-	std::map<std::string> name_list;
+	handle<int> argc;
+	handle<char> argv[20];
 
-	void help();
-	void ls();
-	void exec(handle<char> name);
+    handle<int> servant(handle<char> cmd);
+	void exec();
+	handle<int> parse();
+	handle<int> get();
+	void error();
+	std::string to_string(handle<char> str);
+	
 };
+
+void register_shell();

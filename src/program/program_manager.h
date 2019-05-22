@@ -21,5 +21,7 @@ void register_program(std::string name,
 					  program* (*gen)());
 
 program* get_program(std::string name);
+bool is_program(std::string name);
 
+void init_program_manager();
 void destroy_program_manager();

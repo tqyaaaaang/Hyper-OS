@@ -14,6 +14,8 @@
 #include "../schedule/schedule.h"
 #include "../status/status.h"
 #include "../core/core.h"
+#include "../program/program_manager.h"
+#include <thread>
 
 using std::promise;
 using std::future;
@@ -37,6 +39,11 @@ void init_proc()
 {
 	next_pid = 0;
 	logging::info << "proc init ok." << logging::log_endl;
+	int pid = proc_create_process();
+	proc_exec_program(pid, get_program("shell"));
+	while (1) {
+		std::this_thread::yield();
+	}
 }
 
 void destroy_proc()

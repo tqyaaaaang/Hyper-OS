@@ -82,9 +82,6 @@ bool local_apic::is_enabled () const
 int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 {
 	logging::debug << "LAPIC received interrupt request : " << current_interrupt->to_string () << logging::log_endl;
-	process_t *proc = nullptr;
-	if (status.get_core() != nullptr)
-		proc = status.get_core()->get_current();
 	if ( !current_interrupt->is_lapic_signal () && !is_enabled () ) {
 		logging::warning << "LAPIC received interrupt request after it is disabled : " << current_interrupt->to_string () << logging::log_endl;
 		current_interrupt->get_return_promise ().set_value ( -1 );
@@ -100,11 +97,6 @@ int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 		std::thread wait_thread ( &local_apic::wait_interrupt_return, this, current_interrupt );
 		wait_thread.detach ();
 	}
-	if (return_val == -1)
-		return -1;
-	if (proc != nullptr && status.get_core() != nullptr
-		&& status.get_core()->get_current() != proc)
-		return -2;
 	return return_val;
 }
 

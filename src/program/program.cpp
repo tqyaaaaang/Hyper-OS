@@ -75,6 +75,7 @@ template<typename T>
 handle<T>::handle(program *prog)
 {
 	this->prog = prog;
+	this_type = handle_type::NIL;
 }
 
 template<typename T>

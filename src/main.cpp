@@ -10,6 +10,6 @@
 int main ()
 {
 	init ();
-	test ();
+	// test ();
 	destroy ();
 }

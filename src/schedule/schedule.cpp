@@ -198,6 +198,10 @@ void sched_set_exit(process_t *proc)
 void schedule(int id)
 {	
 	process_t *proc = cores[id].get_current();
+
+	if (proc == nullptr) {
+		logging::info << "proc is null pointer" << logging::log_endl;
+	}
 	
 	if (proc == nullptr || proc->get_resched()) {
 		if (proc != nullptr) {
