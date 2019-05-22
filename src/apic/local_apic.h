@@ -10,6 +10,7 @@
 #include <condition_variable>
 #include <stack>
 #include <queue>
+#include "interrupt_queue.h"
 #include "../utils/thread_safe_queue/thread_safe_queue.h"
 
 class CPU_core;
@@ -52,6 +53,6 @@ private:
 	CPU_core *core;   // CPU core in which it affliate
 
 	std::stack < std::pair < interrupt_t *, std::thread > > isr_stack;   // stack of current running ISRs
-	std::queue < interrupt_t * > interrupt_queue;   // interrupts waiting
+	interrupt_queue_t interrupt_queue;   // interrupts waiting
 	thread_safe_queue < interrupt_t * > event_queue;   // event queue
 };
