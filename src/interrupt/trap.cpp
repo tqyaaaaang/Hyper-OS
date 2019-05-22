@@ -50,7 +50,9 @@ void interrupt_trap_entry ( status_t thread_status, interrupt_t * current_interr
 	} else {
 		logging::debug << "CPU #" << status.get_core()->get_core_id() << " trap into kernel mode of idle" << logging::log_endl;
 	}
-
+	if (cur != nullptr) {
+		logging::info << "trap of " << cur->get_name() << " " << cur->get_pid() << " start process." << logging::log_endl;
+	}
 	current_interrupt->process ();
 	trap_exit();
 	status.get_core()->release ();

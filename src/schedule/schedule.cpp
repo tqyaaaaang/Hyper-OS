@@ -132,7 +132,7 @@ void sched_set_runable(process_t *proc)
 
 void sched_set_sleep_nlock(process_t *proc)
 {
-	logging::info << "process " << proc->get_name() << " need some sleep." << (proc->get_state() == state::SLEEPING) << log_endl;
+	logging::info << "process " << proc->get_name() << " " << proc->get_pid() << " need some sleep." << (proc->get_state() == state::SLEEPING) << log_endl;
 	int core_id = proc->get_core()->get_core_id();
 
 	assert(proc->get_state() == state::RUNABLE);
@@ -143,7 +143,7 @@ void sched_set_sleep_nlock(process_t *proc)
 	proc->linker = state_list[core_id].sleeping.begin();
 
 	status.get_core()->set_current(nullptr);
-	logging::info << "process " << proc->get_name() << " slept." << log_endl;
+	logging::info << "process " << proc->get_name() << " " << proc->get_pid() << " slept." << log_endl;
 }
 
 void sched_set_sleep(process_t *proc)
@@ -154,7 +154,8 @@ void sched_set_sleep(process_t *proc)
 
 void sched_set_wait(process_t *proc, int pid)
 {
-	lock_guard<mutex> lk(sched_mutex);	
+	lock_guard<mutex> lk(sched_mutex);
+	info << "process " << proc->get_name() << " " << proc->get_pid() << " wait " << pid << log_endl;
 	sched_set_sleep_nlock(proc);
 	assert(proc->get_state() == state::SLEEPING);
 	if (proc_table[pid]->get_state() != state::ZOMBIE) {
@@ -197,6 +198,8 @@ void sched_set_exit(process_t *proc)
 
 void schedule(int id)
 {
+	lock_guard<mutex> lk(sched_mutex);
+
 	if ( cores[id].get_interrupt_depth () == 1 ) {
 		process_t *proc = cores[id].get_current ();
 
@@ -227,13 +230,17 @@ void schedule(int id)
 				// make sure nxt_proc sleep sucessfully
 
 				// awake
+
+				logging::info << "nodify process " << nxt_proc->get_name() << " " << nxt_proc->get_pid() << logging::log_endl;
+				
 				nxt_proc->cond_var.notify_one ();
 			}
-			if ( nxt_proc != nullptr ) {
+			if (nxt_proc != proc) {
 
-				logging::info << "switch process : " << nxt_proc->get_name () << logging::log_endl;
+				logging::info << "switch process : " << nxt_proc->get_name () << " " << nxt_proc->get_pid() << logging::log_endl;
 			}
 		} else {
+			logging::info << "nodify process " << proc->get_name() << " " << proc->get_pid() << logging::log_endl;
 			proc->cond_var.notify_one ();
 		}
 	} else {

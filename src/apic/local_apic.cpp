@@ -90,10 +90,13 @@ int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 	event_queue.push_back ( current_interrupt );
 	int return_val = 0;
 	if ( blocked ) {
-		core->release ();
 		if ( core->get_interrupt_depth () == 0 && core->get_current () != nullptr ) {
 			std::unique_lock < std::mutex > lck ( core->get_current ()->cond_mutex );
+			core->release ();
+			logging::info << "process " << core->get_current()->get_name() << " " << core->get_current()->get_pid() << " stop and wait for interrupt" << logging::log_endl;
 			core->get_current ()->cond_var.wait ( lck );
+		} else {
+			core->release ();
 		}
 		return_val = wait_interrupt_return ( current_interrupt );
 		core->acquire ();

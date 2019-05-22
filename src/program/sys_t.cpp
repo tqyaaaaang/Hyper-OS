@@ -31,10 +31,6 @@ int sys_t::intr(syscall_t *sys)
 	int result = interrupt(new syscall_interrupt(sys));
 	int return_value = sys->get_return_value();
 	delete sys;
-	if (result == -2) {
-		logging::info << "program " << this->prog->get_name() << " need sleep" << logging::log_endl;
-		sleep_program(this->prog);
-	}
 	return return_value;
 }
 
@@ -63,7 +59,8 @@ int sys_t::exit()
 
 int sys_t::wait(int pid)
 {
-	return intr(new sys_wait(pid));
+	int w = intr(new sys_wait(pid));
+	return w;
 }
 
 int sys_t::read(int device)
