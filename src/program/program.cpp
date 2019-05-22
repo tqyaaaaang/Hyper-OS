@@ -20,6 +20,7 @@
 #include "../utils/check.h"
 #include "../logging/logging.h"
 #include "../utils/allocator/ffma.h"
+#include "../interrupt/interrupt.h"
 #include "sys_t.h"
 #include "lib.h"
 
@@ -41,26 +42,12 @@ template class handle<char>;
  * if an interrupt occurs, trap into kernel mode
  */
 
-void sleep_program(program *prog)
-{
-	process_t *proc = prog->cur_proc;
-	debug << "proc " << proc->get_name() << " release cpu because of interrupt, => " << status.get_core()->get_intr() << log_endl;
-	unique_lock<mutex> lk (proc->cond_mutex);
-	status.get_core()->release();
-	proc->cond_var.wait(lk);
-	status.get_core()->acquire();
-	debug << "proc " << proc->get_name() << " return frome interrupt, => " << status.get_core()->get_intr() << log_endl;
-}
-
 void tail_check(program *prog)
 {
 	process_t *proc = prog->cur_proc;
 	assert(proc != nullptr);
 	assert(proc->get_core() == status.get_core());
-	if (status.get_core()->get_intr()) {
-		// interrupt occurs
-		sleep_program(prog);
-	} 
+	check_interrupt ();
 }
 
 template<typename T>

@@ -41,6 +41,7 @@ void init_proc()
 	logging::info << "proc init ok." << logging::log_endl;
 	int pid = proc_create_process();
 	proc_exec_program(pid, get_program("shell"));
+	schedule ( 0 );
 	while (1) {
 		std::this_thread::yield();
 	}

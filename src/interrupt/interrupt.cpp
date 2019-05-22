@@ -14,3 +14,8 @@ int interrupt ( interrupt_t * current_interrupt )
 {
 	return status.get_core ()->get_lapic ().interrupt ( current_interrupt );
 }
+
+void check_interrupt ()
+{
+	status.get_core ()->get_lapic ().try_process_interrupt ();
+}

@@ -25,7 +25,7 @@ public:
 	void clear ();
 
 private:
-	typedef std::pair < std::pair < int, long long >, interrupt_t * > queue_element_t;   // format: ((priroity, time), interrupt)
+	typedef std::pair < std::pair < int, std::pair < int, long long > >, interrupt_t * > queue_element_t;   // format: ((type, (priroity, time)), interrupt)
 	std::priority_queue < queue_element_t, std::vector < queue_element_t >, std::greater < queue_element_t > > interrupt_queue;
 
 	long long time_id;

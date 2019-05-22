@@ -200,7 +200,7 @@ void schedule(int id)
 {
 	lock_guard<mutex> lk(sched_mutex);
 
-	if ( cores[id].get_interrupt_depth () == 1 ) {
+	if ( cores[id].get_interrupt_depth () <= 1 ) {
 		process_t *proc = cores[id].get_current ();
 
 		if ( proc == nullptr ) {

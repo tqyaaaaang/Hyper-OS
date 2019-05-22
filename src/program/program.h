@@ -203,5 +203,3 @@ private:
 	std::mutex del_mutex;
 	
 };
-
-void sleep_program(program *prog);

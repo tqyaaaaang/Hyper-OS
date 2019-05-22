@@ -17,7 +17,13 @@ interrupt_queue_t::~interrupt_queue_t ()
 void interrupt_queue_t::push ( interrupt_t * current_interrupt )
 {
 	++time_id;
-	interrupt_queue.push ( std::make_pair ( std::make_pair ( static_cast < int > ( current_interrupt->get_interrupt_id () ) / 16, time_id ), current_interrupt ) );
+	int interrupt_type;
+	if ( current_interrupt->is_internal_interrupt () ) {
+		interrupt_type = 0;
+	} else {
+		interrupt_type = 1;
+	}
+	interrupt_queue.push ( std::make_pair ( std::make_pair ( interrupt_type, std::make_pair ( static_cast < int > ( current_interrupt->get_interrupt_id () ) >> 4, time_id ) ), current_interrupt ) );
 }
 
 interrupt_t * interrupt_queue_t::front () const

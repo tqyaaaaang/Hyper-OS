@@ -36,16 +36,19 @@ public:
 	int interrupt ( interrupt_t *current_interrupt, bool blocked = true );   // @return: whether the interrupt is processed
 	void send_end_of_interrupt ( int return_value );   // send an end_of_interrupt signal
 
+	void try_process_interrupt ();   // check if there is a interrupt waiting and give up current CPU to process it if yes
+
 private:
 	int wait_interrupt_return ( interrupt_t *current_interrupt );
 
+	void send_process_interrupt_signal ();   // send a signal to LAPIC to try to process a new interrupt
 	void send_disable_signal ();   // send disable LAPIC signal
 
 	void lapic_thread_entry ( status_t father_thread_status );   // LAPIC daemon thread entry
 	void lapic_thread_event_loop ();
 
 	bool do_events ( interrupt_t *current_interrupt );   // return true to stop the LAPIC thread
-	void schedule ();   // choose a new interrupt to run
+	void schedule ( bool internal_only );   // choose a new interrupt to run
 	void run_isr ( interrupt_t *current_interrupt );   // run ISR of an interrupt
 
 	bool enabled;   // is LAPIC enabled

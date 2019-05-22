@@ -14,6 +14,7 @@
 #include "../interrupt/interrupts/interrupt_t.h"
 #include "../interrupt/interrupts/end_of_interrupt.h"
 #include "../interrupt/interrupts/disable_lapic.h"
+#include "../interrupt/interrupts/lapic_process_interrupt_signal.h"
 #include "../interrupt/trap.h"
 
 local_apic::local_apic ( CPU_core *_core )
@@ -112,9 +113,18 @@ void local_apic::send_end_of_interrupt ( int return_value )
 	interrupt ( new end_of_interrupt ( return_value ), false );
 }
 
-void local_apic::send_disable_signal ()
+void local_apic::try_process_interrupt ()
 {
-	interrupt ( new disable_lapic (), false );
+	logging::debug << "Try to send signals to LAPIC process interrupts if interrupts exist, proccess #"
+		<< status.get_core ()->get_current ()->get_pid () << " ( " << status.get_core ()->get_current ()->get_name () << " )" << logging::log_endl;
+	while ( !status.get_core ()->get_interrupt_waiting_flag () ) {
+		logging::debug << "Find unprocessed interrupt, sending signal to LAPIC" << logging::log_endl;
+		std::unique_lock < std::mutex > lck ( status.get_core ()->get_current ()->cond_mutex );
+		status.get_core ()->release ();
+		send_process_interrupt_signal ();
+		status.get_core ()->get_current ()->cond_var.wait ( lck );
+		status.get_core ()->acquire ();
+	}
 }
 
 
@@ -124,6 +134,18 @@ int local_apic::wait_interrupt_return ( interrupt_t * current_interrupt )
 	int return_value = current_interrupt->get_return_promise ().get_future ().get ();
 	delete current_interrupt;
 	return return_value;
+}
+
+
+
+void local_apic::send_process_interrupt_signal ()
+{
+	interrupt ( new lapic_process_interrupt_signal (), false );
+}
+
+void local_apic::send_disable_signal ()
+{
+	interrupt ( new disable_lapic (), false );
 }
 
 
@@ -154,13 +176,12 @@ void local_apic::lapic_thread_event_loop ()
 				run_isr ( current_interrupt );
 			} else {
 				interrupt_queue.push ( current_interrupt );
+				core->set_interrupt_waiting_flag ();
 			}
 		} else {   // hardware interrupts
 			logging::debug << "LAPIC received new interrupt request : " << current_interrupt->to_string () << logging::log_endl;
 			interrupt_queue.push ( current_interrupt );
-			if ( isr_stack.empty () ) {
-				schedule ();
-			}
+			core->set_interrupt_waiting_flag ();
 		}
 	}
 }
@@ -186,8 +207,9 @@ bool local_apic::do_events ( interrupt_t * current_interrupt )
 			if ( !is_enabled () ) {   // LAPIC disabled
 				return_value = true;
 				break;
+			} else {
+				schedule ( true );
 			}
-			schedule ();
 		}
 		break;
 
@@ -201,6 +223,11 @@ bool local_apic::do_events ( interrupt_t * current_interrupt )
 		}
 		break;
 
+	case interrupt_id_t::LAPIC_PROCESS_INTERRUPT:
+		logging::debug << "LAPIC received PROCESS INTERRUPT signal" << logging::log_endl;
+		schedule ( false );
+		break;
+
 	default:
 		logging::error << "LAPIC do_events : unknown event id " << static_cast < int > ( current_interrupt->get_interrupt_id () ) << logging::log_endl;
 		break;
@@ -209,14 +236,21 @@ bool local_apic::do_events ( interrupt_t * current_interrupt )
 	return return_value;
 }
 
-void local_apic::schedule ()
+void local_apic::schedule ( bool internal_only )
 {
 	logging::debug << "LAPIC scheduling new ISR to run" << logging::log_endl;
 	if ( core->is_interrupt_enabled () && !interrupt_queue.empty () ) {
 		interrupt_t *current_interrupt = interrupt_queue.front ();
-		interrupt_queue.pop ();
-		logging::debug << "LAPIC scheduled interrupt : " << current_interrupt->to_string () << logging::log_endl;
-		run_isr ( current_interrupt );
+		if ( internal_only && !current_interrupt->is_internal_interrupt () ) {
+			logging::debug << "LAPIC schedule failed because internal_only is true but next interrupt is not internal interrupt" << logging::log_endl;
+		} else {
+			interrupt_queue.pop ();
+			if ( interrupt_queue.empty () ) {
+				core->unset_interrupt_waiting_flag ();
+			}
+			logging::debug << "LAPIC scheduled interrupt : " << current_interrupt->to_string () << logging::log_endl;
+			run_isr ( current_interrupt );
+		}
 	} else if ( !core->is_interrupt_enabled () ) {
 		logging::debug << "LAPIC schedule failed because interrupt is disabled" << logging::log_endl;
 	} else {

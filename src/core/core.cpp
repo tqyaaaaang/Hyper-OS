@@ -20,7 +20,7 @@ CPU_core::CPU_core ()
 {
 	mmu = CPU_mmu(this);
 	current = nullptr;
-	intr_bit = 0;
+	interrupt_waiting_flag = 0;
 }
 
 CPU_core::~CPU_core ()
@@ -163,21 +163,21 @@ void CPU_core::vm_write(size_t addr, const char *buf_begin, const char *buf_end)
 	}
 }
 
-void CPU_core::mark_intr()
+void CPU_core::set_interrupt_waiting_flag()
 {
-	lock_guard<mutex> lk(intr_mutex);
-	intr_bit++;
+	lock_guard<mutex> lk(interrupt_waiting_flag_mutex);
+	interrupt_waiting_flag++;
 }
 
-void CPU_core::unmark_intr()
+void CPU_core::unset_interrupt_waiting_flag()
 {
-	lock_guard<mutex> lk(intr_mutex);
-	intr_bit--;
+	lock_guard<mutex> lk(interrupt_waiting_flag_mutex);
+	interrupt_waiting_flag--;
 }
 
-int CPU_core::get_intr()
+int CPU_core::get_interrupt_waiting_flag() const
 {
-	lock_guard<mutex> lk(intr_mutex);
-    int d = intr_bit;
+	lock_guard<mutex> lk(interrupt_waiting_flag_mutex);
+    int d = interrupt_waiting_flag;
 	return d;
 }

@@ -37,7 +37,7 @@ void interrupt_trap_entry ( status_t thread_status, interrupt_t * current_interr
 
 	status.get_core ()->inc_interrupt_depth ();
 
-	status.get_core ()->mark_intr ();
+	status.get_core ()->set_interrupt_waiting_flag ();
 	process_t *cur = status.get_core()->get_current();
 	
 	status.get_core()->acquire();	
@@ -56,7 +56,7 @@ void interrupt_trap_entry ( status_t thread_status, interrupt_t * current_interr
 	current_interrupt->process ();
 	trap_exit();
 	status.get_core()->release ();
-	status.get_core ()->unmark_intr();
+	status.get_core ()->unset_interrupt_waiting_flag();
 	
 	status.get_core ()->get_lapic ().send_end_of_interrupt ( 0 );
 

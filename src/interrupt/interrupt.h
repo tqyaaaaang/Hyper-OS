@@ -8,3 +8,5 @@
 class interrupt_t;
 
 int interrupt ( interrupt_t *current_interrupt );
+
+void check_interrupt ();

@@ -92,20 +92,23 @@ public:
 	int get_interrupt_depth () const;
 
 	/**
-	 * Mark Interrupt Bit
+	 * CPU_core.set_interrupt_flag
+	 * Set interrupt waiting flag
 	 * Process get mark and yeild in tail-check
 	 */
-	void mark_intr();
+	void set_interrupt_waiting_flag();
 
 	/**
-	 * Unmark Interrupt Bit
+	 * CPU_core.unset_interrupt_flag
+	 * Unet interrupt waiting flag
 	 */
-	void unmark_intr();
+	void unset_interrupt_waiting_flag();
 
 	/**
-	 * Get Interrupt Bit
+	 * CPU_core.get_interrupt_flag
+	 * Get interrupt waiting flag
 	 */
-	int get_intr();
+	int get_interrupt_waiting_flag() const;
 
 	
 	void set_core_id ( int id );   // Set the CPU core id
@@ -142,6 +145,6 @@ private:
 	context_t context;
 	process_t *current;
 
-	int intr_bit;
-	std::mutex intr_mutex;
+	int interrupt_waiting_flag;
+	mutable std::mutex interrupt_waiting_flag_mutex;
 };
