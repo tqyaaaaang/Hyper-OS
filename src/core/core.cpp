@@ -16,6 +16,7 @@ CPU_core::CPU_core ()
 	: enabled_flag ( false )
 	, interrupt_enabled_flag ( false )
 	, lapic ( this )
+	, interrupt_depth ( 0 )
 {
 	mmu = CPU_mmu(this);
 	current = nullptr;
@@ -79,6 +80,21 @@ void CPU_core::disable_interrupt ()
 bool CPU_core::is_interrupt_enabled () const
 {
 	return interrupt_enabled_flag;
+}
+
+void CPU_core::inc_interrupt_depth ()
+{
+	++interrupt_depth;
+}
+
+void CPU_core::dec_interrupt_depth ()
+{
+	--interrupt_depth;
+}
+
+int CPU_core::get_interrupt_depth () const
+{
+	return interrupt_depth;
 }
 
 void CPU_core::set_core_id ( int id )

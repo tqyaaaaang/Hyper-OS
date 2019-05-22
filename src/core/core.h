@@ -74,6 +74,24 @@ public:
 	bool is_interrupt_enabled () const;
 
 	/**
+	 * CPU_core.inc_interrupt_depth ()
+	 * increase the depth of the interrupt stack
+	 */
+	void inc_interrupt_depth ();
+
+	/**
+	 * CPU_core.dec_interrupt_depth ()
+	 * decrease the depth of the interrupt stack
+	 */
+	void dec_interrupt_depth ();
+
+	/**
+	 * CPU_core.get_interrupt_depth ()
+	 * get the depth of the interrupt stack
+	 */
+	int get_interrupt_depth () const;
+
+	/**
 	 * Mark Interrupt Bit
 	 * Process get mark and yeild in tail-check
 	 */
@@ -113,6 +131,8 @@ private:
 	bool enabled_flag;
 	bool interrupt_enabled_flag;
 	int core_id;
+
+	int interrupt_depth;
 
 	local_apic lapic;
 	

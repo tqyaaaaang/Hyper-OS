@@ -91,6 +91,10 @@ int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 	int return_val = 0;
 	if ( blocked ) {
 		core->release ();
+		if ( core->get_interrupt_depth () == 0 && core->get_current () != nullptr ) {
+			std::unique_lock < std::mutex > lck ( core->get_current ()->cond_mutex );
+			core->get_current ()->cond_var.wait ( lck );
+		}
 		return_val = wait_interrupt_return ( current_interrupt );
 		core->acquire ();
 	} else {

@@ -196,44 +196,48 @@ void sched_set_exit(process_t *proc)
 }
 
 void schedule(int id)
-{	
-	process_t *proc = cores[id].get_current();
+{
+	if ( cores[id].get_interrupt_depth () == 1 ) {
+		process_t *proc = cores[id].get_current ();
 
-	if (proc == nullptr) {
-		logging::info << "proc is null pointer" << logging::log_endl;
-	}
-	
-	if (proc == nullptr || proc->get_resched()) {
-		if (proc != nullptr) {
-			proc->set_resched(0);
-			proc->set_slice(1);
-			state_list[id].running.erase(proc->linker);
-			state_list[id].running.push_front(proc);
-			proc->linker = state_list[id].running.begin();
+		if ( proc == nullptr ) {
+			logging::info << "proc is null pointer" << logging::log_endl;
 		}
 
-		// next proc
-		if (state_list[id].running.empty())
-			return;
-		
-		process_t *nxt_proc = state_list[id].running.back();
-		if (nxt_proc != nullptr) {
-			cores[id].set_current(nxt_proc);
-			cores[id].set_context(nxt_proc->get_context());
+		if ( proc == nullptr || proc->get_resched () ) {
+			if ( proc != nullptr ) {
+				proc->set_resched ( 0 );
+				proc->set_slice ( 1 );
+				state_list[id].running.erase ( proc->linker );
+				state_list[id].running.push_front ( proc );
+				proc->linker = state_list[id].running.begin ();
+			}
 
-			nxt_proc->cond_mutex.lock();
-			nxt_proc->cond_mutex.unlock();
-			// make sure nxt_proc sleep sucessfully
+			// next proc
+			if ( state_list[id].running.empty () )
+				return;
 
-			// awake
-			nxt_proc->cond_var.notify_one();
-		}
-		if (nxt_proc != nullptr) {
+			process_t *nxt_proc = state_list[id].running.back ();
+			if ( nxt_proc != nullptr ) {
+				cores[id].set_current ( nxt_proc );
+				cores[id].set_context ( nxt_proc->get_context () );
 
-			logging::info << "switch process : " << nxt_proc->get_name() << logging::log_endl;
+				nxt_proc->cond_mutex.lock ();
+				nxt_proc->cond_mutex.unlock ();
+				// make sure nxt_proc sleep sucessfully
+
+				// awake
+				nxt_proc->cond_var.notify_one ();
+			}
+			if ( nxt_proc != nullptr ) {
+
+				logging::info << "switch process : " << nxt_proc->get_name () << logging::log_endl;
+			}
+		} else {
+			proc->cond_var.notify_one ();
 		}
 	} else {
-	    proc->cond_var.notify_one();
+		logging::debug << "Not running schedule because interrupt depth is greater than 1" << logging::log_endl;
 	}
 
 }
