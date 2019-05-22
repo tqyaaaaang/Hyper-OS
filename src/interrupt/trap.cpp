@@ -55,7 +55,7 @@ void interrupt_trap_entry ( status_t thread_status, interrupt_t * current_interr
 	status.get_core()->release ();
 	status.get_core ()->unmark_intr();
 	
-	status.get_core ()->get_lapic ().send_end_of_interrupt ();
+	status.get_core ()->get_lapic ().send_end_of_interrupt ( 0 );
 	clock_t e = clock();
 	logging::debug << "interrupt : " << 1.0*(e-c)/CLOCKS_PER_SEC << logging::log_endl;
 }

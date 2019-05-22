@@ -100,9 +100,9 @@ int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 	return return_val;
 }
 
-void local_apic::send_end_of_interrupt ()
+void local_apic::send_end_of_interrupt ( int return_value )
 {
-	interrupt ( new end_of_interrupt (), false );
+	interrupt ( new end_of_interrupt ( return_value ), false );
 }
 
 void local_apic::send_disable_signal ()
@@ -173,7 +173,7 @@ bool local_apic::do_events ( interrupt_t * current_interrupt )
 	case interrupt_id_t::END_OF_INTERRUPT:
 		logging::debug << "LAPIC received EOI signal from ISR : " << isr_stack.top ().first->to_string () << logging::log_endl;
 		isr_stack.top ().second.join ();
-		isr_stack.top ().first->get_return_promise ().set_value ( 0 );
+		isr_stack.top ().first->get_return_promise ().set_value ( dynamic_cast < end_of_interrupt * > ( current_interrupt )->get_return_value () );
 		isr_stack.pop ();
 		if ( isr_stack.empty () ) {
 			if ( !is_enabled () ) {   // LAPIC disabled

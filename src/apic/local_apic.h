@@ -33,7 +33,7 @@ public:
 	bool is_enabled () const;
 
 	int interrupt ( interrupt_t *current_interrupt, bool blocked = true );   // @return: whether the interrupt is processed
-	void send_end_of_interrupt ();   // send an end_of_interrupt signal
+	void send_end_of_interrupt ( int return_value );   // send an end_of_interrupt signal
 
 private:
 	int wait_interrupt_return ( interrupt_t *current_interrupt );
