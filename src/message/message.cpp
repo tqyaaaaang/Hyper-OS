@@ -95,7 +95,7 @@ message::message_wrapper message::wrap_message ( message msg )
 
 message::message_wrapper message::make_wrap_message ( msg_info_t _info, std::string _source )
 {
-	return message_wrapper ( make_message ( _info, _source ) );
+	return wrap_message ( make_message ( _info, _source ) );
 }
 
 message::alias_type message::make_alias ( msg_info_t _info )
