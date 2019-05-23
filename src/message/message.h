@@ -118,12 +118,36 @@ namespace message
 	extern msg_endl_t msg_endl;
 
 	typedef decltype ( std::bind ( make_wrap_message, msg_info_t (), std::placeholders::_1 ) ) alias_type;
-	extern const alias_type msg_alias;
+
+	/**
+	 * class alias_wrapper
+	 * wrapper of an alias
+	 */
+	class alias_wrapper
+	{
+	public:
+		alias_wrapper ( alias_type value );
+		~alias_wrapper ();
+
+		template < typename... T >
+		message_wrapper operator () ( T... param )
+		{
+			return ( *ptr ) ( param... );
+		}
+
+	private:
+		std::shared_ptr < alias_type > ptr;
+	};
 
 	alias_type make_alias ( msg_info_t _info );
+	alias_wrapper wrap_alias ( alias_type alias );
+	alias_wrapper make_wrap_alias ( msg_info_t _info );
 
-	extern alias_type interrupt;
-	extern alias_type test;
+	extern const alias_type msg_alias;
+	extern const alias_wrapper wrapped_msg_alias;
+
+	extern alias_wrapper interrupt;
+	extern alias_wrapper test;
 }
 
 void init_message ();   // Initialize the message objects

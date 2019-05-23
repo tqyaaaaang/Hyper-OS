@@ -15,8 +15,9 @@ namespace message
 	msg_endl_t msg_endl;
 
 	const alias_type msg_alias = make_alias ( msg_info_t () );
-	alias_type interrupt = msg_alias;
-	alias_type test = msg_alias;
+	const alias_wrapper wrapped_msg_alias = wrap_alias ( msg_alias );
+	alias_wrapper interrupt = wrapped_msg_alias;
+	alias_wrapper test = wrapped_msg_alias;
 }
 
 message::msg_info_t::msg_info_t ()
@@ -98,9 +99,32 @@ message::message_wrapper message::make_wrap_message ( msg_info_t _info, std::str
 	return wrap_message ( make_message ( _info, _source ) );
 }
 
+
+
 message::alias_type message::make_alias ( msg_info_t _info )
 {
 	return std::bind ( make_wrap_message, static_cast < msg_info_t > ( _info ), std::placeholders::_1 );
+}
+
+message::alias_wrapper message::wrap_alias ( alias_type alias )
+{
+	return alias_wrapper ( alias );
+}
+
+message::alias_wrapper message::make_wrap_alias ( msg_info_t _info )
+{
+	return wrap_alias ( make_alias ( _info ) );
+}
+
+
+
+message::alias_wrapper::alias_wrapper ( alias_type value )
+{
+	ptr = std::make_shared < alias_type > ( value );
+}
+
+message::alias_wrapper::~alias_wrapper ()
+{
 }
 
 
@@ -111,8 +135,8 @@ void init_message ()
 
 	message::OUT = &std::cout;
 
-	message::interrupt = message::make_alias ( message::msg_info_t ( "interrupt", true ) );
-	message::test = message::make_alias ( message::msg_info_t ( "test", true ) );
+	message::interrupt = message::make_wrap_alias ( message::msg_info_t ( "interrupt", true ) );
+	message::test = message::make_wrap_alias ( message::msg_info_t ( "test", true ) );
 }
 
 void destroy_message ()
