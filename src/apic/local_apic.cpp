@@ -126,7 +126,7 @@ void local_apic::try_process_interrupt ()
 {
 	logging::debug << "Try to send signals to LAPIC process interrupts if interrupts exist, proccess #"
 		<< status.get_core ()->get_current ()->get_pid () << " ( " << status.get_core ()->get_current ()->get_name () << " )" << logging::log_endl;
-	while ( !status.get_core ()->get_interrupt_waiting_flag () ) {
+	while ( status.get_core ()->get_interrupt_waiting_flag () ) {
 		logging::debug << "Find unprocessed interrupt, sending signal to LAPIC" << logging::log_endl;
 		std::unique_lock < std::mutex > lck ( status.get_core ()->get_current ()->cond_mutex );
 		status.get_core ()->release ();
