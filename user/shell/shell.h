@@ -21,9 +21,17 @@ private:
 	void exec();
 	handle<int> parse();
 	handle<int> get();
-	void error();
+
+	void program_not_found_error();
+	void too_long_error();
+
 	std::string to_string(handle<char> str);
+
+	void help_prog();
+	void general_help();
 	
+	void help_exit_title();
+	void help_exec_title();
 };
 
 void register_shell();
