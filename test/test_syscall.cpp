@@ -16,7 +16,7 @@
 
 void test_syscall ()
 {
-	logging::debug << "Testing interrupts" << logging::log_endl;
+	logging::debug << "Testing system calls" << logging::log_endl;
 	int return_value;
 
 	status.get_core ()->acquire ();
