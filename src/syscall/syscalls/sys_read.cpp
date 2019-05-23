@@ -5,10 +5,9 @@
 
 #include "sys_read.h"
 
-sys_read::sys_read ( dev_input * device, char data )
+sys_read::sys_read ( dev_input * device )
 	: syscall_t ( syscall_id_t::READ )
 	, device ( device )
-	, data ( data )
 {
 }
 

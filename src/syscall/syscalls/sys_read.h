@@ -13,12 +13,11 @@
 class sys_read : public syscall_t {
 public:
 
-    sys_read(dev_input *device, char data);
+    sys_read(dev_input *device);
     virtual int process();
 
 private:
 
 	dev_input *device;
-	char data;
 };
 
