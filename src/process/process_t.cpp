@@ -89,7 +89,6 @@ void process_t::exec(promise<int> &fin_code)
 	logging::info << "program " << prog->get_name() << " is set running : " << prog->is_running() << logging::log_endl;
 	this->prog->main();
 	prog->sys->exit();
-	core->release();
 }
 
 void process_t::add_chl(int pid)

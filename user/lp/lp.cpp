@@ -37,6 +37,7 @@ void lp::main()
 	handle<int> i = 0;
 	handle<int> size = (int)prog_name.size();
 	for (i = 0; i < size; i = i + 1) {
-		hos_std->println(prog_name[i]);
+		hos_std->print(prog_name[i] + " ");
 	}
+	hos_std->println("");
 }

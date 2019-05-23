@@ -13,17 +13,21 @@
 #include <cassert>
 #include <map>
 #include <unordered_map>
+#include <vector>
 
 using std::mutex;
 using std::lock_guard;
 using std::list;
 using std::unordered_map;
+using std::vector;
 
 using logging::debug;
 using logging::log_endl;
 using logging::info;
 
 extern unordered_map<int, process_t*> proc_table;
+extern mutex table_mutex;
+
 typedef process_t::state state;
 
 struct state_list_t {
@@ -39,7 +43,7 @@ list<process_t*> zombie;
  * state list array for cpus
  * state_list[i] is state list of CPU #i
  */ 
-state_list_t *state_list;
+vector<state_list_t> state_list;
 
 /**
  * waiting map & awake list
@@ -47,15 +51,16 @@ state_list_t *state_list;
  * awake_list[i] is awake list of CPU #i
  */
 unordered_map<int, list<process_t*> > wait_map;
-list<process_t*> *awake_list;
+unordered_map<int, process_t*> zombie_map;
+vector< list<process_t*> > awake_list;
 
 /**
  * schedule init
  */
 void init_schedule()
 {
-	state_list = new state_list_t[get_core_num()];
-	awake_list = new list<process_t*>[get_core_num()];
+	state_list.resize(get_core_num());
+	awake_list.resize(get_core_num());
 }
 
 /**
@@ -63,8 +68,8 @@ void init_schedule()
  */
 void destroy_schedule()
 {
-	delete[] state_list;
-	delete[] awake_list;
+	// delete[] state_list;
+	// delete[] awake_list;
 }
 
 static mutex sched_mutex;
@@ -155,9 +160,11 @@ void sched_set_sleep(process_t *proc)
 void sched_set_wait(process_t *proc, int pid)
 {
 	lock_guard<mutex> lk(sched_mutex);
+	lock_guard<mutex> lkr(table_mutex);
 	info << "process " << proc->get_name() << " " << proc->get_pid() << " wait " << pid << log_endl;
 	sched_set_sleep_nlock(proc);
 	assert(proc->get_state() == state::SLEEPING);
+	assert(proc_table.count(pid));
 	if (proc_table[pid]->get_state() != state::ZOMBIE) {
 		if (!wait_map.count(pid))
 			wait_map[pid] = list<process_t*>();
@@ -171,6 +178,7 @@ void sched_set_wait(process_t *proc, int pid)
 void sched_set_exit(process_t *proc)
 {
 	lock_guard<mutex> lk(sched_mutex);
+	lock_guard<mutex> lkr(table_mutex);
 	logging::info << "process " << proc->get_name() << " is set exit." << log_endl;
 
 	assert(proc == status.get_core()->get_current());
@@ -189,7 +197,12 @@ void sched_set_exit(process_t *proc)
 	logging::info << "process " << proc->get_name() << " exit." << log_endl;
 
 	proc->clean();
+
+	// logging::debug << "erase " << proc->get_pid() << logging::log_endl;
 	
+	proc_table.erase(proc->get_pid());
+	zombie_map[proc->get_pid()] = proc;
+
 	if (wait_map.count(proc->get_pid())) {
 		for (process_t *i : wait_map[proc->get_pid()]) {
 			logging::info << "waking up : " << i->get_pid() << logging::log_endl;

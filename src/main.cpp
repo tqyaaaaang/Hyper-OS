@@ -6,10 +6,13 @@
 #include "init/init.h"
 #include "destroy/destroy.h"
 #include "../test/test.h"
+#include "env/env.h"
 
 int main ()
 {
 	init ();
-	test ();
+	if (TEST) {
+		test ();
+	}
 	destroy ();
 }
