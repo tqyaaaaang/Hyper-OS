@@ -36,6 +36,7 @@ namespace message
 		void set_visible ( bool _visible );
 		bool get_visible () const;
 
+	private:
 		std::string type;
 		bool visible;
 	};
@@ -64,7 +65,7 @@ namespace message
 		friend message & operator << ( message &buf, T a )
 		{
 			logging::debug << "message output : " << a << logging::log_endl;
-			if ( buf.info.visible ) {
+			if ( buf.info.get_visible () ) {
 				buf.BUF << a;
 			}
 			return buf;
@@ -72,7 +73,7 @@ namespace message
 
 		friend message & operator << ( message &buf, msg_endl_t a )
 		{
-			if ( buf.info.visible ) {
+			if ( buf.info.get_visible () ) {
 				{
 					std::lock_guard < std::mutex > lock ( output_lock );
 
