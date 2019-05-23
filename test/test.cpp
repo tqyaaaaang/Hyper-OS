@@ -15,6 +15,7 @@
 #include "test_multiproc.h"
 #include "test_program_manager.h"
 #include "test_heap.h"
+#include "../src/env/env.h"
 #include "../src/mm/pmm.h"
 #include "../src/logging/logging.h"
 #include "../src/utils/allocator/ffma.h"
@@ -22,17 +23,19 @@
 
 void test()
 {
-	logging::info << "Testing the system" << logging::log_endl;
+	if ( TEST ) {
+		logging::info << "Testing the system" << logging::log_endl;
 
-	test_message ();
+		test_message ();
 
-	test_interrupt ();
-	test_syscall ();
+		test_interrupt ();
+		test_syscall ();
 
-	test_devices ();
+		test_devices ();
 
-	test_pm();
-	test_pmm();
-    test_ffma();
-	test_program_manager();
+		test_pm ();
+		test_pmm ();
+		test_ffma ();
+		test_program_manager ();
+	}
 }
