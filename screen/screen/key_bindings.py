@@ -95,12 +95,7 @@ def init ():
 	@data.key_binding.add('insert')
 	@data.key_binding.add(keys.Keys.Ignore)
 	def process_any_key (event):
-		# data.message_windows.buffer.insert_text (repr(event) + ' ' + repr(data.key_seq) + '\n')
-		current_key = event.key_sequence[0].key
-		data.messages_window.buffer.insert_text (current_key + ' ' + event.key_sequence[0].data + '\n')
-		data.key_seq.append (current_key)
-		if len(data.key_seq) > 100:
-			data.key_seq.pop ( 0 )
+		keyboard_event.handle_keyboard_event (event)
 
 	@data.key_binding.add ('c-a', 'escape')
 	def process_exit (event):
