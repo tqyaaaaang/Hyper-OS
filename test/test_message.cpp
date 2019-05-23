@@ -11,5 +11,5 @@ void test_message ()
 {
 	logging::debug << "Testing message service" << logging::log_endl;
 
-	message::test ( "kern test (0)" ) << "This is a test message" << message::msg_endl;
+	message::test ( message::wrap_core_info ( "kern test" ) ) << "This is a test message" << message::msg_endl;
 }
