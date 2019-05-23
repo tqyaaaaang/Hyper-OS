@@ -36,6 +36,10 @@ using std::lock_guard;
 
 template class handle<int>;
 template class handle<char>;
+template class handle<long long>;
+template class handle<size_t>;
+template class handle<double>;
+template class handle< handle<int> >;
 
 /**
  * tail check

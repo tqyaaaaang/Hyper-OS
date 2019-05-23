@@ -242,14 +242,19 @@ handle<T> program::alloc_stack()
 
 /* ---------------------------------------------------- */
 
-#define INST(TYPE) template handle<TYPE> program::alloc_static<TYPE>();	\
+#define INST(TYPE) template handle<TYPE> program::alloc_static<TYPE>();					\
 	template handle<TYPE> program::alloc_bss<TYPE>(); 					\
 	template handle<TYPE> program::alloc_heap<TYPE>();					\
 	template handle<TYPE> program::alloc_static<TYPE>(size_t);			\
 	template handle<TYPE> program::alloc_bss<TYPE>(size_t);				\
 	template handle<TYPE> program::alloc_heap<TYPE>(size_t);			\
 	template handle<TYPE> program::alloc_stack<TYPE>();					\
-	template void program::free_heap<TYPE>(const handle<TYPE> &ptr);
+	template void program::free_heap<TYPE>(const handle<TYPE> &ptr);	\
+	template void handle<TYPE>::alias(const handle<TYPE> &val);
 
 INST(int)
 INST(char)
+INST(long long)
+INST(size_t)
+INST(double)
+INST(handle<int>)
