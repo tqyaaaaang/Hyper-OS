@@ -39,7 +39,7 @@ char CPU_mmu::read(size_t la)
 	while (!check(la, pte, false)); // check passed
 	pte->access = true;
     char result = pm::read(pte->paddr + (la % PAGE_SIZE));
-	// logging::info << "MMU : " << result << " " << logging::log_endl;
+	logging::info << "MMU : read " << result << " " << logging::log_endl;
 	return result;
 }
 
@@ -50,7 +50,8 @@ void CPU_mmu::write(size_t la, char c)
 	while (!check(la, pte, true)); // check passed
 	pte->access = true;
 	pte->dirty = true;
-	pm::write(pte->paddr + (la % PAGE_SIZE), c);
+    pm::write(pte->paddr + (la % PAGE_SIZE), c);
+	logging::info << "MMU : write " << c << " " << logging::log_endl;
 }
 
 typedef intr_pagefault_t::error_info error_info;

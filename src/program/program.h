@@ -199,7 +199,5 @@ private:
 	void do_redirect();
 
 	std::vector<size_t*> redr_table;
-
-	std::mutex del_mutex;
 	
 };

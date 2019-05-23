@@ -86,3 +86,19 @@ void process_t::init_bss()
 	}
 }
 
+/** 
+ * clean process and exit
+ * free context
+ */
+void process_t::clean()
+{
+	if (heap_allocator != nullptr) {
+		delete heap_allocator;
+		heap_allocator = nullptr;
+	}
+	if (prog != nullptr) {
+		delete prog;
+		prog = nullptr;
+	}
+	context.free_all_pages();
+}

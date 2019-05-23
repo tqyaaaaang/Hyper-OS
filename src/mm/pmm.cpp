@@ -121,7 +121,8 @@ void free_pages(page_frame *pg)
 	assert(pg->alloced);
 	assert(!pg->die());
 	pg->free();
-	if (pg->die()) { 
+	if (pg->die()) {
+		logging::info << "pmm free pages : [" << page2id(pg) << ", " << page2id(pg) + pg->length << ")" << logging::log_endl;
 		alloc->free(page2id(pg), pg->length);
 		pg->alloced = false;
 		pg->length = 0;

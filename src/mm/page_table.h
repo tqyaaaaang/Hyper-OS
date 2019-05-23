@@ -36,13 +36,11 @@ public:
 	pte_t* get_pte_try(size_t la); // get pte, if failed, return nullptr
 
 	void set_pte(size_t id, const pte_t &pte);
-private:
-
-    pte_t *table;
 	void free_pte(size_t id);
-
+	
 private:
-
+	
+	pte_t *table;
 	page_repl *page_rp;	
 };
 

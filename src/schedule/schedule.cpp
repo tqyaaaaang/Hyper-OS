@@ -188,12 +188,15 @@ void sched_set_exit(process_t *proc)
 
 	logging::info << "process " << proc->get_name() << " exit." << log_endl;
 
+	proc->clean();
+	
 	if (wait_map.count(proc->get_pid())) {
 		for (process_t *i : wait_map[proc->get_pid()]) {
 			logging::info << "waking up : " << i->get_pid() << logging::log_endl;
 			sched_set_runable_nlock(i);
 		}
 	}
+	
 }
 
 void schedule(int id)

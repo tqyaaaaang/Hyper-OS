@@ -211,7 +211,6 @@ void program::build()
 
 program::~program()
 {
-	lock_guard<mutex> lk (del_mutex);
 	info << "program " << get_name() << " destroy" << log_endl;
     if (data != nullptr) {
 		free(data);
