@@ -16,8 +16,12 @@ namespace message
 
 	const alias_type msg_alias = make_alias ( msg_info_t () );
 	const alias_wrapper wrapped_msg_alias = wrap_alias ( msg_alias );
+	
 	alias_wrapper interrupt = wrapped_msg_alias;
-	alias_wrapper test = wrapped_msg_alias;
+	alias_wrapper process = wrapped_msg_alias;
+	alias_wrapper memory = wrapped_msg_alias;
+	
+	alias_wrapper test = wrapped_msg_alias;	
 }
 
 message::msg_info_t::msg_info_t ()
@@ -127,7 +131,20 @@ message::alias_wrapper::~alias_wrapper ()
 {
 }
 
+void message::set_interrupt_message(bool flag)
+{
+	interrupt = make_wrap_alias ( msg_info_t ("interrupt", flag) );
+}
 
+void message::set_process_message(bool flag)
+{
+	process = make_wrap_alias ( msg_info_t ("process", flag) );
+}
+
+void message::set_memory_message(bool flag)
+{
+	memory = make_wrap_alias ( msg_info_t ("memory", flag) );	
+}
 
 void init_message ()
 {
@@ -135,7 +152,10 @@ void init_message ()
 
 	message::OUT = &std::cout;
 
-	message::interrupt = message::make_wrap_alias ( message::msg_info_t ( "interrupt", true ) );
+	message::set_interrupt_message(false);
+	message::set_process_message(false);
+	message::set_memory_message(false);
+	
 	message::test = message::make_wrap_alias ( message::msg_info_t ( "test", true ) );
 }
 

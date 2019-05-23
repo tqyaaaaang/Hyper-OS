@@ -21,9 +21,26 @@
 #include "../syscall/syscalls/sys_yield.h"
 #include "../interrupt/interrupts/syscall_interrupt.h"
 #include "../logging/logging.h"
+#include "../message/message.h"
 #include "program.h"
 
 using std::string;
+
+static void msg_intr(string str)
+{
+	message::interrupt
+		(message::wrap_core_info("user syscall"))
+		<< str
+		<< message::msg_endl;
+}
+
+static void msg_mm(string str)
+{
+	message::memory
+		(message::wrap_core_info("user syscall"))
+		<< str
+		<< message::msg_endl;
+}
 
 sys_t::sys_t(program *prog)
 {
@@ -32,6 +49,7 @@ sys_t::sys_t(program *prog)
 
 int sys_t::intr(syscall_t *sys)
 {
+	msg_intr("syscall function trigger INTR #80 using \'INT 80\' instruction");
 	int result = syscall(sys);
 	int return_value = sys->get_return_value();
 	delete sys;

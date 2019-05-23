@@ -9,6 +9,7 @@
 #include "../../user/lp/lp.h"
 #include "../../user/elephant/elephant.h"
 #include "../../user/matrix/matrix.h"
+#include "../../user/demo_syscall/demo_syscall.h"
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
@@ -55,4 +56,5 @@ void init_program_manager()
 	register_lp();
 	register_elephant();
 	register_matrix();
+	register_demo_syscall();
 }

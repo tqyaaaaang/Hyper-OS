@@ -148,7 +148,13 @@ namespace message
 	extern const alias_wrapper wrapped_msg_alias;
 
 	extern alias_wrapper interrupt;
+	extern alias_wrapper process;
+	extern alias_wrapper memory;
 	extern alias_wrapper test;
+
+	void set_interrupt_message(bool flag);
+	void set_process_message(bool flag);
+	void set_memory_message(bool flag);
 }
 
 void init_message ();   // Initialize the message objects
