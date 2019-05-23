@@ -13,6 +13,7 @@
 #include <memory>
 
 #include "msg_helper.h"
+#include "../logging/logging.h"
 
 namespace message
 {
