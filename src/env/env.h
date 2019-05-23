@@ -30,3 +30,5 @@ enum LOGGING_LEVEL   // Logging levels
 	DEBUG
 };
 extern const int LOG_LEVEL;   // Logging level to be used
+
+extern const bool TEST; // test = true <=> run unit test

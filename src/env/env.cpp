@@ -19,3 +19,5 @@ const int MOTHERBOARD_NUM = 1;   // The number of motherboards
 const char *LOG_FILE_NAME = "hos.log";   // File name to write log, NULL if write to stdout
 
 const int LOG_LEVEL = LOGGING_LEVEL::DEBUG;   // Logging level to be used
+
+const bool TEST = false;

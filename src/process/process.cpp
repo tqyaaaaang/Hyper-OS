@@ -15,6 +15,7 @@
 #include "../status/status.h"
 #include "../core/core.h"
 #include "../program/program_manager.h"
+#include "../env/env.h"
 #include <thread>
 
 using std::promise;
@@ -39,11 +40,13 @@ void init_proc()
 {
 	next_pid = 0;
 	logging::info << "proc init ok." << logging::log_endl;
-	int pid = proc_create_process();
-	proc_exec_program(pid, get_program("shell"));
-	schedule ( 0 );
-	while (1) {
-		std::this_thread::yield();
+    if (!TEST) {
+		int pid = proc_create_process();
+		proc_exec_program(pid, get_program("shell"));
+		schedule ( 0 );
+		while (1) {
+			std::this_thread::yield();
+		}
 	}
 }
 
