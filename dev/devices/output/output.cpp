@@ -36,3 +36,10 @@ void dev_output::write ( char ch )
 	putchar ( ch );
 	fflush(stdout);
 }
+
+void dev_output::write ( std::string str )
+{
+	for ( auto x : str ) {
+		write ( x );
+	}
+}
