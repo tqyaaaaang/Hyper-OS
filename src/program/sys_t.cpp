@@ -35,6 +35,7 @@ int sys_t::intr(syscall_t *sys)
 	int result = syscall(sys);
 	int return_value = sys->get_return_value();
 	delete sys;
+	check_interrupt ();
 	return return_value;
 }
 

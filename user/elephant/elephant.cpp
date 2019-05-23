@@ -42,10 +42,10 @@ void elephant::static_init()
 void elephant::main()
 {
 	hos_std->println(graph);
-	handle<int> pid = sys->create_process();
+	/*handle<int> pid = sys->create_process();
 	sys->exec_program(pid, elep);
 	while (1) {
 		sys->yield();
 		hos_std->println(elep);
-	}
+		}*/
 }
