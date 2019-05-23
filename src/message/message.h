@@ -21,9 +21,20 @@ namespace message
 	extern std::mutex output_lock;
 
 	/**
-	 * class msg_info_t
-	 * information of a message
-	 */
+	* class msg_endl_t
+	* identifier to end a message line
+	*/
+	class msg_endl_t
+	{
+
+	};
+
+	extern msg_endl_t msg_endl;
+
+	/**
+	* class msg_info_t
+	* information of a message
+	*/
 	class msg_info_t
 	{
 	public:
@@ -39,15 +50,6 @@ namespace message
 	private:
 		std::string type;
 		bool visible;
-	};
-
-	/**
-	* class msg_endl_t
-	* identifier to end a message line
-	*/
-	class msg_endl_t
-	{
-
 	};
 
 	/**
@@ -115,8 +117,6 @@ namespace message
 	message make_message ( msg_info_t _info, std::string _source );
 	message_wrapper wrap_message ( message msg );
 	message_wrapper make_wrap_message ( msg_info_t _info, std::string _source );
-
-	extern msg_endl_t msg_endl;
 
 	typedef decltype ( std::bind ( make_wrap_message, msg_info_t (), std::placeholders::_1 ) ) alias_type;
 
