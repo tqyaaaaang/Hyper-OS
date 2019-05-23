@@ -7,6 +7,7 @@
 #include "../interrupt/interrupts/interrupt_t.h"
 
 interrupt_queue_t::interrupt_queue_t ()
+	: time_id ( 0 )
 {
 }
 

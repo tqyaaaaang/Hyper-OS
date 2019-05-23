@@ -166,13 +166,13 @@ void CPU_core::vm_write(size_t addr, const char *buf_begin, const char *buf_end)
 void CPU_core::set_interrupt_waiting_flag()
 {
 	lock_guard<mutex> lk(interrupt_waiting_flag_mutex);
-	interrupt_waiting_flag++;
+	interrupt_waiting_flag = 1;
 }
 
 void CPU_core::unset_interrupt_waiting_flag()
 {
 	lock_guard<mutex> lk(interrupt_waiting_flag_mutex);
-	interrupt_waiting_flag--;
+	interrupt_waiting_flag = 0;
 }
 
 int CPU_core::get_interrupt_waiting_flag() const
