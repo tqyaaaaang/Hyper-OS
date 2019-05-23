@@ -56,7 +56,6 @@ template<typename T>
 void handle<T>::alias(const handle<T> &val)
 {
 	prog = val.get_prog();
-	assert(prog != nullptr);
 	addr = val.get_addr();
 	if (val.get_type() == type::STACK) {
 		this_type = type::ALIAS;
@@ -66,7 +65,9 @@ void handle<T>::alias(const handle<T> &val)
 	} else {
 		this_type = val.get_type();
 	}
-	if (prog->is_compiling() && this_type == type::BSS) {
+	if (prog != nullptr
+		&& prog->is_compiling()
+		&& this_type == type::BSS) {
 		prog->add_redirect_bss(&(addr));
 		// need to be redirect
 	}

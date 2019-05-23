@@ -6,6 +6,7 @@
 #include "lib.h"
 #include "sys_t.h"
 #include "program.h"
+#include "../logging/logging.h"
 
 using std::string;
 
@@ -57,9 +58,44 @@ void hos_std_t::println(handle<char> str)
 	println("");
 }
 
-handle<char> hos_std_t::getchar()
+char hos_std_t::getchar()
 {
 	sys_t *sys = prog->sys;
-	handle<char> ch = sys->read(sys->std_input());
-	return ch;
+	return sys->read(sys->std_input());
 }
+
+int hos_std_t::read_int()
+{
+	handle<int> result = 0;
+	handle<char> ch = (char)0;
+	while (ch < '0' || ch > '9') {
+		ch = this->getchar();
+	}
+	do {
+		result = result * 10 + (int)(ch - '0');
+		ch = this->getchar();
+	} while ('0' <= ch && ch <= '9');
+	int dat = result;
+	logging::debug << "read a int : " << dat << logging::log_endl;
+	return result;
+}
+
+void hos_std_t::write_recur(handle<int> dat)
+{
+	if (dat != 0) {
+		write_recur(dat / 10);
+		this->putchar(char(dat % 10) + '0');
+	}
+}
+
+void hos_std_t::write_int(int data)
+{
+	handle<int> num = data;
+	if (num == 0) {
+		this->print("0");
+	} else {
+		write_recur((int)num);
+	}
+	logging::debug << "write a int : " << num << logging::log_endl;
+}
+

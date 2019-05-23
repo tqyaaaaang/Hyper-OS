@@ -8,6 +8,7 @@
 #include "../../user/shell/shell.h"
 #include "../../user/lp/lp.h"
 #include "../../user/elephant/elephant.h"
+#include "../../user/matrix/matrix.h"
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
@@ -53,4 +54,5 @@ void init_program_manager()
 	register_shell();
 	register_lp();
 	register_elephant();
+	register_matrix();
 }

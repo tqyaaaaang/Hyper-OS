@@ -112,7 +112,6 @@ template<typename T>
 handle<T>& handle<T>::operator = (const handle<T> &val)
 {
 	alias(val);
-	info << "QWWQ" << (size_t)(&addr) << log_endl;
 	if (prog != nullptr && prog->is_running()) {
 		tail_check(this->prog);
 	}
@@ -145,12 +144,10 @@ handle<T>::operator T() const
 		logging::info << "handle of prog : " << prog->get_name() << " failed" << logging::log_endl;
 	}
 	assert(prog->is_running());
-	char *buf = new char[sizeof(T)];
-	prog->prog_read(buf, addr, addr + sizeof(T));
-	T buf_T = *((T*) buf);
-	delete[] buf;
+	T buf;
+	prog->prog_read((char*)(&buf), addr, addr + sizeof(T));
 	tail_check(this->prog);
-	return buf_T;
+	return buf;
 }
 
 /**

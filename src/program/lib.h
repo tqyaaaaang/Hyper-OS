@@ -18,10 +18,13 @@ public:
 	virtual void println(handle<char> str);	
 	virtual void print(handle<char> str);
 	virtual void putchar(handle<char> c);
-	virtual handle<char> getchar();
+	virtual char getchar();
+	virtual int read_int();
+	virtual void write_int(int data);
 	
 private:
 
 	program *prog;
+	void write_recur(handle<int> dat);
 	
 };
