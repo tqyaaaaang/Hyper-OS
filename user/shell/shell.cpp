@@ -7,6 +7,7 @@
 #include "../../src/program/program_manager.h"
 #include <cstdlib>
 #include <cassert>
+#include <iostream>
 #include <string>
 #include "../../src/logging/logging.h"
 
@@ -37,10 +38,8 @@ void hyper_shell::static_init()
 void hyper_shell::main()
 {
 	logging::info << "shell start." << logging::log_endl;
-	hos_std->println("~hello~");
-    string str; str = str + char(cur_proc->get_pid() + '0');
 	while (1) {
-		hos_std->print(str + "@hyper-shell:$ ");
+		hos_std->print("hyper-shell:$ ");
 		handle<int> res = (int)parse();
 		if (res == 0) {
 			logging::info << "operation success." << logging::log_endl; 
@@ -80,7 +79,9 @@ handle<int> hyper_shell::parse()
 handle<int> hyper_shell::get()
 {
 	handle<int> ch = alloc_heap<int>();
-	ch = getchar();
+	logging::debug << "waiting for input" << logging::log_endl;
+	ch = std::cin.get();
+	logging::debug << "input char from shell : " << (char)ch << logging::log_endl;
 	return ch;
 }
 

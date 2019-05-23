@@ -34,4 +34,5 @@ void dev_output::write ( char ch )
 		logging::debug << "Device output received unvisible character ( ASCII " << static_cast < int > ( ch ) << " ) " << logging::log_endl;
 	}
 	putchar ( ch );
+	fflush(stdout);
 }

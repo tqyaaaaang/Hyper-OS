@@ -13,6 +13,8 @@ public:
 	
 private:
 
+	handle<char> graph;
+	handle<char> elep;
 };
 
 void register_elephant();

@@ -28,7 +28,7 @@ sys_t::sys_t(program *prog)
 
 int sys_t::intr(syscall_t *sys)
 {
-	int result = interrupt(new syscall_interrupt(sys));
+	int result = syscall(sys);
 	int return_value = sys->get_return_value();
 	delete sys;
 	return return_value;
