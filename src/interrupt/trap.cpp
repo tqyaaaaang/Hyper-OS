@@ -49,11 +49,11 @@ void interrupt_trap_entry ( status_t thread_status, interrupt_t * current_interr
 
 	logging::debug << "CPU #" << status.get_core ()->get_core_id () << " received interrupt : " << current_interrupt->to_string () << logging::log_endl;
 
-	status.get_core ()->inc_interrupt_depth ();
-
 	process_t *cur = status.get_core()->get_current();
 	
 	status.get_core()->acquire();	
+	status.get_core ()->inc_interrupt_depth ();
+
 	if (cur != nullptr) {
 		//make sure current proc slept successfully
 		cur->cond_mutex.lock();
@@ -69,11 +69,11 @@ void interrupt_trap_entry ( status_t thread_status, interrupt_t * current_interr
 	current_interrupt->process ();
 	trap_exit();
 	msg_intr("(switch to user mode) trap exit, restore context of current process");
-	status.get_core()->release ();
-	
-	status.get_core ()->get_lapic ().send_end_of_interrupt ( 0 );
 
 	status.get_core ()->dec_interrupt_depth ();
+	status.get_core()->release ();
+
+	status.get_core ()->get_lapic ().send_end_of_interrupt ( 0 );
 
 	clock_t e = clock();
 	logging::debug << "interrupt : " << 1.0*(e-c)/CLOCKS_PER_SEC << logging::log_endl;
