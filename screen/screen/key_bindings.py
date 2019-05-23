@@ -16,7 +16,6 @@ from screen.screen import key_bindings_with_any
 
 def init ():
 	data.key_binding = key_bindings_with_any.KeyBindingsWithAny ()
-	print (key_binding.KeyBindings)
 
 	@data.key_binding.add('<any-visible>')
 	@data.key_binding.add('escape')
