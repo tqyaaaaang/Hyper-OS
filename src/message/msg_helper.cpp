@@ -10,8 +10,8 @@
 std::string message::get_prefix ( const msg_info_t & info, std::string source )
 {
 	std::stringstream string_helper;
-	string_helper << "[" << source << "]";
-	while ( string_helper.str ().size () < 15 ) {
+	string_helper << source;
+	while ( string_helper.str ().size () < 20 ) {
 		string_helper << " ";
 	}
 	string_helper << " : ";
