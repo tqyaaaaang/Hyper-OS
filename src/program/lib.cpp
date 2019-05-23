@@ -38,14 +38,28 @@ void hos_std_t::print(string str)
 
 void hos_std_t::putchar(handle<char> c)
 {
-	std::putchar(c);
+	sys_t *sys = prog->sys;
+    sys->write(sys->std_output(), (char)c);
+}
+
+void hos_std_t::print(handle<char> str)
+{
+	for (size_t i = 0; str[i] != '\0'; i++) {
+		this->putchar(str[i]);
+	}
 }
 
 void hos_std_t::println(handle<char> str)
 {
 	for (size_t i = 0; str[i] != '\0'; i++) {
-		putchar(str[i]);
+		this->putchar(str[i]);
 	}
 	println("");
 }
 
+handle<char> hos_std_t::getchar()
+{
+	sys_t *sys = prog->sys;
+	handle<char> ch = sys->read(sys->std_input());
+	return ch;
+}

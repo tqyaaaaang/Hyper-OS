@@ -15,8 +15,10 @@ public:
 	virtual ~hos_std_t();
 	virtual void println(std::string str);
 	virtual void print(std::string str);
-	virtual void println(handle<char> str);
+	virtual void println(handle<char> str);	
+	virtual void print(handle<char> str);
 	virtual void putchar(handle<char> c);
+	virtual handle<char> getchar();
 	
 private:
 

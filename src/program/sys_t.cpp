@@ -5,6 +5,9 @@
 
 #include "sys_t.h"
 #include "program_manager.h"
+#include "../../dev/device_list.h"
+#include "../../dev/devices/output/output.h"
+#include "../../dev/devices/input/input.h"
 #include "../process/process.h"
 #include "../process/process_t.h"
 #include "../interrupt/interrupt.h"
@@ -12,6 +15,7 @@
 #include "../syscall/syscalls/sys_create_proc.h"
 #include "../syscall/syscalls/sys_exec_prog.h"
 #include "../syscall/syscalls/sys_write.h"
+#include "../syscall/syscalls/sys_read.h"
 #include "../syscall/syscalls/sys_exit.h"
 #include "../syscall/syscalls/sys_wait.h"
 #include "../syscall/syscalls/sys_yield.h"
@@ -63,9 +67,10 @@ int sys_t::wait(int pid)
 	return w;
 }
 
-int sys_t::read(int device)
+int sys_t::read(dev_input *device)
 {
-	return 0;
+	int w = intr(new sys_read(device));
+	return w;
 }
 
 int sys_t::write(dev_output *device, char data)
@@ -76,4 +81,9 @@ int sys_t::write(dev_output *device, char data)
 dev_output* sys_t::std_output()
 {
 	return device_desc::standard_output;
+}
+
+dev_input* sys_t::std_input()
+{
+	return device_desc::standard_input;
 }
