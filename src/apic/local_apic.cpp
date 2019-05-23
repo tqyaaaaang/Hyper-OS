@@ -19,6 +19,7 @@
 
 local_apic::local_apic ( CPU_core *_core )
 	: core ( _core )
+	, enabled ( false )
 {
 }
 
@@ -41,30 +42,38 @@ local_apic::~local_apic ()
 
 void local_apic::enable ()
 {
-	logging::debug << "Enabling local APIC for CPU #" << core->get_core_id () << logging::log_endl;
-	enabled = true;
-	lapic_thread = std::thread ( &local_apic::lapic_thread_entry, this, status );
+	if ( !is_enabled () ) {
+		logging::debug << "Enabling local APIC for CPU #" << core->get_core_id () << logging::log_endl;
+		enabled = true;
+		lapic_thread = std::thread ( &local_apic::lapic_thread_entry, this, status );
+	} else {
+		logging::debug << "Trying to enable local APIC for CPU #" << core->get_core_id () << ", but failed because it is already enabled" << logging::log_endl;
+	}
 }
 
 void local_apic::disable ()
 {
-	logging::debug << "Disabling local APIC for CPU #" << core->get_core_id () << logging::log_endl;
-	enabled = false;
-	send_disable_signal ();
-	lapic_thread.join ();
+	if ( is_enabled () ) {
+		logging::debug << "Disabling local APIC for CPU #" << core->get_core_id () << logging::log_endl;
+		enabled = false;
+		send_disable_signal ();
+		lapic_thread.join ();
 
-	while ( !isr_stack.empty () ) {
-		isr_stack.pop ();
-	}
-	while ( !interrupt_queue.empty () ) {
-		if ( interrupt_queue.front ()->is_lapic_signal () ) {
-			delete interrupt_queue.front ();
-		} else {
-			interrupt_queue.front ()->get_return_promise ().set_value ( -1 );
+		while ( !isr_stack.empty () ) {
+			isr_stack.pop ();
 		}
-		interrupt_queue.pop ();
+		while ( !interrupt_queue.empty () ) {
+			if ( interrupt_queue.front ()->is_lapic_signal () ) {
+				delete interrupt_queue.front ();
+			} else {
+				interrupt_queue.front ()->get_return_promise ().set_value ( -1 );
+			}
+			interrupt_queue.pop ();
+		}
+		event_queue.clear ();
+	} else {
+		logging::debug << "Trying to disable local APIC for CPU #" << core->get_core_id () << ", but failed because it is already disabled" << logging::log_endl;
 	}
-	event_queue.clear ();
 }
 
 bool local_apic::is_enabled () const

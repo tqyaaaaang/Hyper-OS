@@ -15,6 +15,7 @@ using std::lock_guard;
 CPU_core::CPU_core ()
 	: enabled_flag ( false )
 	, interrupt_enabled_flag ( false )
+	, _preserved_interrupt_enabled_flag ( false )
 	, lapic ( this )
 	, interrupt_depth ( 0 )
 {
@@ -39,16 +40,25 @@ void CPU_core::set_enabled ( bool status )
 
 void CPU_core::enable ()
 {
-	logging::info << "Enabling CPU #" << get_core_id () << logging::log_endl;
-	enabled_flag = true;
-	lapic.enable ();
+	if ( !is_enabled () ) {
+		logging::info << "Enabling CPU #" << get_core_id () << logging::log_endl;
+		enabled_flag = true;
+		set_interrupt_enabled ( _preserved_interrupt_enabled_flag );
+	} else {
+		logging::info << "Trying to enable CPU #" << get_core_id () << ", but failed because it is already enabled" << logging::log_endl;
+	}
 }
 
 void CPU_core::disable ()
 {
-	logging::info << "Disabling CPU #" << get_core_id () << logging::log_endl;
-	enabled_flag = false;
-	lapic.disable ();
+	if ( is_enabled () ) {
+		logging::info << "Disabling CPU #" << get_core_id () << logging::log_endl;
+		_preserved_interrupt_enabled_flag = is_interrupt_enabled ();
+		disable_interrupt ();
+		enabled_flag = false;
+	} else {
+		logging::info << "Trying to disable CPU #" << get_core_id () << ", but failed because it is already disabled" << logging::log_endl;
+	}
 }
 
 bool CPU_core::is_enabled () const
@@ -67,14 +77,24 @@ void CPU_core::set_interrupt_enabled ( bool status )
 
 void CPU_core::enable_interrupt ()
 {
-	logging::debug << "Enabling interrupt of CPU #" << get_core_id () << logging::log_endl;
-	interrupt_enabled_flag = true;
+	if ( !is_interrupt_enabled () ) {
+		logging::debug << "Enabling interrupt of CPU #" << get_core_id () << logging::log_endl;
+		interrupt_enabled_flag = true;
+		lapic.enable ();
+	} else {
+		logging::info << "Trying to enable interrupt of CPU #" << get_core_id () << ", but failed because it is already enabled" << logging::log_endl;
+	}
 }
 
 void CPU_core::disable_interrupt ()
 {
-	logging::debug << "Disabling interrupt of CPU #" << get_core_id () << logging::log_endl;
-	interrupt_enabled_flag = false;
+	if ( is_interrupt_enabled () ) {
+		logging::debug << "Disabling interrupt of CPU #" << get_core_id () << logging::log_endl;
+		interrupt_enabled_flag = false;
+		lapic.disable ();
+	} else {
+		logging::info << "Trying to disable interrupt of CPU #" << get_core_id () << ", but failed because it is already disabled" << logging::log_endl;
+	}
 }
 
 bool CPU_core::is_interrupt_enabled () const

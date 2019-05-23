@@ -133,6 +133,7 @@ public:
 private:
 	bool enabled_flag;
 	bool interrupt_enabled_flag;
+	bool _preserved_interrupt_enabled_flag;
 	int core_id;
 
 	int interrupt_depth;
