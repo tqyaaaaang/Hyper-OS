@@ -4,6 +4,7 @@
  */
 
 #include "test.h"
+#include "test_message.h"
 #include "test_interrupt.h"
 #include "test_syscall.h"
 #include "test_devices.h"
@@ -22,6 +23,8 @@
 void test()
 {
 	logging::info << "Testing the system" << logging::log_endl;
+
+	test_message ();
 
 	test_interrupt ();
 	test_syscall ();

@@ -8,6 +8,7 @@
 #include "../core/cpus.h"
 #include "../motherboard/motherboard.h"
 #include "../logging/logging.h"
+#include "../message/message.h"
 #include "../schedule/schedule.h"
 #include "../program/program_manager.h"
 #include "../../dev/device.h"
@@ -20,6 +21,8 @@ void destroy ()
 	destroy_devices ();
 	destroy_motherboards ();
 	destroy_cpus ();
+
+	destroy_message ();
 
 	destroy_logger ();
 	
