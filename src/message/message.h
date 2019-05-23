@@ -123,8 +123,6 @@ namespace message
 
 	extern alias_type interrupt;
 	extern alias_type test;
-
-	extern message tt;
 }
 
 void init_message ();   // Initialize the message objects
