@@ -57,19 +57,16 @@ message::message::message ( msg_info_t _info, std::string _source )
 	: info ( _info )
 	, source ( _source )
 {
-	logging::debug << "Calling constructor of message" << logging::log_endl;
 }
 
 message::message::message ( const message & _message )
 	: info ( _message.info )
 	, source ( _message.source )
 {
-	logging::debug << "Calling copy constructor of message" << logging::log_endl;
 }
 
 message::message::~message ()
 {
-	logging::debug << "Calling destructor of message" << logging::log_endl;
 	if ( !BUF.str ().empty () ) {
 		logging::warning << "destructing a message instance which buffer is not empty : \"" << BUF.str () << "\"" << logging::log_endl;
 	}
