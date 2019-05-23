@@ -20,4 +20,5 @@ const char *LOG_FILE_NAME = "hos.log";   // File name to write log, NULL if writ
 
 const int LOG_LEVEL = LOGGING_LEVEL::DEBUG;   // Logging level to be used
 
+// Unittest
 const bool TEST = false;
