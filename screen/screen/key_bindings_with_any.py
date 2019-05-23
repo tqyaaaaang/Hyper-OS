@@ -28,7 +28,7 @@ from prompt_toolkit.keys import Keys, ALL_KEYS, KEY_ALIASES
 from prompt_toolkit.cache import SimpleCache
 from prompt_toolkit.filters import to_filter, Never
 
-from screen.screen import data
+from screen import data
 
 
 KeysTuple = Tuple[Union[Keys, str], ...]

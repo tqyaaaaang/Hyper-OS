@@ -10,8 +10,9 @@ import prompt_toolkit
 from prompt_toolkit import key_binding
 from prompt_toolkit import keys
 
-from screen.screen import data
+from screen import data
 from screen.screen import key_bindings_with_any
+from screen.input import keyboard_event
 
 
 def init ():

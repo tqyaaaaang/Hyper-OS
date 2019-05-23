@@ -11,7 +11,7 @@ from prompt_toolkit import layout
 from prompt_toolkit.layout import containers
 from prompt_toolkit import widgets
 
-from screen.screen import data
+from screen import data
 
 
 def init ():

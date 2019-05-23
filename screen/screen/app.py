@@ -12,7 +12,7 @@ from prompt_toolkit.layout import containers
 from prompt_toolkit import widgets
 from prompt_toolkit.key_binding import key_processor
 
-from screen.screen import data
+from screen import data
 from screen.screen import key_bindings
 
 
