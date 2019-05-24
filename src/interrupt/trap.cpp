@@ -13,6 +13,7 @@
 #include "../process/process_t.h"
 #include "../schedule/schedule.h"
 #include "../message/message.h"
+#include "../process/idle.h"
 #include <ctime>
 
 using std::string;
@@ -31,7 +32,16 @@ static void msg_intr(string str)
  */
 static void trap_exit()
 {
-	schedule(status.get_core()->get_core_id());
+	try {
+		process_t *p = status.get_core()->get_current();
+		schedule(status.get_core()->get_core_id());
+		process_t *proc = status.get_core()->get_current();
+		if (proc == nullptr) {
+			signal_idle();
+		}
+	} catch(int id) {
+		logging::info << "idle exit with id : " << id << logging::log_endl;
+	}
 }
 
 /**

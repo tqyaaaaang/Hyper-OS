@@ -59,8 +59,9 @@ void process_t::set_state(state stat)
 void process_t::set_prog(program *prog)
 {
 	this->prog = prog;
-	prog->cur_proc = this;
- 
+	if (prog != nullptr) {
+		prog->cur_proc = this;
+	}
 }
 
 program* process_t::get_prog() const

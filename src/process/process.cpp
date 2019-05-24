@@ -17,6 +17,7 @@
 #include "../program/program_manager.h"
 #include "../env/env.h"
 #include "../core/cpus.h"
+#include "idle.h"
 #include <thread>
 
 using std::promise;
@@ -57,6 +58,7 @@ void init_proc()
 	next_pid = 0;
 	logging::info << "proc init ok." << logging::log_endl;
     if (!TEST) {
+		init_idle();
 		int pid = proc_create_process();
 		proc_exec_program(pid, get_program("shell"));
 		schedule ( 0 );
@@ -64,6 +66,7 @@ void init_proc()
 			std::this_thread::yield();
 		}
 		logging::info << "main shell exit, system shut down." << logging::log_endl;
+		idle_exit();
 		cores[0].disable_interrupt();
 		logging::info << "main shell exit, system shut down." << logging::log_endl;
 	}

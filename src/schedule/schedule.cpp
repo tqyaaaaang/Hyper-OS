@@ -237,7 +237,8 @@ void schedule(int id)
 		}
 
 		if ( proc == nullptr || proc->get_resched () ) {
-			if ( proc != nullptr ) {
+			if ( proc != nullptr && proc->get_prog() != nullptr) {
+				// not idle
 				proc->set_resched ( 0 );
 				proc->set_slice ( 1 );
 				state_list[id].running.erase ( proc->linker );
@@ -264,7 +265,7 @@ void schedule(int id)
 				
 				nxt_proc->cond_var.notify_one ();
 			}
-			if (nxt_proc != proc) {
+			if (nxt_proc != proc && nxt_proc != nullptr) {
 
 				logging::info << "switch process : " << nxt_proc->get_name () << " " << nxt_proc->get_pid() << logging::log_endl;
 			}
