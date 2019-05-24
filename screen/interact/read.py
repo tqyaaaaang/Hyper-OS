@@ -35,6 +35,8 @@ def read_thread_entry ():
 		current_type = current_data[0]
 		current_data = current_data[1:]
 
+		# TODO: Check that input has correct format
+
 		if current_data[0] == '[' and current_data[-1] == ']':
 			current_data = current_data[1:-1]
 
