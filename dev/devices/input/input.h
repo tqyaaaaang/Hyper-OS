@@ -16,7 +16,7 @@ public:
 
 	virtual std::string to_string () const;
 
-	virtual char read ();
+	virtual int read () = 0;
 
 private:
 };

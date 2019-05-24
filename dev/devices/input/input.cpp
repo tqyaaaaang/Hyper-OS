@@ -15,16 +15,3 @@ std::string dev_input::to_string () const
 {
 	return "input";
 }
-
-char dev_input::read ()
-{
-	logging::debug << "Reading character from device input" << logging::log_endl;
-	char ch;
-	ch = getchar ();
-	if ( ch >= 32 ) {
-		logging::debug << "Device input received character '" << ch << "' ( ASCII " << static_cast < int > ( ch ) << " ) " << logging::log_endl;
-	} else {
-		logging::debug << "Device input received unvisible character ( ASCII " << static_cast < int > ( ch ) << " ) " << logging::log_endl;
-	}
-	return ch;
-}
