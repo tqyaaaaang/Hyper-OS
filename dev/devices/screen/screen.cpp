@@ -24,5 +24,7 @@ int dev_screen::read ()
 
 void dev_screen::write ( std::string type, std::string data )
 {
+	std::unique_lock < std::mutex > lck ( write_lock );
+
 	std::cout << type << "[" << data << "]" << std::endl;
 }

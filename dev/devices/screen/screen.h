@@ -9,6 +9,7 @@
 #include "../device_t.h"
 #include "../../../src/status/status.h"
 #include <string>
+#include <mutex>
 
 class dev_screen : public device_t
 {
@@ -21,4 +22,5 @@ public:
 	virtual void write ( std::string type, std::string data );
 
 private:
+	std::mutex write_lock;
 };
