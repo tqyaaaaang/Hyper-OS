@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-screen.app
+screen.screen.app
 Application
 """
 

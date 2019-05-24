@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-screen.__init__
+screen.screen.__init__
 Process the screen
 """
 

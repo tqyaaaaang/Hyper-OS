@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-screen.data
+screen.screen.data
 Data in screen application
 """
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
 
 """
-__init__
+screen.__init__
 """

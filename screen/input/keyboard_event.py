@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-input.keyboard_event
+screen.input.keyboard_event
 Handle keyboard events
 """
 

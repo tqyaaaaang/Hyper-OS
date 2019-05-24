@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-screen.key_bindings_with_any
+screen.screen.key_bindings_with_any
 Class KeyBindingsWithAny
 """
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-screen.windows
+screen.screen.windows
 Window objects
 """
 

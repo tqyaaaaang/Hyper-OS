@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-__main__
+screen.__main__
 """
 
 from screen import screen

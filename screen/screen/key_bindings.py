@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-screen.key_bindings
+screen.screen.key_bindings
 Key bindings
 """
 
