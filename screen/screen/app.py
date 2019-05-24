@@ -14,6 +14,7 @@ from prompt_toolkit.key_binding import key_processor
 
 from screen import data
 from screen.screen import key_bindings
+from screen.screen import utils
 
 
 def init ():
@@ -24,4 +25,6 @@ def init ():
 	data.application = prompt_toolkit.Application (layout=app_layout, full_screen=True, mouse_support=True, key_bindings=data.key_binding)
 
 def run ():
+	data.screen_up_event.set ()
+	
 	data.application.run ()

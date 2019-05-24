@@ -6,5 +6,8 @@ Input/Output stream to interact with kernel
 """
 
 
+from screen.interact import read
+
+
 def init ():
-	pass
+	read.init ()
