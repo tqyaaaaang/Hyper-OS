@@ -21,6 +21,7 @@
 #include "../logging/logging.h"
 #include "../utils/allocator/ffma.h"
 #include "../interrupt/interrupt.h"
+#include "../message/message.h"
 #include "sys_t.h"
 #include "lib.h"
 
@@ -40,6 +41,13 @@ template class handle<long long>;
 template class handle<size_t>;
 template class handle<double>;
 template class handle< handle<int> >;
+
+static void msg_mm(string str)
+{
+	message::memory(message::wrap_core_info("user program"))
+		<< str
+		<< message::msg_endl;
+}
 
 /**
  * tail check
@@ -127,6 +135,17 @@ template<typename T>
 handle<T>& handle<T>::operator = (const T &val)
 {
 	assert(prog->is_running());
+	if (this_type == handle_type::STACK) {
+		msg_mm("write operation in stack");
+	} else if (this_type == handle_type::HEAP) {
+		msg_mm("write operation in heap");
+	} else if (this_type == handle_type::STATIC) {
+		msg_mm("write operation in .data");
+	} else if (this_type == handle_type::BSS) {
+		msg_mm("write operation in .bss");
+	} else {
+		msg_mm("write operation in unknown");
+	}
 	const char* buf = (const char*)(&val);
 	prog->prog_write(addr, buf, buf + sizeof(T));
 	tail_check(this->prog); 
@@ -145,6 +164,17 @@ handle<T>::operator T() const
 		logging::info << "handle of prog : " << prog->get_name() << " failed" << logging::log_endl;
 	}
 	assert(prog->is_running());
+	if (this_type == handle_type::STACK) {
+		msg_mm("read operation in stack");
+	} else if (this_type == handle_type::HEAP) {
+		msg_mm("read operation in heap");
+	} else if (this_type == handle_type::STATIC) {
+		msg_mm("read operation in .data");
+	} else if (this_type == handle_type::BSS) {
+		msg_mm("read operation in .bss");
+	} else {
+		msg_mm("read operation in unknown");
+	}
 	T buf;
 	prog->prog_read((char*)(&buf), addr, addr + sizeof(T));
 	tail_check(this->prog);

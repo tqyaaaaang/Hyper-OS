@@ -10,6 +10,7 @@
 #include "../../user/elephant/elephant.h"
 #include "../../user/matrix/matrix.h"
 #include "../../user/demo_syscall/demo_syscall.h"
+#include "../../user/demo_pagefault/demo_pagefault.h"
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
@@ -57,4 +58,5 @@ void init_program_manager()
 	register_elephant();
 	register_matrix();
 	register_demo_syscall();
+	register_demo_pagefault();
 }

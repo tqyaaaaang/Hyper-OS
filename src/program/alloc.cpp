@@ -243,7 +243,7 @@ handle<T> program::alloc_stack()
 
 /* ---------------------------------------------------- */
 
-#define INST(TYPE) template handle<TYPE> program::alloc_static<TYPE>();					\
+#define INST(TYPE) template handle<TYPE> program::alloc_static<TYPE>();	\
 	template handle<TYPE> program::alloc_bss<TYPE>(); 					\
 	template handle<TYPE> program::alloc_heap<TYPE>();					\
 	template handle<TYPE> program::alloc_static<TYPE>(size_t);			\
