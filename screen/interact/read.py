@@ -26,6 +26,20 @@ def read_thread_entry ():
 	data.screen_up_event.wait ()
 	while not data.application.is_running:   # Wait for the applicate to run
 		pass
-	for current_data in data.kern_proc.stdout:
-		current_data = current_data.decode ('utf-8').strip ()
-		write.putchar (current_data)
+	for line in data.kern_proc.stdout:
+		current_data = line.decode ('utf-8').strip ()
+		print (line)
+		current_data = current_data.split (' ')
+
+		print (current_data)
+
+		if len(current_data) == 0:
+			continue
+
+		if current_data[0] == 'w':
+			if len(current_data) == 1:
+				write.putchar (current_data[1])
+			elif current_data == '\\n':
+				write.newline ()
+		elif current_data[0] == 'm':
+			pass
