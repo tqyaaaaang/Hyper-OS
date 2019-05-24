@@ -49,8 +49,7 @@ static void proc_main(process_t *proc, promise<int> &fin_code)
 bool proc_not_exit(int pid)
 {
 	lock_guard<mutex> lk(table_mutex);
-	assert(pid == 0);
-    return proc_table.count(pid);
+	return proc_table.count(pid);
 }
 
 void init_proc()
@@ -88,7 +87,7 @@ int proc_create_process()
 	proc->set_state(state::UNINIT);
 
 	pid_mutex.lock();
-	int id = next_pid++;
+	int id = ++next_pid;
 	proc->set_pid(id);
 	logging::debug << "proc table set : " << id << logging::log_endl;
 	proc_table[id] = proc;
