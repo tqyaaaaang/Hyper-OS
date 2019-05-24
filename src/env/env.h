@@ -31,6 +31,9 @@ enum LOGGING_LEVEL   // Logging levels
 };
 extern const int LOG_LEVEL;   // Logging level to be used
 
+// Message service
+extern const char *MESSAGE_FILE_NAME;   // File name to write messages, write to stdout if is NULL and IO_DEVICE is 0
+
 // Unittest
 extern const bool TEST; // test = true <=> run unit test
 

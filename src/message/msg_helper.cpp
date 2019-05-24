@@ -29,13 +29,11 @@ std::string message::get_suffix ( const msg_info_t & info, std::string source )
 
 void message::output_message ( std::string msg )
 {
-	if ( OUT != nullptr && ( IO_DEVICE == 1 || OUT != &std::cout ) ) {
+	if ( OUT != nullptr ) {
 		( *OUT ) << msg << std::endl;
 	}
 	if ( IO_DEVICE ) {
 		device_desc::device_screen->write ( "m", msg );
-	} else {
-		std::cout << msg << std::endl;
 	}
 }
 
