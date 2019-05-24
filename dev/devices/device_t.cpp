@@ -47,6 +47,16 @@ motherboard_t * device_t::get_motherboard () const
 	return motherboard;
 }
 
+void device_t::init ()
+{
+	logging::debug << "Initializing device " << to_string () << logging::log_endl;
+}
+
+void device_t::destroy ()
+{
+	logging::debug << "Destroying device " << to_string () << logging::log_endl;
+}
+
 std::string device_t::to_string () const
 {
 	return "";

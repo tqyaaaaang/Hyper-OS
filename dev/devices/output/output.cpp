@@ -11,16 +11,6 @@ dev_output::dev_output ( int __motherboard_id )
 {
 }
 
-void dev_output::init ()
-{
-	logging::debug << "Initializing device output" << logging::log_endl;
-}
-
-void dev_output::destroy ()
-{
-	logging::debug << "Destroying device output" << logging::log_endl;
-}
-
 std::string dev_output::to_string () const
 {
 	return "output";

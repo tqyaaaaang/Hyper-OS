@@ -26,8 +26,8 @@ public:
 	void set_motherboard ( motherboard_t *_motherboard );
 	motherboard_t * get_motherboard () const;
 
-	virtual void init () = 0;
-	virtual void destroy () = 0;
+	virtual void init ();
+	virtual void destroy ();
 
 	virtual std::string to_string () const;
 

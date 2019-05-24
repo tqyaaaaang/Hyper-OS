@@ -17,11 +17,15 @@ dev_clock::dev_clock ( int __motherboard_id, std::chrono::nanoseconds _tick_dura
 
 void dev_clock::init ()
 {
+	device_t::init ();
+
 	device_thread = std::thread ( &dev_clock::device_thread_entry, this, status );
 }
 
 void dev_clock::destroy ()
 {
+	device_t::destroy ();
+	
 	prom.set_value ( 0 );
 	device_thread.join ();
 }

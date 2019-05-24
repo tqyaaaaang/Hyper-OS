@@ -11,16 +11,6 @@ dev_input::dev_input ( int __motherboard_id )
 {
 }
 
-void dev_input::init ()
-{
-	logging::debug << "Initializing device input" << logging::log_endl;
-}
-
-void dev_input::destroy ()
-{
-	logging::debug << "Destroying device input" << logging::log_endl;
-}
-
 std::string dev_input::to_string () const
 {
 	return "input";

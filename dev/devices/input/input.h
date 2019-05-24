@@ -14,9 +14,6 @@ class dev_input : public device_t
 public:
 	dev_input ( int __motherboard_id );
 
-	virtual void init ();
-	virtual void destroy ();
-
 	virtual std::string to_string () const;
 
 	virtual char read ();
