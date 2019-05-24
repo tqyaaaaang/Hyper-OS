@@ -20,7 +20,7 @@ def start ():
 def stop ():
 	kernel.kern_proc.kill ()
 	try:
-		kernel.kern_proc.wait (timeout=10)
+		kernel.kern_proc.wait (timeout=1)
 	except subprocess.TimeoutExpired:
 		print ('kill failed')
 		kernel.kern_proc.terminate ()
