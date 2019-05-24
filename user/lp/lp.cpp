@@ -30,7 +30,9 @@ lp::~lp()
 { }
 
 void lp::static_init()
-{ }
+{
+	set_name("lp");
+}
 
 void lp::main()
 {
