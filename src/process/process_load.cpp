@@ -96,9 +96,5 @@ void process_t::clean()
 		delete heap_allocator;
 		heap_allocator = nullptr;
 	}
-	if (prog != nullptr) {
-		delete prog;
-		prog = nullptr;
-	}
 	context.free_all_pages();
 }

@@ -154,7 +154,7 @@ void process_t::vm_write(size_t addr, const char *buf_begin, const char *buf_end
 
 void process_t::set_exit_flag()
 {
-	exit_flag = 1;
+	exit_flag = true;
 }
 
 bool process_t::get_exit_flag() const

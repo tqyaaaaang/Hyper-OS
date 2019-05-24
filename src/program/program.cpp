@@ -99,7 +99,8 @@ handle<T>::~handle()
 {
 	if (prog == nullptr)
 		return;
-	if (this_type == type::STACK) {
+	if (prog->is_running() && this_type == type::STACK) {
+		logging::debug << "handle of program : " << prog->get_name() << "poping" << logging::log_endl;
 		prog->stack_pop(sizeof(T));
     }
 	
@@ -221,6 +222,7 @@ program::~program()
 		delete hos_std;
 		hos_std = nullptr;
 	}
+	this->running = false;
 }
 
 size_t program::get_text_size() const

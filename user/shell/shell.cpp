@@ -45,6 +45,7 @@ void hyper_shell::main()
 			logging::info << "operation success." << logging::log_endl; 
 		} else if (res == -1) {
 			sys->exit();
+			break;
 		} else if (res == -2) {
 			logging::info << "operation failed." << logging::log_endl;
 		}
