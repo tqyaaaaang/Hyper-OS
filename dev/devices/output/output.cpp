@@ -26,21 +26,6 @@ std::string dev_output::to_string () const
 	return "output";
 }
 
-void dev_output::write ( char ch )
-{
-	if ( ch >= 32 ) {
-		logging::debug << "Device output received character '" << ch << "' ( ASCII " << static_cast < int > ( ch ) << " ) " << logging::log_endl;
-	} else {
-		logging::debug << "Device output received unvisible character ( ASCII " << static_cast < int > ( ch ) << " ) " << logging::log_endl;
-	}
-	if ( ch == '\n' ) {
-		printf ( "w[\\n]\n" );
-	} else {
-		printf ( "w[%c]\n", ch );
-	}
-	fflush ( stdout );
-}
-
 void dev_output::write ( std::string str )
 {
 	for ( auto x : str ) {

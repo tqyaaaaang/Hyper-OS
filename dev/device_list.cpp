@@ -7,13 +7,14 @@
 
 #include "devices/null/null.h"
 #include "devices/clock/clock.h"
-#include "devices/output/output.h"
+#include "devices/output/output_terminal.h"
+#include "devices/output/output_screen.h"
 
 std::vector < device_t * > device_list ( {
 	new dev_null ( 0 ),
 	new dev_clock ( 0, std::chrono::milliseconds ( 200 ) ),
 	new dev_input ( 0 ),
-	new dev_output ( 0 )
+	new dev_output_screen ( 0 )
 } );
 
 
