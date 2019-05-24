@@ -13,7 +13,8 @@ std::vector < device_t * > device_list ( {
 	new dev_null ( 0 ),
 	new dev_clock ( 0, std::chrono::milliseconds ( 200 ) ),
 	new dev_input ( 0 ),
-	make_output_device ( 0 )
+	make_output_device ( 0 ),
+	new dev_screen ( 0 )
 } );
 
 
@@ -22,4 +23,6 @@ namespace device_desc
 {
 	dev_input *standard_input = dynamic_cast < dev_input * > ( device_list[2] );
 	dev_output *standard_output = dynamic_cast < dev_output * > ( device_list[3] );
+
+	dev_screen *device_screen = dynamic_cast < dev_screen * > ( device_list[4] );
 }

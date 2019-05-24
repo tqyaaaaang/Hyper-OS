@@ -6,6 +6,7 @@
 
 #include "output_screen.h"
 #include "../../../src/logging/logging.h"
+#include "../../device_list.h"
 
 dev_output_screen::dev_output_screen ( int __motherboard_id )
 	: dev_output ( __motherboard_id )
@@ -29,10 +30,11 @@ void dev_output_screen::write ( char ch )
 	} else {
 		logging::debug << "Device output received unvisible character ( ASCII " << static_cast < int > ( ch ) << " ) " << logging::log_endl;
 	}
+	std::string data;
 	if ( ch == '\n' ) {
-		printf ( "w[\\n]\n" );
+		data = "\\n";
 	} else {
-		printf ( "w[%c]\n", ch );
+		data = ch;
 	}
-	fflush ( stdout );
+	device_desc::device_screen->write ( "w", data );
 }
