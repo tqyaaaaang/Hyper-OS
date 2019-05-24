@@ -28,18 +28,20 @@ def read_thread_entry ():
 		pass
 	for line in data.kern_proc.stdout:
 		current_data = line.decode ('utf-8').strip ()
-		print (line)
-		current_data = current_data.split (' ')
-
-		print (current_data)
 
 		if len(current_data) == 0:
 			continue
 
-		if current_data[0] == 'w':
+		current_type = current_data[0]
+		current_data = current_data[1:]
+
+		if current_data[0] == '[' and current_data[-1] == ']':
+			current_data = current_data[1:-1]
+
+		if current_type == 'w':
 			if len(current_data) == 1:
-				write.putchar (current_data[1])
+				write.putchar (current_data)
 			elif current_data == '\\n':
 				write.newline ()
-		elif current_data[0] == 'm':
+		elif current_type == 'm':
 			pass

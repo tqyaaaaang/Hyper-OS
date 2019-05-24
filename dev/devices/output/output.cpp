@@ -34,9 +34,9 @@ void dev_output::write ( char ch )
 		logging::debug << "Device output received unvisible character ( ASCII " << static_cast < int > ( ch ) << " ) " << logging::log_endl;
 	}
 	if ( ch == '\n' ) {
-		printf ( "w \\n\n" );
+		printf ( "w[\\n]\n" );
 	} else {
-		printf ( "w %c\n", ch );
+		printf ( "w[%c]\n", ch );
 	}
 	fflush ( stdout );
 }
