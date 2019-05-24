@@ -47,5 +47,5 @@ void elephant::main()
 	while (1) {
 		sys->yield();
 		hos_std->println(elep);
-		}*/
+    }*/
 }

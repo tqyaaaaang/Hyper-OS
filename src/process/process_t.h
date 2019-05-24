@@ -12,6 +12,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <future>
+#include <thread>
 #include "../context/context.h"
 #include "../program/program.h"
 #include "../utils/allocator/allocator.h"
@@ -86,6 +87,12 @@ public:
 	
 	void clean();
 	// clean process when exit
+
+	std::thread *th;
+
+	void set_exit_flag();
+	bool get_exit_flag() const;
+	
 private:
 
 	int pid;
@@ -102,5 +109,6 @@ private:
 
 	CPU_core *core;
 	allocator *heap_allocator;
-	
+
+	bool exit_flag;
 };

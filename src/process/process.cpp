@@ -35,9 +35,14 @@ static mutex pid_mutex;
 
 static void proc_main(process_t *proc, promise<int> &fin_code)
 {
-	status.set_name(proc->get_name());
-	status.set_core(proc->get_core());
-	proc->exec(fin_code);
+	try {
+		status.set_name(proc->get_name());
+		status.set_core(proc->get_core());
+		proc->exec(fin_code);
+	} catch(int id) {
+		logging::info << "process exit with id : " << id << logging::log_endl;
+	}
+	logging::info << "process exit" << logging::log_endl;
 }
 
 bool proc_not_exit(int pid)
@@ -127,8 +132,7 @@ int proc_exec_program(int pid, program *prog)
 	promise<int> fin_code;
 	future<int> fut = fin_code.get_future();
 
-	thread th(proc_main, proc, std::ref(fin_code));
-	th.detach();
+	proc->th = new thread(proc_main, proc, std::ref(fin_code));
 
 	int fcode = fut.get();
 	

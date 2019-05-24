@@ -162,13 +162,24 @@ void sched_set_wait(process_t *proc, int pid)
 	lock_guard<mutex> lk(sched_mutex);
 	lock_guard<mutex> lkr(table_mutex);
 	info << "process " << proc->get_name() << " " << proc->get_pid() << " wait " << pid << log_endl;
-	sched_set_sleep_nlock(proc);
-	assert(proc->get_state() == state::SLEEPING);
-	assert(proc_table.count(pid));
-	if (proc_table[pid]->get_state() != state::ZOMBIE) {
+	if (proc_table.count(pid)) {
+		sched_set_sleep_nlock(proc);
+		assert(proc->get_state() == state::SLEEPING);
 		if (!wait_map.count(pid))
 			wait_map[pid] = list<process_t*>();
 		wait_map[pid].push_back(proc);		
+	} else if (zombie_map.count(pid)) {
+		logging::debug << "process " << pid << " has already finished." << logging::log_endl;
+		process_t *chl = zombie_map[pid];
+		zombie_map.erase(pid);
+		chl->set_exit_flag();
+		chl->cond_var.notify_one();
+		chl->th->join();
+		logging::debug << "deleting process " << pid << logging::log_endl;
+		delete chl->th;
+		delete chl;
+    } else {
+		assert(false);
 	}
 }
 
@@ -194,7 +205,7 @@ void sched_set_exit(process_t *proc)
 	
 	status.get_core()->set_current(nullptr);
 
-	logging::info << "process " << proc->get_name() << " exit." << log_endl;
+	logging::info << "process " << proc->get_name() << " " << proc->get_pid() << " exit." << log_endl;
 
 	proc->clean();
 
@@ -208,8 +219,10 @@ void sched_set_exit(process_t *proc)
 			logging::info << "waking up : " << i->get_pid() << logging::log_endl;
 			sched_set_runable_nlock(i);
 		}
+		wait_map.erase(proc->get_pid());
 	}
-	
+
+    proc->set_exit_flag();
 }
 
 void schedule(int id)

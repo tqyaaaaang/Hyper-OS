@@ -97,6 +97,7 @@ int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 		current_interrupt->get_return_promise ().set_value ( -1 );
 		return -1;
 	}
+	process_t *proc = core->get_current();
 	event_queue.push_back ( current_interrupt );
 	int return_val = 0;
 	if ( blocked ) {
@@ -105,6 +106,9 @@ int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 			core->release ();
 			logging::info << "process " << core->get_current()->get_name() << " " << core->get_current()->get_pid() << " stop and wait for interrupt" << logging::log_endl;
 			core->get_current ()->cond_var.wait ( lck );
+			if (proc->get_exit_flag()) {
+				throw 0;
+			}
 		} else {
 			core->release ();
 		}
@@ -126,12 +130,16 @@ void local_apic::try_process_interrupt ()
 {
 	logging::debug << "Try to send signals to LAPIC process interrupts if interrupts exist, proccess #"
 		<< status.get_core ()->get_current ()->get_pid () << " ( " << status.get_core ()->get_current ()->get_name () << " )" << logging::log_endl;
+	process_t *proc = status.get_core()->get_current();
 	while ( status.get_core ()->get_interrupt_waiting_flag () ) {
 		logging::debug << "Find unprocessed interrupt, sending signal to LAPIC" << logging::log_endl;
 		std::unique_lock < std::mutex > lck ( status.get_core ()->get_current ()->cond_mutex );
 		status.get_core ()->release ();
 		send_process_interrupt_signal ();
 		status.get_core ()->get_current ()->cond_var.wait ( lck );
+		if (proc->get_exit_flag()) {
+			throw 0;
+		}
 		status.get_core ()->acquire ();
 	}
 }

@@ -22,6 +22,9 @@ size_t program::stack_push(size_t size)
 
 size_t program::stack_pop(size_t size)
 {
+	if (cur_proc->get_exit_flag()) {
+		return 0;
+	}
 	return cur_proc->stack_pop(size);
 }
 

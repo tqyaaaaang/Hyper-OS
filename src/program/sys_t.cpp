@@ -23,8 +23,11 @@
 #include "../logging/logging.h"
 #include "../message/message.h"
 #include "program.h"
+#include <unordered_map>
 
 using std::string;
+
+extern std::unordered_map<int, process_t*> zombie_map;
 
 static void msg_intr(string str)
 {
@@ -83,6 +86,15 @@ int sys_t::exit()
 int sys_t::wait(int pid)
 {
 	int w = intr(new sys_wait(pid));
+	if (zombie_map.count(pid)) {
+		process_t *proc = zombie_map[pid];
+		zombie_map.erase(pid);
+		proc->cond_var.notify_one();
+		proc->th->join();
+		logging::info << "sys_wait kill process :"<< pid << logging::log_endl;
+		delete proc->th;
+		delete proc;
+	}
 	return w;
 }
 
