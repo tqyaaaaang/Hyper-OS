@@ -11,6 +11,7 @@ import os
 
 from screen import data
 from screen.output import write
+from screen import message
 
 
 read_thr = None
@@ -46,4 +47,4 @@ def read_thread_entry ():
 			elif current_data == '\\n':
 				write.newline ()
 		elif current_type == 'm':
-			pass
+			message.print_message (current_data)

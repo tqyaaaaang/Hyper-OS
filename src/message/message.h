@@ -79,7 +79,7 @@ namespace message
 				{
 					std::lock_guard < std::mutex > lock ( output_lock );
 
-					( *OUT ) << get_prefix ( buf.info, buf.source ) << buf.BUF.str () << get_suffix ( buf.info, buf.source ) << std::endl;
+					output_message ( get_prefix ( buf.info, buf.source ) + buf.BUF.str () + get_suffix ( buf.info, buf.source ) );
 				}
 				buf.BUF.clear ();
 				buf.BUF.str ( "" );
