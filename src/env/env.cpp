@@ -22,3 +22,6 @@ const int LOG_LEVEL = LOGGING_LEVEL::DEBUG;   // Logging level to be used
 
 // Unittest
 const bool TEST = false;
+
+// I/O Device
+extern const int IO_DEVICE = 1;   // I/O Device method, 0 if directly to terminal, 1 if to module screen
