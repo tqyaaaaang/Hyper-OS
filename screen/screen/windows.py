@@ -19,6 +19,6 @@ def init ():
 	data.messages_window = widgets.TextArea (scrollbar=True, focus_on_click=True)
 
 	data.app_windows = [
-		widgets.Frame (data.console_window, title='console'),
+		containers.VSplit([widgets.Frame (data.console_window, title='console')], key_bindings=data.key_binding),
 		widgets.Frame (data.messages_window, title='messages')
 	]
