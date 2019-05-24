@@ -9,6 +9,7 @@ Boot the kernel
 import subprocess
 import threading
 import os
+import pathlib
 
 
 kern_proc = None
@@ -16,24 +17,15 @@ kern_up_event = threading.Event ()
 
 
 def daemon_thread ():
-	files = os.listdir (os.path.join (os.path.dirname(os.path.abspath (__file__)), '..', 'bin'))
-	available_files = []
-	for i in files:
-		if i[0:3] == 'hos':
-			available_files.append (i)
-	if len(available_files) == 0:
-		print ('Cannot find hos kernel')
-	elif len(available_files) >= 2:
-		print ('Find duplicated hos kernel')
-	
+	kern_path = os.path.join (os.path.dirname(os.path.abspath (__file__)), '..', 'bin', 'hos')
+
 	global kern_proc
 
 	kern_proc = subprocess.Popen (
-		args = [os.path.join (os.path.dirname(os.path.abspath (__file__)), '..', 'bin', available_files[0])],
+		args = [kern_path],
 		stdin = subprocess.PIPE,
 		stdout = subprocess.PIPE,
-		stderr = subprocess.PIPE,
-		shell = True
+		stderr = subprocess.PIPE
 	)
 
 	kern_up_event.set ()
