@@ -6,13 +6,13 @@ screen.__main__
 
 from screen import data
 from screen import screen
-from screen import ios
+from screen import interact
 
 
 def main (kern_proc):
 	data.kern_proc = kern_proc
 
-	ios.init ()
+	interact.init ()
 	screen.init ()
 
 	screen.run ()
