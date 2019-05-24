@@ -22,7 +22,6 @@ def stop ():
 	try:
 		kernel.kern_proc.wait (timeout=1)
 	except subprocess.TimeoutExpired:
-		print ('kill failed')
 		kernel.kern_proc.terminate ()
 
 	os._exit (0)
