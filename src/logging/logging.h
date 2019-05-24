@@ -29,7 +29,7 @@ namespace logging
 
 	/**
 	* class logger
-	* can bu used to write logs
+	* can be used to write logs
 	*/
 	class logger
 	{

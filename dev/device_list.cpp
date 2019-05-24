@@ -11,7 +11,8 @@
 
 std::vector < device_t * > device_list ( {
 	new dev_null ( 0 ),
-	new dev_clock ( 0, std::chrono::milliseconds ( 300 ) ),
+	new dev_clock ( 0, std::chrono::milliseconds ( 200 ) ),
+	new dev_input ( 0 ),
 	new dev_output ( 0 )
 } );
 
@@ -19,5 +20,6 @@ std::vector < device_t * > device_list ( {
 
 namespace device_desc
 {
-	dev_output *standard_output = dynamic_cast < dev_output * > ( device_list[2] );
+	dev_input *standard_input = dynamic_cast < dev_input * > ( device_list[2] );
+	dev_output *standard_output = dynamic_cast < dev_output * > ( device_list[3] );
 }

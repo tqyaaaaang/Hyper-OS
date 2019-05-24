@@ -56,7 +56,6 @@ template<typename T>
 void handle<T>::alias(const handle<T> &val)
 {
 	prog = val.get_prog();
-	assert(prog != nullptr);
 	addr = val.get_addr();
 	if (val.get_type() == type::STACK) {
 		this_type = type::ALIAS;
@@ -66,7 +65,9 @@ void handle<T>::alias(const handle<T> &val)
 	} else {
 		this_type = val.get_type();
 	}
-	if (prog->is_compiling() && this_type == type::BSS) {
+	if (prog != nullptr
+		&& prog->is_compiling()
+		&& this_type == type::BSS) {
 		prog->add_redirect_bss(&(addr));
 		// need to be redirect
 	}
@@ -85,8 +86,10 @@ size_t program::alloc_static_area(size_t len)
 	data_size += len;
 	size_t l = data_size;
 	round2page(l);
+	logging::info << "REALLOC : " << len << logging::log_endl;
 	if (data == nullptr) data = (char*)malloc(l);
 	else data = (char*)realloc(data, l);
+	logging::info << "realloc success: " << len << logging::log_endl;
 	return data_size - len;
 }
 
@@ -247,7 +250,12 @@ handle<T> program::alloc_stack()
 	template handle<TYPE> program::alloc_bss<TYPE>(size_t);				\
 	template handle<TYPE> program::alloc_heap<TYPE>(size_t);			\
 	template handle<TYPE> program::alloc_stack<TYPE>();					\
-	template void program::free_heap<TYPE>(const handle<TYPE> &ptr);
+	template void program::free_heap<TYPE>(const handle<TYPE> &ptr);	\
+	template void handle<TYPE>::alias(const handle<TYPE> &val);
 
 INST(int)
 INST(char)
+INST(long long)
+INST(size_t)
+INST(double)
+INST(handle<int>)

@@ -15,11 +15,13 @@ using std::lock_guard;
 CPU_core::CPU_core ()
 	: enabled_flag ( false )
 	, interrupt_enabled_flag ( false )
+	, _preserved_interrupt_enabled_flag ( false )
 	, lapic ( this )
+	, interrupt_depth ( 0 )
 {
 	mmu = CPU_mmu(this);
 	current = nullptr;
-	intr_bit = 0;
+	interrupt_waiting_flag = 0;
 }
 
 CPU_core::~CPU_core ()
@@ -38,16 +40,25 @@ void CPU_core::set_enabled ( bool status )
 
 void CPU_core::enable ()
 {
-	logging::info << "Enabling CPU #" << get_core_id () << logging::log_endl;
-	enabled_flag = true;
-	lapic.enable ();
+	if ( !is_enabled () ) {
+		logging::info << "Enabling CPU #" << get_core_id () << logging::log_endl;
+		enabled_flag = true;
+		set_interrupt_enabled ( _preserved_interrupt_enabled_flag );
+	} else {
+		logging::info << "Trying to enable CPU #" << get_core_id () << ", but failed because it is already enabled" << logging::log_endl;
+	}
 }
 
 void CPU_core::disable ()
 {
-	logging::info << "Disabling CPU #" << get_core_id () << logging::log_endl;
-	enabled_flag = false;
-	lapic.disable ();
+	if ( is_enabled () ) {
+		logging::info << "Disabling CPU #" << get_core_id () << logging::log_endl;
+		_preserved_interrupt_enabled_flag = is_interrupt_enabled ();
+		disable_interrupt ();
+		enabled_flag = false;
+	} else {
+		logging::info << "Trying to disable CPU #" << get_core_id () << ", but failed because it is already disabled" << logging::log_endl;
+	}
 }
 
 bool CPU_core::is_enabled () const
@@ -66,19 +77,44 @@ void CPU_core::set_interrupt_enabled ( bool status )
 
 void CPU_core::enable_interrupt ()
 {
-	logging::debug << "Enabling interrupt of CPU #" << get_core_id () << logging::log_endl;
-	interrupt_enabled_flag = true;
+	if ( !is_interrupt_enabled () ) {
+		logging::debug << "Enabling interrupt of CPU #" << get_core_id () << logging::log_endl;
+		interrupt_enabled_flag = true;
+		lapic.enable ();
+	} else {
+		logging::info << "Trying to enable interrupt of CPU #" << get_core_id () << ", but failed because it is already enabled" << logging::log_endl;
+	}
 }
 
 void CPU_core::disable_interrupt ()
 {
-	logging::debug << "Disabling interrupt of CPU #" << get_core_id () << logging::log_endl;
-	interrupt_enabled_flag = false;
+	if ( is_interrupt_enabled () ) {
+		logging::debug << "Disabling interrupt of CPU #" << get_core_id () << logging::log_endl;
+		interrupt_enabled_flag = false;
+		lapic.disable ();
+	} else {
+		logging::info << "Trying to disable interrupt of CPU #" << get_core_id () << ", but failed because it is already disabled" << logging::log_endl;
+	}
 }
 
 bool CPU_core::is_interrupt_enabled () const
 {
 	return interrupt_enabled_flag;
+}
+
+void CPU_core::inc_interrupt_depth ()
+{
+	++interrupt_depth;
+}
+
+void CPU_core::dec_interrupt_depth ()
+{
+	--interrupt_depth;
+}
+
+int CPU_core::get_interrupt_depth () const
+{
+	return interrupt_depth;
 }
 
 void CPU_core::set_core_id ( int id )
@@ -147,21 +183,21 @@ void CPU_core::vm_write(size_t addr, const char *buf_begin, const char *buf_end)
 	}
 }
 
-void CPU_core::mark_intr()
+void CPU_core::set_interrupt_waiting_flag()
 {
-	lock_guard<mutex> lk(intr_mutex);
-	intr_bit++;
+	lock_guard<mutex> lk(interrupt_waiting_flag_mutex);
+	interrupt_waiting_flag = 1;
 }
 
-void CPU_core::unmark_intr()
+void CPU_core::unset_interrupt_waiting_flag()
 {
-	lock_guard<mutex> lk(intr_mutex);
-	intr_bit--;
+	lock_guard<mutex> lk(interrupt_waiting_flag_mutex);
+	interrupt_waiting_flag = 0;
 }
 
-int CPU_core::get_intr()
+int CPU_core::get_interrupt_waiting_flag() const
 {
-	lock_guard<mutex> lk(intr_mutex);
-    int d = intr_bit;
+	lock_guard<mutex> lk(interrupt_waiting_flag_mutex);
+    int d = interrupt_waiting_flag;
 	return d;
 }

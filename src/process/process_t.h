@@ -12,6 +12,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <future>
+#include <thread>
 #include "../context/context.h"
 #include "../program/program.h"
 #include "../utils/allocator/allocator.h"
@@ -56,26 +57,41 @@ public:
 
 	void set_core(CPU_core *core);
 	CPU_core* get_core() const;
-
+	
 	std::condition_variable cond_var;
 	std::mutex cond_mutex;
-	std::list<process_t*>::iterator linker;
+	// condition variable to break control flow
 	
+	std::list<process_t*>::iterator linker;
+	// linker to state list
+
 	void init_context();
 	void init_data();
 	void init_bss();
 	void init_dmm();
+	// init
 	
 	void set_resched(bool resch);
 	bool get_resched() const;
-
+	// set/get need_resched
+	
 	void vm_read(char *buf, size_t la_begin, size_t la_end);
 	void vm_write(size_t addr, const char *buf_begin, const char *buf_end);	
-
+	// vm read/write opertions
+	
 	size_t heap_malloc(size_t len);
 	void heap_free(size_t ptr);
 	size_t stack_push(size_t size);
 	size_t stack_pop(size_t size);
+	// heap & stack operations
+	
+	void clean();
+	// clean process when exit
+
+	std::thread *th;
+
+	void set_exit_flag();
+	bool get_exit_flag() const;
 	
 private:
 
@@ -93,5 +109,6 @@ private:
 
 	CPU_core *core;
 	allocator *heap_allocator;
-	
+
+	bool exit_flag;
 };

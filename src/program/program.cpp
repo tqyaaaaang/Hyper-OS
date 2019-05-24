@@ -20,6 +20,10 @@
 #include "../utils/check.h"
 #include "../logging/logging.h"
 #include "../utils/allocator/ffma.h"
+#include "../interrupt/interrupt.h"
+#include "../message/message.h"
+#include "sys_t.h"
+#include "lib.h"
 
 using std::mutex;
 using std::unique_lock;
@@ -33,32 +37,29 @@ using std::lock_guard;
 
 template class handle<int>;
 template class handle<char>;
+template class handle<long long>;
+template class handle<size_t>;
+template class handle<double>;
+template class handle< handle<int> >;
+
+static void msg_mm(string str)
+{
+	message::memory(message::wrap_core_info("user program"))
+		<< str
+		<< message::msg_endl;
+}
 
 /**
  * tail check
  * if an interrupt occurs, trap into kernel mode
  */
 
-void sleep_program(program *prog)
-{
-	process_t *proc = prog->cur_proc;
-	debug << "proc " << proc->get_name() << " release cpu because of interrupt, => " << status.get_core()->get_intr() << log_endl;
-	unique_lock<mutex> lk (proc->cond_mutex);
-	status.get_core()->release();
-	proc->cond_var.wait(lk);
-	status.get_core()->acquire();
-	debug << "proc " << proc->get_name() << " return frome interrupt, => " << status.get_core()->get_intr() << log_endl;
-}
-
 void tail_check(program *prog)
 {
 	process_t *proc = prog->cur_proc;
 	assert(proc != nullptr);
 	assert(proc->get_core() == status.get_core());
-	if (status.get_core()->get_intr()) {
-		// interrupt occurs
-		sleep_program(prog);
-	} 
+	check_interrupt ();
 }
 
 template<typename T>
@@ -73,6 +74,7 @@ template<typename T>
 handle<T>::handle(program *prog)
 {
 	this->prog = prog;
+	this_type = handle_type::NIL;
 }
 
 template<typename T>
@@ -105,7 +107,8 @@ handle<T>::~handle()
 {
 	if (prog == nullptr)
 		return;
-	if (this_type == type::STACK) {
+	if (prog->is_running() && this_type == type::STACK) {
+		logging::debug << "handle of program : " << prog->get_name() << "poping" << logging::log_endl;
 		prog->stack_pop(sizeof(T));
     }
 	
@@ -118,7 +121,6 @@ template<typename T>
 handle<T>& handle<T>::operator = (const handle<T> &val)
 {
 	alias(val);
-	info << "QWWQ" << (size_t)(&addr) << log_endl;
 	if (prog != nullptr && prog->is_running()) {
 		tail_check(this->prog);
 	}
@@ -133,6 +135,17 @@ template<typename T>
 handle<T>& handle<T>::operator = (const T &val)
 {
 	assert(prog->is_running());
+	if (this_type == handle_type::STACK) {
+		msg_mm("write operation in stack");
+	} else if (this_type == handle_type::HEAP) {
+		msg_mm("write operation in heap");
+	} else if (this_type == handle_type::STATIC) {
+		msg_mm("write operation in .data");
+	} else if (this_type == handle_type::BSS) {
+		msg_mm("write operation in .bss");
+	} else {
+		msg_mm("write operation in unknown");
+	}
 	const char* buf = (const char*)(&val);
 	prog->prog_write(addr, buf, buf + sizeof(T));
 	tail_check(this->prog); 
@@ -147,13 +160,25 @@ template<typename T>
 handle<T>::operator T() const
 {
 	assert(prog != nullptr);
+	if (!prog->is_running()) {
+		logging::info << "handle of prog : " << prog->get_name() << " failed" << logging::log_endl;
+	}
 	assert(prog->is_running());
-	char *buf = new char[sizeof(T)];
-	prog->prog_read(buf, addr, addr + sizeof(T));
-	T buf_T = *((T*) buf);
-	delete[] buf;
+	if (this_type == handle_type::STACK) {
+		msg_mm("read operation in stack");
+	} else if (this_type == handle_type::HEAP) {
+		msg_mm("read operation in heap");
+	} else if (this_type == handle_type::STATIC) {
+		msg_mm("read operation in .data");
+	} else if (this_type == handle_type::BSS) {
+		msg_mm("read operation in .bss");
+	} else {
+		msg_mm("read operation in unknown");
+	}
+	T buf;
+	prog->prog_read((char*)(&buf), addr, addr + sizeof(T));
 	tail_check(this->prog);
-	return buf_T;
+	return buf;
 }
 
 /**
@@ -205,14 +230,16 @@ void program::build()
 	name = "<default>";
 	text_size = data_size = bss_size = 0;
 	running = false;
+	debug << "STATIC INIT" << log_endl;
 	this->static_init(); // init static info
+	info << "COMPILE" << log_endl;
 	compile();           // simulate compile
 	info << "BUILDING FINISH" << log_endl;
 }
 
 program::~program()
 {
-	lock_guard<mutex> lk (del_mutex);
+	info << "program " << get_name() << " destroy" << log_endl;
     if (data != nullptr) {
 		free(data);
 		data = nullptr;
@@ -225,6 +252,7 @@ program::~program()
 		delete hos_std;
 		hos_std = nullptr;
 	}
+	this->running = false;
 }
 
 size_t program::get_text_size() const

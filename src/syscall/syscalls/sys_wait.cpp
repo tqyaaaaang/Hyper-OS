@@ -5,6 +5,8 @@
 
 #include "sys_wait.h"
 #include "../../process/process.h"
+#include <unordered_map>
+#include "../../logging/logging.h"
 
 sys_wait::sys_wait(int pid)
 	:syscall_t(syscall_id_t::WAIT)
@@ -14,5 +16,8 @@ sys_wait::sys_wait(int pid)
 
 int sys_wait::process()
 {
-	return proc_wait(pid);
+	logging::debug << "sys_wait : " << pid << logging::log_endl;
+	int res = proc_wait(pid);
+	logging::debug << "sys_wait finish." << logging::log_endl;
+	return res;
 }

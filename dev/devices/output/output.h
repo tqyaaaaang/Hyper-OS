@@ -7,6 +7,7 @@
 
 #include "../device_t.h"
 #include "../../../src/status/status.h"
+#include <string>
 
 class dev_output : public device_t
 {
@@ -19,6 +20,7 @@ public:
 	virtual std::string to_string () const;
 
 	virtual void write ( char ch );
+	virtual void write ( std::string str );
 
 private:
 };

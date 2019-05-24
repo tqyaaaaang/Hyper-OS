@@ -74,20 +74,41 @@ public:
 	bool is_interrupt_enabled () const;
 
 	/**
-	 * Mark Interrupt Bit
+	 * CPU_core.inc_interrupt_depth ()
+	 * increase the depth of the interrupt stack
+	 */
+	void inc_interrupt_depth ();
+
+	/**
+	 * CPU_core.dec_interrupt_depth ()
+	 * decrease the depth of the interrupt stack
+	 */
+	void dec_interrupt_depth ();
+
+	/**
+	 * CPU_core.get_interrupt_depth ()
+	 * get the depth of the interrupt stack
+	 */
+	int get_interrupt_depth () const;
+
+	/**
+	 * CPU_core.set_interrupt_flag
+	 * Set interrupt waiting flag
 	 * Process get mark and yeild in tail-check
 	 */
-	void mark_intr();
+	void set_interrupt_waiting_flag();
 
 	/**
-	 * Unmark Interrupt Bit
+	 * CPU_core.unset_interrupt_flag
+	 * Unet interrupt waiting flag
 	 */
-	void unmark_intr();
+	void unset_interrupt_waiting_flag();
 
 	/**
-	 * Get Interrupt Bit
+	 * CPU_core.get_interrupt_flag
+	 * Get interrupt waiting flag
 	 */
-	int get_intr();
+	int get_interrupt_waiting_flag() const;
 
 	
 	void set_core_id ( int id );   // Set the CPU core id
@@ -112,7 +133,10 @@ public:
 private:
 	bool enabled_flag;
 	bool interrupt_enabled_flag;
+	bool _preserved_interrupt_enabled_flag;
 	int core_id;
+
+	int interrupt_depth;
 
 	local_apic lapic;
 	
@@ -122,6 +146,6 @@ private:
 	context_t context;
 	process_t *current;
 
-	int intr_bit;
-	std::mutex intr_mutex;
+	int interrupt_waiting_flag;
+	mutable std::mutex interrupt_waiting_flag_mutex;
 };

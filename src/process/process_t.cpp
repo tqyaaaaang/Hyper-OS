@@ -6,6 +6,7 @@
 #include "process_t.h"
 #include "../utils/panic.h"
 #include "../core/core.h"
+#include "../program/sys_t.h"
 #include <string>
 #include <cassert>
 #include <mutex>
@@ -23,6 +24,7 @@ process_t::process_t()
 	ptr_par = 0;
 	heap_allocator = nullptr;
 	need_resched = false;
+	exit_flag = false;
 }
 
 process_t::~process_t()
@@ -84,9 +86,10 @@ void process_t::exec(promise<int> &fin_code)
 	this->cond_var.wait(lk);
 	lk.unlock();
 	core->acquire();
+	this->prog->run();
+	logging::info << "program " << prog->get_name() << " is set running : " << prog->is_running() << logging::log_endl;
 	this->prog->main();
 	prog->sys->exit();
-	core->release();
 }
 
 void process_t::add_chl(int pid)
@@ -149,3 +152,12 @@ void process_t::vm_write(size_t addr, const char *buf_begin, const char *buf_end
 	core->vm_write(addr, buf_begin, buf_end);
 }
 
+void process_t::set_exit_flag()
+{
+	exit_flag = true;
+}
+
+bool process_t::get_exit_flag() const
+{
+	return exit_flag;
+}

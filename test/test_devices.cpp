@@ -23,6 +23,13 @@ void test_output_device ()
 	for ( auto x : str ) {
 		device_desc::standard_output->write ( x );
 	}
+	device_desc::standard_output->write ( str );
+
+	device_desc::standard_output->write ( "Please input a character: " );
+	char ch = device_desc::standard_input->read ();
+	device_desc::standard_output->write ( "input read : " );
+	device_desc::standard_output->write ( ch );
+	device_desc::standard_output->write ( '\n' );
 
 	logging::debug << "Test on output device succeeded" << logging::log_endl;
 }

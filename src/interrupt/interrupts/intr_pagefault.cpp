@@ -15,10 +15,18 @@
 #include "../../core/core.h"
 #include <string>
 #include <cassert>
+#include "../../message/message.h"
 
 using std::string;
 
 typedef intr_pagefault_t::error_info error_info;
+
+static void msg_mm(string str)
+{
+	message::memory(message::wrap_core_info("kern ISR(#PF)"))
+		<< str
+		<< message::msg_endl;
+}
 
 error_info::error_info()
 {
@@ -69,6 +77,12 @@ void intr_pagefault_t::process()
 		process_t *proc = status.get_core()->get_current();
 		pte_t *pte = proc->get_context().get_page_table()
 			->get_pte(info.la);
+		message::memory(message::wrap_core_info("kern ISR(#PF)"))
+			<< "swap-in or create page for linear address "
+			<< info.la << ", page "
+			<< info.la / PAGE_SIZE << " is now in physical page frame ["
+			<< pte->paddr << ", " << pte->paddr + PAGE_SIZE << ")"
+			<< message::msg_endl;
 		pte->user = true;
 		pte->write = true;
 		assert(pte != nullptr);

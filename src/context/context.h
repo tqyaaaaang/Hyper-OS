@@ -11,6 +11,7 @@ public:
 	void set_page_table( page_table *pg );
 	page_table * get_page_table() const;
 
+	void free_all_pages();
 	size_t esp;
 	size_t brk;
 	

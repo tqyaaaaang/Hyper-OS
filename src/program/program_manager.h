@@ -9,19 +9,19 @@
 #include <string>
 #include <algorithm>
 #include <map>
+#include <functional>
 #include "program.h"
-
-extern std::map<std::string,
-	std::pair<size_t, program*> > prog_table;
 
 /**
  * register a program
  * @name : name of program
- * @prog : program to register
- * @size : sizeof(prog)
+ * @gen  : program generator
  */
-void register_program(std::string name, program *prog, size_t size);
+void register_program(std::string name,
+					  program* (*gen)());
 
 program* get_program(std::string name);
+bool is_program(std::string name);
 
+void init_program_manager();
 void destroy_program_manager();

@@ -9,7 +9,7 @@ bool add_check(size_t a, size_t b)
 
 bool mul_check(size_t a, size_t b)
 {
-	return (size_t)(-1) / a >= b;
+	return a == 0 || (size_t)(-1) / a >= b;
 }
 
 void round2page(size_t &size)

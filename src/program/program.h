@@ -8,11 +8,11 @@
 #include <vector>
 #include <string>
 #include <mutex>
-#include "sys_t.h"
-#include "lib.h"
 
 class program;
 class process_t;
+class sys_t;
+class hos_std_t;
 
 namespace handle_type {
 	
@@ -199,9 +199,5 @@ private:
 	void do_redirect();
 
 	std::vector<size_t*> redr_table;
-
-	std::mutex del_mutex;
 	
 };
-
-void sleep_program(program *prog);
