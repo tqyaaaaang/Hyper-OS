@@ -20,3 +20,5 @@ app_windows = []
 key_binding = KeyBindings ()
 
 key_seq = []
+
+kern_proc = None
