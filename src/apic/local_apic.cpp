@@ -287,7 +287,8 @@ void local_apic::schedule ( bool internal_only )
 
 void local_apic::run_isr ( interrupt_t * current_interrupt )
 {
-	message::interrupt ( message::wrap_core_info ( "hd Local APIC", core->get_core_id () ) ) << "Local APIC scheduled ISR of interrupt to be run : " << current_interrupt->to_string () << message::msg_endl;
+	message::interrupt ( message::wrap_core_info ( "hd Local APIC", core->get_core_id () ) ) << "Local APIC scheduled ISR of interrupt to be run : " << current_interrupt->to_string ()
+		<< ", this is #" << isr_stack.size () << " ISR on stack" << message::msg_endl;
 	logging::debug << "Calling ISR of interrupt : " << current_interrupt->to_string () << logging::log_endl;
 	status_t isr_status = status;
 	isr_status.set_core ( core );
