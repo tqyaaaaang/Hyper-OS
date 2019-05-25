@@ -133,7 +133,18 @@ lapic -> process 2: 启动另一个进程
 note over process 2: 进程正确执行
 ```
 
+#### 中断的完成
+在中断完成后，应该由 CPU 向 Local APIC 写入一个 EOI 寄存器 (End Of Interrupt)，代表中断处理完成，并由 Local APIC 决定如何处理这个信息，例如再发送一个中断等等。但是 Hyper OS 中的 Local APIC 不是忙等待的，而是通过等待在事件队列上获取下一个事件。因此在 Hyper OS 中，中断完成后 ISR 会向 Local APIC 发送一个信号事件，表示中断处理完成。Local APIC 通过处理这个信号事件来完成对中断结束的处理。
 
+而 Local APIC 在进行完中断结束后，还需要通知发送中断的线程中断完成。这里有异于 schedule 中的通知，这里通知的一定是发送中断的线程，让该线程获取中断的返回值，并销毁这个 interrupt_t 类的实例，避免内存泄漏。
+
+因此在处理完中断后，还应当有如下过程：
+
+```sequence
+ISR -> LAPIC: 发送 EOI 信号模拟写入 EOI 寄存器
+LAPIC -> thread which sent the interrupt: 通知中断来源中断结束
+thread which sent the interrupt: 获取中断结果，回收清理内存
+```
 
 #### 中断嵌套
 
