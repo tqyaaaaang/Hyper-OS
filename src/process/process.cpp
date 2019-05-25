@@ -109,7 +109,7 @@ int proc_exec_program(int pid, program *prog)
 {
 	lock_guard<mutex> lkr(table_mutex);
 	if (prog == nullptr) {
-		logging::info << "exec error. program is invalid" << logging::log_endl;
+		logging::warning << "exec error. program is invalid" << logging::log_endl;
 		return -2;
 	}
 	if (!proc_table.count(pid)) {

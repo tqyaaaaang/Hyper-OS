@@ -20,6 +20,7 @@ elephant::~elephant()
 
 void elephant::static_init()
 {
+	set_name("elephant");
 	const char str[] =
 		"--------------------------------------------------------------------\n"
 		"    //    / /                                      //   ) ) //   )  \n"
