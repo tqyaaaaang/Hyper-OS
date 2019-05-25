@@ -143,7 +143,7 @@ note over process 2: 进程正确执行
 ```sequence
 ISR -> LAPIC: 发送 EOI 信号模拟写入 EOI 寄存器
 LAPIC -> thread which sent the interrupt: 通知中断来源中断结束
-thread which sent the interrupt: 获取中断结果，回收清理内存
+note over thread which sent the interrupt: 获取中断结果，回收清理内存
 ```
 
 #### 中断嵌套
@@ -172,7 +172,9 @@ Hyper OS 实现的另外一个难点是如何打断用户态进程的执行，�
    - 在栈上分配：在  `main` 中使用 `alloc_stack<T>()` 函数分配； 
    - 在堆上分配：在  `main` 中使用 `alloc_heap<T>()` 函数分配，使用 `free_heap` 进行释放。
 
-   由于重载了构造、赋值和类型转化函数，可以直接使用 `handle<T>` 进行运算。
+   由于重载了构造、赋值和类型转化函数，可以直接使用 `handle<T>` 进行运算。`handle` 访存操作会经过 MMU 被翻译到物理地址，利用物理内存的访存指令进行访存。
+   
+   `handle<T>` 是从应用程序抢夺控制权的基础，通过模拟真实系统，在访存操作结束后检查是否有中断，并利用进程同步操作放弃控制权，实现了操作系统对程序的控制。
 
 #### 进程
 
