@@ -10,6 +10,7 @@
 
 #include "../core/core.h"
 #include "../logging/logging.h"
+#include "../message/message.h"
 #include "../status/status.h"
 #include "../interrupt/interrupts/interrupt_t.h"
 #include "../interrupt/interrupts/end_of_interrupt.h"
@@ -91,6 +92,7 @@ bool local_apic::is_enabled () const
  */
 int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 {
+	message::interrupt ( message::wrap_core_info ( "hd Local APIC", core->get_core_id () ) ) << "Sending an interrupt request to LAPIC on core #" << core->get_core_id () << " : " << current_interrupt->to_string () << message::msg_endl;
 	logging::debug << "LAPIC received interrupt request : " << current_interrupt->to_string () << logging::log_endl;
 	if ( !current_interrupt->is_lapic_signal () && !is_enabled () ) {
 		logging::warning << "LAPIC received interrupt request after it is disabled : " << current_interrupt->to_string () << logging::log_endl;
@@ -123,6 +125,8 @@ int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 
 void local_apic::send_end_of_interrupt ( int return_value )
 {
+	message::interrupt ( message::wrap_core_info ( "hd Local APIC", core->get_core_id () ) ) << "Sending EOI to LAPIC" << message::msg_endl;
+
 	interrupt ( new end_of_interrupt ( return_value ), false );
 }
 
@@ -189,6 +193,7 @@ void local_apic::lapic_thread_event_loop ()
 			}
 		} else if ( current_interrupt->is_internal_interrupt () ) {   // internal CPU exceptions
 			logging::debug << "LAPIC received new interrupt request : " << current_interrupt->to_string () << logging::log_endl;
+			message::interrupt ( message::wrap_core_info ( "hd Local APIC", core->get_core_id () ) ) << "LAPIC received new interrupt request : " << current_interrupt->to_string () << message::msg_endl;
 			if ( isr_stack.empty () || isr_stack.top ().first->is_internal_interrupt () ) {
 				run_isr ( current_interrupt );
 			} else {
@@ -197,6 +202,7 @@ void local_apic::lapic_thread_event_loop ()
 			}
 		} else {   // hardware interrupts
 			logging::debug << "LAPIC received new interrupt request : " << current_interrupt->to_string () << logging::log_endl;
+			message::interrupt ( message::wrap_core_info ( "hd Local APIC", core->get_core_id () ) ) << "LAPIC received new interrupt request : " << current_interrupt->to_string () << message::msg_endl;
 			interrupt_queue.push ( current_interrupt );
 			core->set_interrupt_waiting_flag ();
 		}
@@ -217,6 +223,8 @@ bool local_apic::do_events ( interrupt_t * current_interrupt )
 	switch ( current_interrupt->get_interrupt_id () ) {
 	case interrupt_id_t::END_OF_INTERRUPT:
 		logging::debug << "LAPIC received EOI signal from ISR : " << isr_stack.top ().first->to_string () << logging::log_endl;
+		message::interrupt ( message::wrap_core_info ( "hd Local APIC", core->get_core_id () ) ) << "LAPIC received EOI from ISR : " << isr_stack.top ().first->to_string ()
+			<< ", return the interrupt" << message::msg_endl;
 		isr_stack.top ().second.join ();
 		isr_stack.top ().first->get_return_promise ().set_value ( dynamic_cast < end_of_interrupt * > ( current_interrupt )->get_return_value () );
 		isr_stack.pop ();
@@ -277,6 +285,7 @@ void local_apic::schedule ( bool internal_only )
 
 void local_apic::run_isr ( interrupt_t * current_interrupt )
 {
+	message::interrupt ( message::wrap_core_info ( "hd Local APIC", core->get_core_id () ) ) << "Local APIC scheduled ISR of interrupt to be run : " << current_interrupt->to_string () << message::msg_endl;
 	logging::debug << "Calling ISR of interrupt : " << current_interrupt->to_string () << logging::log_endl;
 	status_t isr_status = status;
 	isr_status.set_core ( core );

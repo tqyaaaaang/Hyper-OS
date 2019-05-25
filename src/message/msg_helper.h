@@ -15,4 +15,5 @@ namespace message
 	void output_message ( std::string msg );
 
 	std::string wrap_core_info ( std::string str );
+	std::string wrap_core_info ( std::string str, int core_id );
 }

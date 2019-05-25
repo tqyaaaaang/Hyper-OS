@@ -39,7 +39,12 @@ void message::output_message ( std::string msg )
 
 std::string message::wrap_core_info ( std::string str )
 {
+	return wrap_core_info ( str, status.get_core ()->get_core_id () );
+}
+
+std::string message::wrap_core_info ( std::string str, int core_id )
+{
 	std::stringstream string_helper;
-	string_helper << str << " (" << status.get_core ()->get_core_id () << ")";
+	string_helper << str << " (" << core_id << ")";
     return string_helper.str ();
 }

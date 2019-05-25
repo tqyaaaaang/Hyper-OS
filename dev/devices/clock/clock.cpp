@@ -8,6 +8,7 @@
 #include "../../../src/interrupt/interrupts/clock_interrupt.h"
 #include <sstream>
 #include "../../../src/logging/logging.h"
+#include "../../../src/message/message.h"
 
 dev_clock::dev_clock ( int __motherboard_id, std::chrono::nanoseconds _tick_duration )
 	: device_t ( __motherboard_id )
@@ -42,6 +43,7 @@ void dev_clock::device_thread_event_loop ()
 	while ( true ) {
 		if ( wait_future.wait_for ( tick_duration ) == std::future_status::timeout ) {
 			logging::debug << "Device clock sending a tick" << logging::log_endl;
+			message::interrupt ( "dev clock" ) << "Device clock sending a tick" << message::msg_endl;
 			get_motherboard ()->send_interrupt ( new clock_interrupt () );
 		} else {
 			logging::debug << "Device clock received kill signal" << logging::log_endl;
