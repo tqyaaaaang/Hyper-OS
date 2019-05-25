@@ -163,9 +163,7 @@ Hyper OS 实现的另外一个难点是如何打断用户态进程的执行，�
    - `static_init`：完成静态空间的设置，包括分配静态区 `.data` 和 bss 区 `.bss` 的内存，设置静态区内容等操作。
    - `main`：应用程序的入口，被加载到进程中后，执行其中的代码。
 
-2. 程序必须通过给定的接口 `handle<T>` 来分配和访问内存，Hyper OS 应用程序具有非常简单的内存布局：
-
-   分配内存的方式有四种，分别是：
+2. 程序必须通过给定的接口 `handle<T>` 来分配和访问内存，分配内存的方式有四种，分别是：
 
    - 在静态区分配：在 `static_init` 中使用 `alloc_static<T>()` 分配，使用 `modify_in_compile()` 修改；
    - 在 bss 区分配：在 `static_init` 中使用 `alloc_bss<T>()` 函数分配；
@@ -193,7 +191,6 @@ process 1 -> ISR : 阻塞自己并放弃CPU
 note over ISR: 调度器切换到process 2
 ISR -> process 2: 给条件变量一个信号
 note over process 2: 收到信号并启动继续执行
-
 ```
 
 #### 标准库和系统调用
