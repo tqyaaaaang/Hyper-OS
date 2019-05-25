@@ -70,7 +70,9 @@ motherboard_t * io_apic::get_motherboard () const
 
 void io_apic::interrupt ( external_interrupt_t * current_interrupt )
 {
-	message::interrupt ( "hd I/O APIC" ) << "Sending an interrupt request to I/O APIC : " << current_interrupt->to_string () << message::msg_endl;
+	if ( !current_interrupt->is_io_apic_signal () ) {
+		message::interrupt ( "hd I/O APIC" ) << "Sending an interrupt request to I/O APIC : " << current_interrupt->to_string () << message::msg_endl;
+	}
 	logging::debug << "I/O APIC received interrupt request : " << current_interrupt->to_string () << logging::log_endl;
 	event_queue.push_back ( current_interrupt );
 }

@@ -92,7 +92,9 @@ bool local_apic::is_enabled () const
  */
 int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 {
-	message::interrupt ( message::wrap_core_info ( "hd Local APIC", core->get_core_id () ) ) << "Sending an interrupt request to LAPIC on core #" << core->get_core_id () << " : " << current_interrupt->to_string () << message::msg_endl;
+	if ( !current_interrupt->is_lapic_signal () ) {
+		message::interrupt ( message::wrap_core_info ( "hd Local APIC", core->get_core_id () ) ) << "Sending an interrupt request to LAPIC on core #" << core->get_core_id () << " : " << current_interrupt->to_string () << message::msg_endl;
+	}
 	logging::debug << "LAPIC received interrupt request : " << current_interrupt->to_string () << logging::log_endl;
 	if ( !current_interrupt->is_lapic_signal () && !is_enabled () ) {
 		logging::warning << "LAPIC received interrupt request after it is disabled : " << current_interrupt->to_string () << logging::log_endl;
