@@ -34,6 +34,7 @@ enum class interrupt_id_t
 	INTERNAL_TEST = 31,
 
 	CLOCK_INTERRUPT = 32,
+	KEYBOARD_INTERRUPT = 33,
 
 	SYSCALL = 80,
 
