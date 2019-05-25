@@ -255,7 +255,7 @@ Hyper OS 中的进程具有很简单的内存布局：
 
 ## 实验演示
 
-#### shell
+### shell
 
 `shell` 是仅使用 `hos` 标准库和标准库编写的简单终端，其中执行程序的逻辑可以大致表述为： 
 
@@ -270,7 +270,7 @@ wait(pid);
 
 调用程序 `lp`，可以答应所有加载的程序。
 
-#### elephant
+### elephant
 
 `elephant` 输出字符串 `Hyper OS` 的字符画：
 
@@ -297,28 +297,84 @@ while (1) {
 
 可以观察到，每隔一段时间，一个新的进程被创建出来并打印一个字符画；每当一个进程被创建出来，打印 `tick` 的个数就加 1。这说明 `yield` 成功地释放了 CPU 使用权。由于没有实现同步互斥，可能存在字符画打印一半后出现一个 `tick`，这也符合预测。
 
-#### demo-syscall
+### demo-interrupt
 
-`demo-syscall` 展示最简单的系统调用：打印一个字符，并输出对应的帮助信息。根据帮助信息我们可以清晰地看出系统调用的完整过程。
+`demo-interrupt` 展示了中断处理相关的处理过程。这个例程分为三个部分。我们可以通过这三个部分的例子完整看出系统处理不同中断的时候的过程。
+
+#### 内部中断
+第一部分中例程向系统发送了 DOUBLE INTERRUPT TEST 中断。这个中断的中断处理例程会发送 INTERRUPT TEST 中断，而 INTERRUPT TEST 中断为一个简单的测试用中断。因此这个过程展示了内部中断嵌套的情况。这部分的过程如下：
+
+```
+hd Local APIC (0)    : Sending an interrupt request to LAPIC on core #0 : id : 30
+hd Local APIC (0)    : LAPIC received new interrupt request : id : 30
+hd Local APIC (0)    : Local APIC scheduled ISR of interrupt to be run : id : 30, this is #0 ISR on stack
+kern trap (0)        : (switch to kernel mode) trap entry of interrupt : id : 30
+hd Local APIC (0)    : Sending an interrupt request to LAPIC on core #0 : id : 31
+hd Local APIC (0)    : LAPIC received new interrupt request : id : 31
+hd Local APIC (0)    : Local APIC scheduled ISR of interrupt to be run : id : 31, this is #1 ISR on stack
+kern trap (0)        : (switch to kernel mode) trap entry of interrupt : id : 31
+kern trap (0)        : (switch to user mode) trap exit, restore context of current process
+hd Local APIC (0)    : Sending EOI to LAPIC
+hd Local APIC (0)    : LAPIC received EOI from ISR : id : 31, return the interrupt
+kern trap (0)        : (switch to user mode) trap exit, restore context of current process
+hd Local APIC (0)    : Sending EOI to LAPIC
+hd Local APIC (0)    : LAPIC received EOI from ISR : id : 30, return the interrupt
+```
+
+可以发现中断从 LAPIC 一路传到 CPU，并执行中断处理例程，并在中断处理例程中再次发送中断，产生嵌套。在中断结束后，通过向 LAPIC 发送 EOI 返回中断。
+
+#### 系统调用
+第二部分展示了最简单的系统调用：打印一个字符。这部分过程如下：
 
 ```
 user stdlib (0)      : call function 'println' in standard library
 user syscall (0)     : syscall function trigger INTR #80 using 'INT 80' instruction
-kern trap (0)        : (switch to kernel mode) trap entry of interrupt id : 80
+hd Local APIC (0)    : Sending an interrupt request to LAPIC on core #0 : id : 80
+hd Local APIC (0)    : LAPIC received new interrupt request : id : 80
+hd Local APIC (0)    : Local APIC scheduled ISR of interrupt to be run : id : 80, this is #0 ISR on stack
+kern trap (0)        : (switch to kernel mode) trap entry of interrupt : id : 80
 kern syscall (0)     : Interrupt Service Routine start to serve syscall
-(device print) : '~'
 kern trap (0)        : (switch to user mode) trap exit, restore context of current process
-kern trap (0)        : (switch to kernel mode) trap entry of interrupt #PF : P--
+hd Local APIC (0)    : Sending EOI to LAPIC
+hd Local APIC (0)    : LAPIC received EOI from ISR : id : 80, return the interrupt
+hd Local APIC (0)    : Sending an interrupt request to LAPIC on core #0 : #PF : P--
+hd Local APIC (0)    : LAPIC received new interrupt request : #PF : P--
+hd Local APIC (0)    : Local APIC scheduled ISR of interrupt to be run : #PF : P--, this is #0 ISR on stack
+kern trap (0)        : (switch to kernel mode) trap entry of interrupt : #PF : P--
 kern trap (0)        : (switch to user mode) trap exit, restore context of current process
-// 这两行是由于在栈上申请了空间传递参数，导致的缺页
+hd Local APIC (0)    : Sending EOI to LAPIC
+hd Local APIC (0)    : LAPIC received EOI from ISR : #PF : P--, return the interrupt
+// 这个中断是由于在栈上申请了空间传递参数，导致的缺页
 user syscall (0)     : syscall function trigger INTR #80 using 'INT 80' instruction
-kern trap (0)        : (switch to kernel mode) trap entry of interrupt id : 80
+hd Local APIC (0)    : Sending an interrupt request to LAPIC on core #0 : id : 80
+hd Local APIC (0)    : LAPIC received new interrupt request : id : 80
+hd Local APIC (0)    : Local APIC scheduled ISR of interrupt to be run : id : 80, this is #0 ISR on stack
+kern trap (0)        : (switch to kernel mode) trap entry of interrupt : id : 80
 kern syscall (0)     : Interrupt Service Routine start to serve syscall
-(device print) : '\n'
 kern trap (0)        : (switch to user mode) trap exit, restore context of current process
+hd Local APIC (0)    : Sending EOI to LAPIC
+hd Local APIC (0)    : LAPIC received EOI from ISR : id : 80, return the interrupt
 ```
 
-#### demo-pf
+#### 外部中断
+第三部分展示了时钟中断的过程。这部分由 dev clock 定时发出，并通过 I/O APIC 传递到 LAPIC，过程如下：
+
+```
+dev clock            : Device clock sending a tick
+hd I/O APIC          : Sending an interrupt request to I/O APIC : id : 32
+hd I/O APIC          : I/O APIC received interrupt request : id : 32, sending to core #0
+hd Local APIC (0)    : Sending an interrupt request to LAPIC on core #0 : id : 32
+hd Local APIC (0)    : LAPIC received new interrupt request : id : 32
+hd Local APIC (0)    : Local APIC scheduled ISR of interrupt to be run : id : 32, this is #0 ISR on stack
+kern trap (0)        : (switch to kernel mode) trap entry of interrupt : id : 32
+kern trap (0)        : (switch to user mode) trap exit, restore context of current process
+hd Local APIC (0)    : Sending EOI to LAPIC
+hd Local APIC (0)    : LAPIC received EOI from ISR : id : 32, return the interrupt
+```
+
+可以发现中断 device $\to$ I/O APIC $\to$ Local APIC $\to$ CPU 的过程，并在 I/O APIC 到 Local APIC 的过程中决定被发送到哪个核的 Local APIC。
+
+### demo-pf
 
 `demo-pf` 是缺页处理的例子，Hyper OS 不会为堆栈预先分配空间，而是按需分配，因此在堆栈上申请内存会导致缺页错并开始处理。
 
@@ -334,7 +390,7 @@ hd MMU (0)           : MMU translate linear address : 2147483647 to physical add
 
 值得演示的例子是，如果再一次调用 `demo-pf`，最后一行算出的物理地址不会变化，这是由于上一次调用退出后其占用的页面被释放；如果调用 `shell` 再调用 `demo-pf`，物理地址则会发生变化。
 
-#### demo-proc
+### demo-proc
 
 `demo-proc` 是进程调度的基本实例，其基本逻辑如下：
 
@@ -387,7 +443,7 @@ demo_proc -> shell: (wait finish)
 note over shell: sleeping->runable
 ```
 
-#### matrix
+### matrix
 
 `matrix` 是矩阵乘法的例子，用于测试利用 `handle` 访问内存使用二维数组（`handle<handle<int>>`）。在这样的例子中，二维数组事实上是指向一维数组指针的数组。
 
