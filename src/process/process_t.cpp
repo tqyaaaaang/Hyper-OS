@@ -162,3 +162,13 @@ bool process_t::get_exit_flag() const
 {
 	return exit_flag;
 }
+
+void process_t::set_signal_data(size_t data)
+{
+	signal_data = data;
+}
+
+size_t process_t::get_signal_data() const
+{
+	return signal_data;
+}

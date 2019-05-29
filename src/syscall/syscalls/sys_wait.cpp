@@ -4,9 +4,11 @@
  */
 
 #include "sys_wait.h"
-#include "../../process/process.h"
 #include <unordered_map>
+#include "../../process/process.h"
 #include "../../logging/logging.h"
+#include "../../schedule/signal.h"
+#include "../../status/status.h"
 
 sys_wait::sys_wait(int pid)
 	:syscall_t(syscall_id_t::WAIT)

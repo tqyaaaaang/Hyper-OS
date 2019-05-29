@@ -12,6 +12,7 @@
 #include <cassert>
 #include <future>
 #include "../schedule/schedule.h"
+#include "../schedule/signal.h"
 #include "../status/status.h"
 #include "../core/core.h"
 #include "../program/program_manager.h"
@@ -158,7 +159,12 @@ int proc_yield()
 int proc_wait(int pid)
 {
 	process_t *proc = status.get_core()->get_current();
-	sched_set_wait(proc, pid);
+	if (pid >= 0) {
+		sched_set_wait(proc, pid);
+	} else {
+		sched_set_sleep(proc);
+		return wait_signal(pid, proc);
+	}
 	return 0;
 }
 
@@ -169,3 +175,9 @@ int proc_exit()
 	return 0;
 }
 
+int proc_sleep()
+{
+	process_t *proc = status.get_core()->get_current();
+	sched_set_sleep(proc);
+	return 0;
+}

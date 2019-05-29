@@ -187,8 +187,6 @@ void sched_set_wait(process_t *proc, int pid)
 	if (proc_table.count(pid)) {
 		sched_set_sleep_nlock(proc);
 		assert(proc->get_state() == state::SLEEPING);
-		if (!wait_map.count(pid))
-			wait_map[pid] = list<process_t*>();
 		wait_map[pid].push_back(proc);		
 	} else if (zombie_map.count(pid)) {
 		logging::debug << "process " << pid << " has already finished." << logging::log_endl;

@@ -92,6 +92,9 @@ public:
 
 	void set_exit_flag();
 	bool get_exit_flag() const;
+
+	void set_signal_data(size_t data);
+	size_t get_signal_data() const;
 	
 private:
 
@@ -111,4 +114,5 @@ private:
 	allocator *heap_allocator;
 
 	bool exit_flag;
+	size_t signal_data;
 };
