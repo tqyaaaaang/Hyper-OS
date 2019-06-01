@@ -20,12 +20,12 @@ private:
 
 	std::mutex mut;
 	std::queue<process_t*> proc;
+	std::queue<size_t> que;
 };
 
 namespace signal_id {
-	extern const int wait_exit;
-	extern const int keyboard;
-	extern const int kill;
+	extern const int WAIT_EXIT;
+	extern const int KEYBOARD;
 }
 
 /**

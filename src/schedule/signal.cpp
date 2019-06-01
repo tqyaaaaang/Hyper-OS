@@ -15,9 +15,8 @@ using std::unordered_map;
 
 namespace signal_id {
 	
-	const int wait_exit = -1;
-	const int keyboard = -2;
-	const int kill = -3;
+	const int WAIT_EXIT = -1;
+	const int KEYBOARD = -2;
 
 	int signal_top = -128;
 }
@@ -33,18 +32,20 @@ signal_t::~signal_t()
 void signal_t::notify(size_t data)
 {
 	lock_guard<mutex> lk (mut);
-	if (proc.empty())
-		return;
-	process_t *proc = this->proc.front();
-	this->proc.pop();
-	proc->set_signal_data(data);
-	sched_set_runable(proc);	
+	que.push(data);
+	if (!this->proc.empty()) {
+		process_t *proc = this->proc.front();
+		this->proc.pop();
+		proc->set_signal_data(que.front());
+		que.pop();
+		sched_set_runable(proc);
+	}
 }
 
 void signal_t::wait(process_t *proc)
 {
 	lock_guard<mutex> lk (mut);
-	this->proc.push(proc);
+    this->proc.push(proc);
 }
 
 int register_signal()

@@ -74,9 +74,6 @@ void init_proc()
 
 void destroy_proc()
 {
-	for (auto i : proc_table) {
-		// delete i.second;
-	}
 }
 
 int proc_create_process()
