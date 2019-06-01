@@ -80,10 +80,9 @@ int proc_create_process()
 {
 	lock_guard<mutex> lkr(table_mutex);
 
+	process_t *cur = status.get_core()->get_current();
 	process_t *proc = new process_t;
 	
-	proc->set_state(state::UNINIT);
-
 	pid_mutex.lock();
 	int id = ++next_pid;
 	proc->set_pid(id);
@@ -91,6 +90,14 @@ int proc_create_process()
 	proc_table[id] = proc;
 	pid_mutex.unlock();
 
+	proc->set_state(state::UNINIT);
+	if (cur != nullptr) {
+		proc->set_par(cur->get_pid());
+		cur->add_chl(proc->get_pid());
+	} else {
+		proc->set_par(0);
+	}
+	
     sched_init_proc(proc);
 	
 	return id;
@@ -153,14 +160,27 @@ int proc_yield()
 	return 0;
 }
 
+/**
+ * wait process or signal pid
+ * @pid : signal/process id
+ *        signal id is smaller than 0, process id is greater than 0
+ * @return : 0   ok
+ *           -1  pid is not children of current process
+ *           -2  pid is not valid signal id
+ */
 int proc_wait(int pid)
 {
 	process_t *proc = status.get_core()->get_current();
 	if (pid >= 0) {
-		sched_set_wait(proc, pid);
+		if (proc->is_chl(pid)) {
+			sched_set_wait(proc, pid);
+		} else {
+			return -1;
+		}
 	} else {
 		sched_set_sleep(proc);
-		return wait_signal(pid, proc);
+		if (wait_signal(pid, proc) != 0)
+			return -2;
 	}
 	return 0;
 }

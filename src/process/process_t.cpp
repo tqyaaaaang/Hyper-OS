@@ -103,6 +103,16 @@ void process_t::set_par(int pid)
 	ptr_par = pid;
 }
 
+bool process_t::is_chl(int pid) const
+{
+	return ptr_chl.count(pid);
+}
+
+int process_t::get_par() const
+{
+	return pid;
+}
+
 bool process_t::tick()
 {
 	return (slice--) == 0;
