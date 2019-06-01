@@ -25,6 +25,7 @@ public:
 	int intr(syscall_t *sys);
 	dev_output* std_output();
 	dev_input* std_input();
+	int pid();
 	
 private:
 

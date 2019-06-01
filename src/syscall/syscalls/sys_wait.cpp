@@ -1,6 +1,6 @@
 /**
  * syscall/syscalls/sys_wait.cpp
- * create_proc syscall
+ * wait process
  */
 
 #include "sys_wait.h"
