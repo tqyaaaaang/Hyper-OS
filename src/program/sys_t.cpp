@@ -87,7 +87,7 @@ int sys_t::exit()
 int sys_t::wait(int pid)
 {
 	int w = intr(new sys_wait(pid));
-	if (zombie_map.count(pid)) {
+	if (w == 0 && zombie_map.count(pid)) {
 		process_t *proc = zombie_map[pid];
 		zombie_map.erase(pid);
 		proc->cond_var.notify_one();
