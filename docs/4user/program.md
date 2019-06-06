@@ -21,7 +21,7 @@ User-Mode Program is supported in Hyper OS in a special way. Each program is a i
    ```
    It is not allowed to allocate space in stack/heap, because they don't exist until being loaded into process.
 
-2. `void main()` is the main function of program. When the program is load into a process by system call `exec_program` (see section `System Call`) or kernel, the function is called after initialization. You can allocate space in heap or stack, do some works and exit using either `return` or system call `exit`.
+2. `void main()` is the main function of program. When the program is load into a process by system call `exec_program` (see section `System Call and Standard Library`) or kernel, the function is called after initialization. You can allocate space in heap or stack, do some works and exit using either `return` or system call `exit`.
 
    ```c++
    // Example: /user/elephant/elephant.h
@@ -51,7 +51,7 @@ A process of Hyper OS has its own page table and `2G` independent linear address
 
 ### Functions
 
-The functions and operators about `handle` is listed below.
+The functions and operators about `handle` are listed below.
 
 1. `handle<T>()`: default construction function, construct a null `handle<T>`.
 
@@ -196,4 +196,59 @@ hyper-shell:$ lp
 shell lp elephant matrix demo-syscall demo-pf demo-proc
 hyper-shell:$ 
 ```
+
+## System Call and Standard Library
+
+### System Call
+
+In Hyper OS, user-mode programs can get service of kernel by system call. System call functions are encapsulated into `class sys_t` (see `src/program/sys_t.h` and `user/hyperstd.h`). User-mode programs call these functions via member object `sys_t *sys` of `class program`.  
+
+Supported system calls are listed below.
+
+1. `int create_process()`: create a process and return its process id. The new process becomes child process of current process. The new process is an `UNINIT` process until its father calls `exec_program`.
+2. `int exec_program(int pid, handle<char> name)`: execute program `@name` in process `@pid`. Process `@pid` must be child of current process. `@name` should be a valid string, which means it is an array of `char` ended with `\0`. 
+3. `int yield()`: yield CPU access. 
+4. `int exit()`: exit process.
+5. `int wait(int pid)`: block current process until child process `@pid` exit.
+6. `int read(dev_input *device)`: read a byte from input device. User programs can get pointer of standard input device by `sys_t::std_input()`.
+7. `int write(dev_output *device, char data)`: write a byte to output device. User programs can get pointer of standard output device by `sys_t::std_output()`.
+8. `int pid()`: get process id of current process.
+
+### Support New System Call
+
+You need two steps to support a new system call.
+
+1. Add new syscall id in `src/syscall/syscall_id.h`
+
+2. Add new syscall in `src/syscall/syscalls/`, you need to create a inheritance class of `class syscall_t`,  initialize syscall id and create syscall process function. 
+
+   ```c++
+   // Example : pid() syscall
+   
+   sys_pid::sys_pid()
+   	:syscall_t(syscall_id_t::PID)
+   {
+   }
+   
+   int sys_pid::process()
+   {
+   	int res = status.get_core()->get_current()->get_pid();
+   	logging::debug << "get pid : " << res << logging::log_endl;
+   	return res;
+   }
+   ```
+
+3. Add syscall function in `sys_t`. Add declaration in `src/program/sys_t.h` and implement it in `src/program/sys_t.cpp`. You need to send an syscall interrupt to APIC using interface `syscall` or `sys_t::intr`. 
+
+   ```c++
+   // Example : pid() syscall
+   int sys_t::pid()
+   {
+   	return intr(new sys_pid);
+   }
+   ```
+
+### Standard Library
+
+User mode programs of Hyper OS can also get service of standard library. Standard library functions are encapsulated into `class hos_std_t` (see `src/program/lib.h`). 
 
