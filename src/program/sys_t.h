@@ -19,7 +19,7 @@ public:
 	int exec_program(int pid, handle<char> name);
 	int yield();
 	int exit();
-    int wait(int pid);
+	int wait(int pid);
 	int read(dev_input *device);
 	int write(dev_output *device, char data);
 	int intr(syscall_t *sys);

@@ -108,6 +108,7 @@ int proc_create_process()
  * @return : 0 ok.
  *          -1 process not exists.
  *          -2 program is invalid
+ *          -3 pid is not child process
  *        else error code of proc_main
  */
 int proc_exec_program(int pid, program *prog)
@@ -121,7 +122,12 @@ int proc_exec_program(int pid, program *prog)
 		logging::info << "exec error. process " << pid << " not exists" << logging::log_endl;
 		return -1;
 	}
+	process_t *cur = status.get_core()->get_current();
 	process_t *proc = proc_table[pid];
+	if (cur != nullptr && proc->get_par() != cur->get_pid()) {
+		logging::info << "exec error. process " << pid << " is not child of current process" << logging::log_endl;
+		return -3;
+	}
 	
 	proc->set_prog(prog);
 	proc->set_name(prog->get_name());
