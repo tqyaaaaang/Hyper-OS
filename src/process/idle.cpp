@@ -53,6 +53,8 @@ void init_idle()
     proc.set_name("idle");
 	proc.set_core(cores + 0);
 	proc.set_prog(nullptr);
+	proc.set_pid(0);
+	status.get_core()->set_current(&proc);
 	proc.th = new thread(idle_main);
 }
 

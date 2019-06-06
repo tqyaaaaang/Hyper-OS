@@ -110,7 +110,7 @@ bool process_t::is_chl(int pid) const
 
 int process_t::get_par() const
 {
-	return pid;
+	return ptr_par;
 }
 
 bool process_t::tick()

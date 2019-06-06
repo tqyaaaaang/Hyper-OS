@@ -92,6 +92,7 @@ int proc_create_process()
 
 	proc->set_state(state::UNINIT);
 	if (cur != nullptr) {
+		logging::debug << "set father for " << id << " to " << cur->get_pid() << logging::log_endl;
 		proc->set_par(cur->get_pid());
 		cur->add_chl(proc->get_pid());
 	} else {
@@ -125,7 +126,8 @@ int proc_exec_program(int pid, program *prog)
 	process_t *cur = status.get_core()->get_current();
 	process_t *proc = proc_table[pid];
 	if (cur != nullptr && proc->get_par() != cur->get_pid()) {
-		logging::info << "exec error. process " << pid << " is not child of current process" << logging::log_endl;
+		logging::info << "exec error. process " << pid << " is not child of current process " << cur->get_pid() << logging::log_endl;
+		logging::debug << "true father is " << proc->get_par() << logging::log_endl;
 		return -3;
 	}
 	
