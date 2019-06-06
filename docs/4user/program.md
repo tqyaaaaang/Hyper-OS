@@ -40,7 +40,7 @@ A process of Hyper OS has its own page table and `2G` independent linear address
 
 - As program code is not actually in `.text`, the size of `.text` is always 0. 
 - Static data of program (allocated by `handle::alloc_static`) will stores in `.data`. Static data is saved in `char *program::data`, and the size of `.data` is computed after `static_init()` finished. When the program is loaded into process, kernel allocate pages for `.data` and copy data of `char *program::data` into memory. 
-- Space in `.bss` is allocated during `static_init()` using `handle::alloc_bss`. When the program is loaded, kernel allocate pages for `.bss` and set to 0.
+- Space in `.bss` is allocated during `static_init()` using `handle::alloc_bss`. When the program is loaded, kernel allocate pages for `.bss` and set them to 0. Because of memory layout of program, all the handles of `.bss` objects will be **redirected** after `static_init` finished (In other words, address of a handle of `.bss` object is added an offset of `DATA_SIZE`). 
 - `.stack` containing the **stack and heap** for program in order to support dynamic memory allocation. Stack starts at `0x7fffffff` and grows towards decreasing addresses; heap starts at `data_size + bss_size` and grows towards increasing addresses. Stack or heap overflow is undefined behaviour.
 
 ## Handle
@@ -250,5 +250,5 @@ You need two steps to support a new system call.
 
 ### Standard Library
 
-User mode programs of Hyper OS can also get service of standard library. Standard library functions are encapsulated into `class hos_std_t` (see `src/program/lib.h`). 
+User mode programs of Hyper OS can also get service of standard library. Standard library functions are encapsulated into `class hos_std_t` (see `src/program/lib.h`). User-mode programs call standard library functions via member object `hos_std_t *hos_std` of `class program`. 
 
