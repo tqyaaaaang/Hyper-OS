@@ -2,7 +2,7 @@
 
 ## Program Class
 
-User-Mode Program is supported in Hyper OS in a special way. Each program is a inheritance class of abstract class `program`(see `/src/program/program.h`). You should implement two virtual function: `main()` and `static_init()`.
+User-Mode Program is supported by Hyper OS in a special way. Each program is a inheritance class of abstract class `program`(see `/src/program/program.h`). You should implement two virtual function: `main()` and `static_init()`.
 
 1. `void static_init()` is called when the program is 'compiled', and in Hyper OS it is called when it's cloned by `program manager`. In `static_init()` you can allocate memory in `.bss` or `.data`(see section `Process Memory Layout`), modify the data in `.data` using `handle<T>::modify_in_compile(T)`(see section `Handle`), or set name for program.
 
@@ -40,7 +40,7 @@ A process of Hyper OS has its own page table and `2G` independent linear address
 
 - As program code is not actually in `.text`, the size of `.text` is always 0. 
 - Static data of program (allocated by `handle::alloc_static`) will stores in `.data`. Static data is saved in `char *program::data`, and the size of `.data` is computed after `static_init()` finished. When the program is loaded into process, kernel allocate pages for `.data` and copy data of `char *program::data` into memory. 
-- Space in `.bss` is allocated during `static_init()` using `handle::alloc_bss`. When the program is loaded, kernel allocate pages for `.bss` and set them to 0. Because of memory layout of program, all the handles of `.bss` objects will be **redirected** after `static_init` finished (In other words, address of a handle of `.bss` object is added an offset of `DATA_SIZE`). 
+- Space in `.bss` is allocated during `static_init()` using `handle::alloc_bss`. When the program is loaded, kernel allocate pages for `.bss` and set them to 0. Because of memory layout of program, all the handles of `.bss` objects will be **redirected** after `static_init` finished (In other words, address of a handle of `.bss` object is added by an offset of `DATA_SIZE`). 
 - `.stack` containing the **stack and heap** for program in order to support dynamic memory allocation. Stack starts at `0x7fffffff` and grows towards decreasing addresses; heap starts at `data_size + bss_size` and grows towards increasing addresses. Stack or heap overflow is undefined behaviour.
 
 ## Handle
