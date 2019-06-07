@@ -63,7 +63,7 @@ char CPU_mmu::read(size_t la)
 		<< " = " << pte->paddr + (la % PAGE_SIZE)
 		<< message::msg_endl; 
 	pte->access = true;
-    char result = pm::read(pte->paddr + (la % PAGE_SIZE));
+	char result = pm::read(pte->paddr + (la % PAGE_SIZE));
 	logging::info << "MMU : read " << result << " " << logging::log_endl;
 	return result;
 }
@@ -74,7 +74,7 @@ void CPU_mmu::write(size_t la, char c)
 		<< "memory write operation at linear address : "
 		<< la 
 		<< message::msg_endl;
-    page_table *pg = core->get_context().get_page_table();
+	page_table *pg = core->get_context().get_page_table();
 	pte_t *pte = pg->get_pte_try(la);
 	while (!check(la, pte, true)) {
 		msg_mm("page fault ISR finish, run the memory access instruction again");
@@ -90,7 +90,7 @@ void CPU_mmu::write(size_t la, char c)
 		<< message::msg_endl; 
 	pte->access = true;
 	pte->dirty = true;
-    pm::write(pte->paddr + (la % PAGE_SIZE), c);
+	pm::write(pte->paddr + (la % PAGE_SIZE), c);
 	logging::info << "MMU : write " << c << " " << logging::log_endl;
 }
 
