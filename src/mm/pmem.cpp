@@ -28,8 +28,15 @@ public:
 	}
 	~pm_page_frame()
 	{
-		if (!alloced)
+		if (alloced)
 			delete[] data;
+	}
+	void free()
+	{
+		if (alloced) {
+			delete[] data;
+			alloced = false;
+		}
 	}
 	char& at(size_t pt)
 	{
@@ -51,7 +58,7 @@ private:
 
 // info mmu --> pm
 struct pm_info {
-    enum TYPE {READ, WRITE, SHUTDOWN};
+	enum TYPE {READ, WRITE, SHUTDOWN};
 	TYPE type;
 	size_t paddr;
 	char data;
@@ -112,8 +119,8 @@ static pm_result pm_write(size_t paddr, char data)
  * write from thread_safe_queue pm2mmu
  * --------------------------
  * Instructions Support:
- * pm_info::READ     : read a byte from pm_info::paddr
- * pm_info::WRITE    : write pm_info::data to pm_info::paddr
+ * pm_info::READ	 : read a byte from pm_info::paddr
+ * pm_info::WRITE	: write pm_info::data to pm_info::paddr
  * pm_info::SHUTDOWN : shutdown memory 
  */
 static void memory_main()
@@ -124,7 +131,7 @@ static void memory_main()
 		pm_info info = mmu2pm.pop_front();
 		pm_result result;
 		switch(info.type) {
-	    case pm_info::READ:
+		case pm_info::READ:
 			result = pm_read(info.paddr);
 			break;
 		case pm_info::WRITE:
@@ -138,7 +145,7 @@ static void memory_main()
 		default:
 			assert(false);
 		}
-	    
+		
 		pm2mmu.push_back(result);
 	}
 }
@@ -167,65 +174,69 @@ void destroy_pm()
 					  << logging::log_endl;
 	} else {
 		logging::info << "pm error while shutting down."
-			<< "error code : "
+					  << "error code : "
 					  << result.error_code
-			<< logging::log_endl;
+					  << logging::log_endl;
 	}
-
-    // clean pm page frames
-    assert(pm_pages != nullptr);
+	assert(pm_pages != nullptr);
+	logging::info << "free memory..." << logging::log_endl;
+	for (size_t i = 0; i < PAGE_NUM; i++) {
+		pm_pages[i].free();
+	}
+	logging::info << "free memory finish" << logging::log_endl;
+	// clean pm page frames
 	delete[] pm_pages;
 	
 }
 
 namespace pm {
 
-mutex pm_mut;
+	mutex pm_mut;
 
-/**
- * interface for mmu, read a byte
- * @paddr : physical address to read
- */
-size_t read(size_t paddr)
-{
-	lock_guard<mutex> lk (pm_mut);
-	pm_info info;
-	info.type = pm_info::READ;
-	info.paddr = paddr;
-	mmu2pm.push_back(info);
-	pm_result result = pm2mmu.pop_front();
-	// waiting for pm
-	if (result.type == pm_result::OK) {
-		return result.data;
-	} else {
-		logging::info << "pm read fail. error code = "
-					  << result.error_code << logging::log_endl;
-		assert(false);
-		return 0;
+	/**
+	 * interface for mmu, read a byte
+	 * @paddr : physical address to read
+	 */
+	size_t read(size_t paddr)
+	{
+		lock_guard<mutex> lk (pm_mut);
+		pm_info info;
+		info.type = pm_info::READ;
+		info.paddr = paddr;
+		mmu2pm.push_back(info);
+		pm_result result = pm2mmu.pop_front();
+		// waiting for pm
+		if (result.type == pm_result::OK) {
+			return result.data;
+		} else {
+			logging::info << "pm read fail. error code = "
+						  << result.error_code << logging::log_endl;
+			assert(false);
+			return 0;
+		}
 	}
-}
 
-/**
- * interface for mmu, write a byte
- * @paddr : physical address to write
- * @data  : data to write
- */
-void write(size_t paddr, char data)
-{
-	lock_guard<mutex> lk (pm_mut);
-	pm_info info;
-	info.type = pm_info::WRITE;
-	info.paddr = paddr;
-	info.data = data;
-	// logging::info << "MMU WRITE " << data << logging::log_endl;
-	mmu2pm.push_back(info);
-	pm_result result = pm2mmu.pop_front();
-	// waiting for pm
-	if (result.type == pm_result::ERR) {
-		logging::info << "pm write fail. error code = "
-					  << result.error_code << logging::log_endl;
+	/**
+	 * interface for mmu, write a byte
+	 * @paddr : physical address to write
+	 * @data  : data to write
+	 */
+	void write(size_t paddr, char data)
+	{
+		lock_guard<mutex> lk (pm_mut);
+		pm_info info;
+		info.type = pm_info::WRITE;
+		info.paddr = paddr;
+		info.data = data;
+		// logging::info << "MMU WRITE " << data << logging::log_endl;
+		mmu2pm.push_back(info);
+		pm_result result = pm2mmu.pop_front();
+		// waiting for pm
+		if (result.type == pm_result::ERR) {
+			logging::info << "pm write fail. error code = "
+						  << result.error_code << logging::log_endl;
+		}
 	}
-}
 
 }
 
