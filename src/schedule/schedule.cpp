@@ -4,6 +4,7 @@
  */
 
 #include "schedule.h"
+#include "sched_msg.h"
 #include "../process/process_t.h"
 #include "../core/cpus.h"
 #include "../logging/logging.h"
@@ -81,6 +82,9 @@ static mutex sched_mutex;
 void sched_init_proc(process_t *proc)
 {
 	lock_guard<mutex> lk(sched_mutex);
+	msg_proc("process "
+			 + proc_info(proc)
+			 + " is created, state : uninit");
 	assert(proc != nullptr);
 	uninit.push_front(proc);
 	proc->linker = uninit.begin();
@@ -94,6 +98,10 @@ void sched_set_core(process_t *proc)
 {
 	lock_guard<mutex> lk(sched_mutex);
 	int id = 0;
+	msg_proc("process "
+			 + proc_info(proc)
+			 + " is assigned to CPU #"
+			 + to_string(id));
 	uninit.erase(proc->linker);
 	proc->set_core(cores + id);
 	state_list[id].uninit.push_front(proc);
@@ -107,8 +115,12 @@ void sched_set_core(process_t *proc)
 void sched_set_runable_nlock(process_t *proc)
 {
 	logging::info << "process " << proc->get_name() << " is set runable." << log_endl;
-
 	assert(proc->get_state() != state::RUNABLE);
+	msg_proc("process "
+			 + proc_info(proc)
+			 + " state change : "
+			 + proc_state(proc)
+			 + " --> runable");
 	int id = proc->get_core()->get_core_id();
 	switch(proc->get_state()) {
 	case state::UNINIT:
@@ -138,6 +150,13 @@ void sched_set_runable(process_t *proc)
 void sched_set_sleep_nlock(process_t *proc)
 {
 	logging::info << "process " << proc->get_name() << " " << proc->get_pid() << " need some sleep." << (proc->get_state() == state::SLEEPING) << log_endl;
+
+	msg_proc("process "
+			 + proc_info(proc)
+			 + " state change : "
+			 + proc_state(proc)
+			 + " --> sleeping");
+
 	int core_id = proc->get_core()->get_core_id();
 
 	assert(proc->get_state() == state::RUNABLE);
@@ -161,12 +180,13 @@ void sched_set_wait(process_t *proc, int pid)
 {
 	lock_guard<mutex> lk(sched_mutex);
 	lock_guard<mutex> lkr(table_mutex);
+	msg_proc("process " + proc_info(proc)
+			 + " will wait process "
+			 + to_string(pid));	
 	info << "process " << proc->get_name() << " " << proc->get_pid() << " wait " << pid << log_endl;
 	if (proc_table.count(pid)) {
 		sched_set_sleep_nlock(proc);
 		assert(proc->get_state() == state::SLEEPING);
-		if (!wait_map.count(pid))
-			wait_map[pid] = list<process_t*>();
 		wait_map[pid].push_back(proc);		
 	} else if (zombie_map.count(pid)) {
 		logging::debug << "process " << pid << " has already finished." << logging::log_endl;
@@ -179,7 +199,7 @@ void sched_set_wait(process_t *proc, int pid)
 		delete chl->th;
 		delete chl;
     } else {
-		assert(false);
+		logging::warning << "process " << pid << " not exists" << logging::log_endl;
 	}
 }
 
@@ -191,7 +211,10 @@ void sched_set_exit(process_t *proc)
 	lock_guard<mutex> lk(sched_mutex);
 	lock_guard<mutex> lkr(table_mutex);
 	logging::info << "process " << proc->get_name() << " is set exit." << log_endl;
-
+	
+	msg_proc("process " + proc_info(proc)
+			 + " exit");
+	
 	assert(proc == status.get_core()->get_current());
 	assert(proc->get_state() == state::RUNABLE);
 
@@ -216,6 +239,10 @@ void sched_set_exit(process_t *proc)
 
 	if (wait_map.count(proc->get_pid())) {
 		for (process_t *i : wait_map[proc->get_pid()]) {
+			msg_proc("process " + proc_info(proc)
+					 + " exit, waiting"
+					 + " process " + proc_info(i)
+					 + " will be waken up");
 			logging::info << "waking up : " << i->get_pid() << logging::log_endl;
 			sched_set_runable_nlock(i);
 		}
@@ -237,7 +264,9 @@ void schedule(int id)
 		}
 
 		if ( proc == nullptr || proc->get_resched () ) {
-			if ( proc != nullptr ) {
+			if ( proc != nullptr && proc->get_prog() != nullptr) {
+				// not idle
+				
 				proc->set_resched ( 0 );
 				proc->set_slice ( 1 );
 				state_list[id].running.erase ( proc->linker );
@@ -261,10 +290,15 @@ void schedule(int id)
 				// awake
 
 				logging::info << "nodify process " << nxt_proc->get_name() << " " << nxt_proc->get_pid() << logging::log_endl;
-				
+				if (proc != nxt_proc) {
+					msg_proc("time slice of process "
+							 + proc_info(proc)
+							 + " is running out, switch to process "
+							 + proc_info(nxt_proc));
+				}
 				nxt_proc->cond_var.notify_one ();
 			}
-			if (nxt_proc != proc) {
+			if (nxt_proc != proc && nxt_proc != nullptr) {
 
 				logging::info << "switch process : " << nxt_proc->get_name () << " " << nxt_proc->get_pid() << logging::log_endl;
 			}

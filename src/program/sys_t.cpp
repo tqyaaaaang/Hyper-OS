@@ -19,6 +19,7 @@
 #include "../syscall/syscalls/sys_exit.h"
 #include "../syscall/syscalls/sys_wait.h"
 #include "../syscall/syscalls/sys_yield.h"
+#include "../syscall/syscalls/sys_pid.h"
 #include "../interrupt/interrupts/syscall_interrupt.h"
 #include "../logging/logging.h"
 #include "../message/message.h"
@@ -86,7 +87,7 @@ int sys_t::exit()
 int sys_t::wait(int pid)
 {
 	int w = intr(new sys_wait(pid));
-	if (zombie_map.count(pid)) {
+	if (w == 0 && zombie_map.count(pid)) {
 		process_t *proc = zombie_map[pid];
 		zombie_map.erase(pid);
 		proc->cond_var.notify_one();
@@ -117,4 +118,9 @@ dev_output* sys_t::std_output()
 dev_input* sys_t::std_input()
 {
 	return device_desc::standard_input;
+}
+
+int sys_t::pid()
+{
+	return intr(new sys_pid);
 }

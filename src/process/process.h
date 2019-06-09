@@ -12,6 +12,7 @@ int proc_exec_program(int pid, program *prog);
 int proc_yield();
 int proc_wait(int pid);
 int proc_exit();
+int proc_sleep();
 
 void init_proc();
 void destroy_proc();

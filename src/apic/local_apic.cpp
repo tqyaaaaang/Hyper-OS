@@ -105,12 +105,14 @@ int local_apic::interrupt ( interrupt_t *current_interrupt, bool blocked )
 	event_queue.push_back ( current_interrupt );
 	int return_val = 0;
 	if ( blocked ) {
-		if ( core->get_interrupt_depth () == 0 && core->get_current () != nullptr ) {
-			std::unique_lock < std::mutex > lck ( core->get_current ()->cond_mutex );
+		if ( core->get_interrupt_depth () == 0 && proc != nullptr ) {
+			std::unique_lock < std::mutex > lck ( proc->cond_mutex );
 			core->release ();
 			logging::info << "process " << core->get_current()->get_name() << " " << core->get_current()->get_pid() << " stop and wait for interrupt" << logging::log_endl;
-			core->get_current ()->cond_var.wait ( lck );
-			if (proc->get_exit_flag()) {
+		    proc->cond_var.wait ( lck );
+			if (proc->get_prog() != nullptr
+				&& proc->get_exit_flag()) {
+				// not idle
 				throw 0;
 			}
 		} else {
@@ -143,7 +145,8 @@ void local_apic::try_process_interrupt ()
 		status.get_core ()->release ();
 		send_process_interrupt_signal ();
 		status.get_core ()->get_current ()->cond_var.wait ( lck );
-		if (proc->get_exit_flag()) {
+		if (proc->get_prog() != nullptr
+			&& proc->get_exit_flag()) {
 			throw 0;
 		}
 		status.get_core ()->acquire ();

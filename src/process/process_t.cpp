@@ -59,8 +59,9 @@ void process_t::set_state(state stat)
 void process_t::set_prog(program *prog)
 {
 	this->prog = prog;
-	prog->cur_proc = this;
- 
+	if (prog != nullptr) {
+		prog->cur_proc = this;
+	}
 }
 
 program* process_t::get_prog() const
@@ -100,6 +101,16 @@ void process_t::add_chl(int pid)
 void process_t::set_par(int pid)
 {
 	ptr_par = pid;
+}
+
+bool process_t::is_chl(int pid) const
+{
+	return ptr_chl.count(pid);
+}
+
+int process_t::get_par() const
+{
+	return ptr_par;
 }
 
 bool process_t::tick()
@@ -160,4 +171,14 @@ void process_t::set_exit_flag()
 bool process_t::get_exit_flag() const
 {
 	return exit_flag;
+}
+
+void process_t::set_signal_data(size_t data)
+{
+	signal_data = data;
+}
+
+size_t process_t::get_signal_data() const
+{
+	return signal_data;
 }

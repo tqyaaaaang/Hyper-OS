@@ -11,6 +11,7 @@
 #include "../../user/matrix/matrix.h"
 #include "../../user/demo_interrupt/demo_interrupt.h"
 #include "../../user/demo_pagefault/demo_pagefault.h"
+#include "../../user/demo_process/demo_process.h"
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
@@ -40,7 +41,11 @@ bool is_program(string name)
 
 program* get_program(string name)
 {
-	assert(prog_table.count(name));
+	if (!prog_table.count(name)) {
+		logging::warning << "program " << name
+						 << " not found." << logging::log_endl;
+		return nullptr;
+	}
 	program* (*gen)() = prog_table[name];
 	program* prog = gen();
 	prog->build();
@@ -59,4 +64,5 @@ void init_program_manager()
 	register_matrix();
 	register_demo_syscall();
 	register_demo_pagefault();
+	register_demo_process();
 }
