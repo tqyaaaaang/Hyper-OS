@@ -29,23 +29,30 @@ signal_t::signal_t()
 signal_t::~signal_t()
 { }
 
-void signal_t::notify(size_t data)
+void signal_t::notify ( size_t data )
 {
-	lock_guard<mutex> lk (mut);
-	que.push(data);
-	if (!this->proc.empty()) {
-		process_t *proc = this->proc.front();
-		this->proc.pop();
-		proc->set_signal_data(que.front());
-		que.pop();
-		sched_set_runable(proc);
+	lock_guard<mutex> lk ( mut );
+	if ( !this->proc.empty () ) {
+		process_t *proc = this->proc.front ();
+		this->proc.pop ();
+		proc->set_signal_data ( data );
+		sched_set_runable ( proc );
+	} else {
+		que.push ( data );
 	}
 }
 
-void signal_t::wait(process_t *proc)
+void signal_t::wait ( process_t *proc )
 {
-	lock_guard<mutex> lk (mut);
-    this->proc.push(proc);
+	lock_guard<mutex> lk ( mut );
+	if ( !que.empty () ) {
+		size_t current_data = que.front ();
+		que.pop ();
+		proc->set_signal_data ( current_data );
+		sched_set_runable ( proc );
+	} else {
+		this->proc.push ( proc );
+	}
 }
 
 int register_signal()
