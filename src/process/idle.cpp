@@ -30,7 +30,6 @@ static void idle_main()
 		proc.get_core()->set_current(&proc);
 		check_interrupt();
 	}
-	proc.get_core()->release();
 }
 
 void signal_idle()
