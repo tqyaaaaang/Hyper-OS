@@ -66,7 +66,6 @@ namespace message
 		template < typename T >
 		friend message & operator << ( message &buf, T a )
 		{
-			logging::debug << "message output : " << a << logging::log_endl;
 			if ( buf.info.get_visible () ) {
 				buf.BUF << a;
 			}
@@ -76,6 +75,7 @@ namespace message
 		friend message & operator << ( message &buf, msg_endl_t a )
 		{
 			if ( buf.info.get_visible () ) {
+				logging::debug << "message output : " << buf.BUF.str () << logging::log_endl;
 				{
 					std::lock_guard < std::mutex > lock ( output_lock );
 
