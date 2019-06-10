@@ -21,6 +21,7 @@ public:
 	virtual char getchar();
 	virtual int read_int();
 	virtual void write_int(int data);
+	virtual void init();
 	
 private:
 

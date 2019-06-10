@@ -232,6 +232,7 @@ void program::build()
 	running = false;
 	debug << "STATIC INIT" << log_endl;
 	this->static_init(); // init static info
+	hos_std->init();
 	info << "COMPILE" << log_endl;
 	compile();           // simulate compile
 	info << "BUILDING FINISH" << log_endl;

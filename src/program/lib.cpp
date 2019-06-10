@@ -29,6 +29,11 @@ hos_std_t::~hos_std_t()
 	
 }
 
+void hos_std_t::init()
+{
+	
+}
+
 void hos_std_t::println(string str)
 {
 	msg_intr("call function \'println\' in standard library");
