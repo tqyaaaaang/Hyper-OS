@@ -91,6 +91,7 @@ std::unordered_map < std::string, special_keys > special_keys_map;
 
 void init_special_keys ()
 {
+	logging::debug << "Initializing special keys" << logging::log_endl;
 	int key_num = special_keys_list.size () - 1;
 	for ( int i = 1; i <= key_num; ++i ) {
 		special_keys_map[special_keys_list[i]] = static_cast < special_keys > ( i );
