@@ -102,9 +102,12 @@ Hyper OS uses RR (Round Robin) algorithm to choose the next process to run.
 
 #### wait
 
+Block current process and wait for a process or signal.
+
+1. $$pid >0$$: block current process until process `pid` exits. Current process will destroy the process.
+2. $$pid < 0$$: block current process until receiving a signal `pid`. More information about signal see `src/schedule/signal.cpp`, an important example of it is standard input (see `src/program/lib.cpp`). 
+
 #### yield
 
-## Example : Shell
-
-
+Yield CPU actively.  
 
