@@ -5,6 +5,7 @@
 
 #include "schedule.h"
 #include "sched_msg.h"
+#include "signal.h"
 #include "../process/process_t.h"
 #include "../core/cpus.h"
 #include "../logging/logging.h"
@@ -60,8 +61,12 @@ vector< list<process_t*> > awake_list;
  */
 void init_schedule()
 {
+	logging::debug << "Initializing schedule module" << logging::log_endl;
+
 	state_list.resize(get_core_num());
 	awake_list.resize(get_core_num());
+
+	init_signal ();
 }
 
 /**
@@ -69,8 +74,12 @@ void init_schedule()
  */
 void destroy_schedule()
 {
+	logging::debug << "Destroying schedule module" << logging::log_endl;
+
 	// delete[] state_list;
 	// delete[] awake_list;
+
+	destroy_signal ();
 }
 
 static mutex sched_mutex;

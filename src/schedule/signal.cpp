@@ -21,7 +21,7 @@ namespace signal_id {
 	int signal_top = -128;
 }
 
-static unordered_map<int,signal_t> signal_table;
+static unordered_map<int,signal_t *> signal_table;
 
 signal_t::signal_t()
 { }
@@ -55,10 +55,19 @@ void signal_t::wait ( process_t *proc )
 	}
 }
 
-int register_signal()
+void init_signal ()
 {
-	int signal = --signal_id::signal_top;
-	return signal;
+	logging::debug << "Initializing process wait signals" << logging::log_endl;
+	signal_table.insert ( std::make_pair ( signal_id::WAIT_EXIT, new signal_t () ) );
+	signal_table.insert ( std::make_pair ( signal_id::KEYBOARD, new signal_t () ) );
+}
+
+void destroy_signal ()
+{
+	logging::debug << "Destroying process wait signals" << logging::log_endl;
+	for ( auto &x : signal_table ) {
+		delete x.second;
+	}
 }
 
 int send_signal(int signal_id, size_t data)
@@ -67,7 +76,7 @@ int send_signal(int signal_id, size_t data)
 		logging::info << "signal " << signal_id << " not found" << logging::log_endl;
 		return -1;
 	}
-	signal_table[signal_id].notify(data);
+	signal_table[signal_id]->notify(data);
 	return 0;
 }
 
@@ -77,7 +86,13 @@ int wait_signal(int signal_id, process_t *proc)
 		logging::info << "signal " << signal_id << " not found" << logging::log_endl;
 		return -1;
 	}
-	signal_table[signal_id].wait(proc);
+	signal_table[signal_id]->wait(proc);
 	return 0;
 }
 
+int register_signal ()
+{
+	int signal = --signal_id::signal_top;
+	signal_table.insert ( std::make_pair ( signal, new signal_t () ) );
+	return signal;
+}

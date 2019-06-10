@@ -28,6 +28,9 @@ namespace signal_id {
 	extern const int KEYBOARD;
 }
 
+void init_signal ();
+void destroy_signal ();
+
 /**
  * send/wait on a signal
  * @return : 0 ok
