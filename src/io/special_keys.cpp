@@ -4,6 +4,7 @@
  */
 
 #include "special_keys.h"
+#include "../logging/logging.h"
 
 std::vector < std::string > special_keys_list = {
 	"",
@@ -86,6 +87,8 @@ std::vector < std::string > special_keys_list = {
 
 std::unordered_map < std::string, special_keys > special_keys_map;
 
+
+
 void init_special_keys ()
 {
 	int key_num = special_keys_list.size () - 1;
@@ -93,6 +96,8 @@ void init_special_keys ()
 		special_keys_map[special_keys_list[i]] = static_cast < special_keys > ( i );
 	}
 }
+
+
 
 std::string get_key_str ( special_keys key )
 {
@@ -102,4 +107,14 @@ std::string get_key_str ( special_keys key )
 special_keys get_key_id ( std::string str )
 {
 	return special_keys_map[str];
+}
+
+
+
+void handle_special_key ( special_keys key )
+{
+	switch ( key ) {
+	default:
+		logging::warning << "Processing special key <" << get_key_str ( key ) << "> not implemented" << logging::log_endl;
+	}
 }

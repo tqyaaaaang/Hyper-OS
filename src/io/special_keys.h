@@ -95,3 +95,5 @@ void init_special_keys ();
 
 std::string get_key_str ( special_keys key );
 special_keys get_key_id ( std::string str );
+
+void handle_special_key ( special_keys key );
