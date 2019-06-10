@@ -13,6 +13,7 @@
 #include "../motherboard/motherboard.h"
 #include "../apic/io_apic.h"
 #include "../mm/pmm.h"
+#include "../io/io.h"
 #include "../../dev/device.h"
 #include "../process/process.h"
 #include "../program/program_manager.h"
@@ -29,6 +30,8 @@ void init ()
 	init_status_phase_2 ();
 	init_motherboards ( MOTHERBOARD_NUM );
 	init_io_apic ();
+
+	init_io ();
 
 	init_devices ();
 
