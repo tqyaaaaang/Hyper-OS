@@ -11,7 +11,12 @@
 class keyboard_interrupt : public external_interrupt_t
 {
 public:
-	keyboard_interrupt ();
+	keyboard_interrupt ( std::string _data );
 
 	virtual void process ();
+
+private:
+	void signal_data ( int data );
+
+	std::string data;
 };
