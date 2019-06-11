@@ -15,6 +15,7 @@
 #include "../mm/pmm.h"
 #include "../io/io.h"
 #include "../../dev/device.h"
+#include "../schedule/schedule.h"
 #include "../process/process.h"
 #include "../program/program_manager.h"
 
@@ -36,6 +37,8 @@ void init ()
 	init_devices ();
 
 	init_pmm ( );
+
+	init_schedule ();
 
 	init_program_manager( );
 
