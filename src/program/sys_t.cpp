@@ -25,6 +25,7 @@
 #include "../message/message.h"
 #include "program.h"
 #include <unordered_map>
+#include <cassert>
 
 using std::string;
 
@@ -102,7 +103,10 @@ int sys_t::wait(int pid)
 int sys_t::read(dev_input *device)
 {
 	int w = intr(new sys_read(device));
-	return w;
+    assert(w == 0);
+	assert(prog != nullptr);
+	assert(prog->cur_proc != nullptr);
+	return prog->cur_proc->get_signal_data();
 }
 
 int sys_t::write(dev_output *device, char data)

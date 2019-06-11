@@ -5,6 +5,7 @@
 
 #include "sys_read.h"
 #include "../../logging/logging.h"
+#include "../../schedule/signal.h"
 
 sys_read::sys_read ( dev_input * device )
 	: syscall_t ( syscall_id_t::READ )
@@ -15,8 +16,7 @@ sys_read::sys_read ( dev_input * device )
 int sys_read::process ()
 {
 	logging::debug << "Processing syscall READ" << logging::log_endl;
-	char ch;
-	ch = device->read ();
-	logging::debug << "Received character " << static_cast < int > ( ch ) << logging::log_endl;
-	return ch;
+    proc_wait(signal_id::KEYBOARD);
+	logging::debug << "Fall in sleep until keyboard interrupt" << logging::log_endl;
+	return 0;
 }
