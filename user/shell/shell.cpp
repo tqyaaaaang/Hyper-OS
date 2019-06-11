@@ -74,6 +74,15 @@ handle<int> hyper_shell::parse()
 			argv[argc][top] = '\0';
 			argc = argc + 1;
 			top = 0;
+		} else if (c == '\b') {
+			if (top > 0) {
+				top = top - 1;
+			} else if (argc > 0) {
+			    argc = argc - 1;
+				top = 0;
+				while (argv[argc][top] != '\0')
+					top = top + 1;
+			}
 		} else {
 			argv[argc][top] = c;
 			top = top + 1;
