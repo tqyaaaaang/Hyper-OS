@@ -12,6 +12,7 @@ import os
 from screen import data
 from screen.output import write
 from screen import message
+from screen import interact
 
 
 read_thr = None
@@ -20,7 +21,6 @@ read_thr = None
 def init ():
 	read_thr = threading.Thread (target=read_thread_entry)
 	read_thr.start ()
-	data.messages_window.buffer.insert_text ('h')
 
 
 def read_thread_entry ():
@@ -51,3 +51,7 @@ def read_thread_entry ():
 		elif current_type == 'c':
 			if current_data == 'backspace':
 				write.backspace ()
+		elif current_type == 's':
+			if current_data == 'shutdown':
+				interact.write.write ('s', 'shutdown')
+				break

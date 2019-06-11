@@ -27,7 +27,10 @@ void dev_screen::destroy ()
 {
 	logging::debug << "Destroying device screen" << logging::log_endl;
 
-	device_thread.detach ();   // Cannot join because we cannot nofity the thread to exit
+	if ( IO_DEVICE ) {
+		write ( "s", "shutdown" );
+	}
+	device_thread.join ();
 }
 
 std::string dev_screen::to_string () const
@@ -63,6 +66,13 @@ void dev_screen::device_thread_event_loop ()
 			switch ( line[0] ) {
 			case 'k':
 				dynamic_cast < dev_input_screen * > ( device_desc::standard_input )->send_key ( data );
+				break;
+
+			case 's':
+				if ( data == "shutdown" ) {
+					return;
+				}
+				logging::warning << "device screen received unexpected system command : " << data << logging::log_endl;
 				break;
 
 			default:
