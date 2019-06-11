@@ -25,7 +25,9 @@ private:
 
 	void program_not_found_error();
 	void too_long_error();
-
+	void format_error();
+	void argv_error(handle<int> id);
+	
 	std::string to_string(handle<char> str);
 
 	void help_prog();

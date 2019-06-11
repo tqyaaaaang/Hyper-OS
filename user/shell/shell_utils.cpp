@@ -22,3 +22,19 @@ void hyper_shell::too_long_error()
 {
 	hos_std->println("command is too long");
 }
+
+void hyper_shell::format_error()
+{
+	hos_std->print("command [");
+	hos_std->print(argv[0]);
+	hos_std->println("], format error");
+}
+
+void hyper_shell::argv_error(handle<int> id)
+{
+	hos_std->print("command [");
+	hos_std->print(argv[0]);
+	hos_std->print("], argv ");
+	hos_std->write_int(id);
+	hos_std->println(" error");
+}
