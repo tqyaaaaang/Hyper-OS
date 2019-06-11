@@ -134,7 +134,8 @@ int handle_special_key ( special_keys key )
 		return_value = '\n';
 		break;
 
-	case special_keys::BACKSPACE:
+	case special_keys::BACKSPACE:   // Alias of <c-h>
+	case special_keys::CTRL_H:
 		logging::debug << "Get <backspace>, transform to \\b" << logging::log_endl;
 		return_value = '\b';
 		break;
