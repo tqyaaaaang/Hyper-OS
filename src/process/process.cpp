@@ -61,7 +61,6 @@ void init_proc()
 		init_idle();
 		int pid = proc_create_process();
 		proc_exec_program(pid, get_program("shell"));
-//		schedule ( 0 );
 		while (proc_not_exit(pid)) {
 			std::this_thread::yield();
 		}
