@@ -48,3 +48,6 @@ def read_thread_entry ():
 				write.newline ()
 		elif current_type == 'm':
 			message.print_message (current_data)
+		elif current_type == 'c':
+			if current_data == 'backspace':
+				write.backspace ()

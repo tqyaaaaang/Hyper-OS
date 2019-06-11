@@ -14,3 +14,6 @@ def putchar (ch):
 
 def newline ():
 	data.console_window.buffer.newline ()
+
+def backspace ():
+	data.console_window.buffer.delete_before_cursor ()

@@ -30,11 +30,16 @@ void dev_output_screen::write ( char ch )
 	} else {
 		logging::debug << "Device output received unvisible character ( ASCII " << static_cast < int > ( ch ) << " ) " << logging::log_endl;
 	}
-	std::string data;
-	if ( ch == '\n' ) {
-		data = "\\n";
+
+	if ( ch == '\b' ) {   // handle backspace
+		device_desc::device_screen->write ( "c", "backspace" );
 	} else {
-		data = ch;
+		std::string data;
+		if ( ch == '\n' ) {
+			data = "\\n";
+		} else {
+			data = ch;
+		}
+		device_desc::device_screen->write ( "w", data );
 	}
-	device_desc::device_screen->write ( "w", data );
 }
