@@ -30,8 +30,6 @@ def read_thread_entry ():
 	for line in data.kern_proc.stdout:
 		current_data = line.decode ('utf-8').strip ()
 
-		message.print_message (current_data)
-
 		if len(current_data) == 0:
 			continue
 
