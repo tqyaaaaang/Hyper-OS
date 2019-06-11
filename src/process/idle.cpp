@@ -22,6 +22,7 @@ static mutex flag_mut;
 static void idle_main()
 {
 	status.set_core(proc.get_core());
+	status.set_name(proc.get_name());
 	proc.get_core()->acquire();
 	while (1) {
 	    lock_guard<mutex> lk(flag_mut);
