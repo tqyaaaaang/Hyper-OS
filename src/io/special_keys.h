@@ -96,4 +96,10 @@ void init_special_keys ();
 std::string get_key_str ( special_keys key );
 special_keys get_key_id ( std::string str );
 
-void handle_special_key ( special_keys key );
+/**
+ * @return: whether to pass the key to waiting process
+ *          -2: pass as special_key ( like LEFT and RIGHT )
+ *          -1: not pass ( like CTRL_C )
+ *          >=0: pass as character ( like ENTER and BACKSPACE )
+ */
+int handle_special_key ( special_keys key );

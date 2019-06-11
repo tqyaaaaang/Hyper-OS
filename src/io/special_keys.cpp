@@ -112,10 +112,36 @@ special_keys get_key_id ( std::string str )
 
 
 
-void handle_special_key ( special_keys key )
+/**
+* @return: whether to pass the key to waiting process
+*          -2: pass as special_key ( like LEFT and RIGHT )
+*          -1: not pass ( like CTRL_C )
+*          >=0: pass as character ( like ENTER and BACKSPACE )
+*/
+int handle_special_key ( special_keys key )
 {
+	logging::debug << "Find special key <" << get_key_str ( key ) << ">, handling" << logging::log_endl;
+	int return_value = false;
 	switch ( key ) {
+	case special_keys::LEFT:
+	case special_keys::RIGHT:
+		logging::debug << "Get <arrow-left> or <arrow-right>, direct pass the special key" << logging::log_endl;
+		return_value = -2;
+		break;
+
+	case special_keys::CTRL_M:
+		logging::debug << "Get <c-m>, transform to \\n" << logging::log_endl;
+		return_value = '\n';
+		break;
+
+	case special_keys::BACKSPACE:
+		logging::debug << "Get <backspace>, transform to \\b" << logging::log_endl;
+		return_value = '\b';
+		break;
+
 	default:
 		logging::warning << "Processing special key <" << get_key_str ( key ) << "> not implemented" << logging::log_endl;
+		return_value = -2;
 	}
+	return return_value;
 }
