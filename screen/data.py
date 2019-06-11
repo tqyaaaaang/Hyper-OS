@@ -20,6 +20,7 @@ messages_window = widgets.TextArea ()
 app_windows = []
 
 screen_up_event = threading.Event ()
+screen_down_event = threading.Event ()
 
 key_binding = KeyBindings ()
 

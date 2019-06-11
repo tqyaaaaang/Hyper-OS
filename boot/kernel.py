@@ -11,6 +11,8 @@ import threading
 import os
 import pathlib
 
+import screen
+
 
 kern_proc = None
 kern_up_event = threading.Event ()
@@ -31,6 +33,9 @@ def daemon_thread ():
 	kern_up_event.set ()
 
 	kern_proc.wait ()
+
+	screen.screen_exit ()
+
 	os._exit (0)
 
 

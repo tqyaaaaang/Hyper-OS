@@ -26,5 +26,5 @@ def init ():
 
 def run ():
 	data.screen_up_event.set ()
-	
+
 	data.application.run ()
