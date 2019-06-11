@@ -30,6 +30,8 @@ def read_thread_entry ():
 	for line in data.kern_proc.stdout:
 		current_data = line.decode ('utf-8').strip ()
 
+		message.print_message (current_data)
+
 		if len(current_data) == 0:
 			continue
 
@@ -51,6 +53,8 @@ def read_thread_entry ():
 		elif current_type == 'c':
 			if current_data == 'backspace':
 				write.backspace ()
+			elif current_data == 'newline':
+				write.newline ()
 		elif current_type == 's':
 			if current_data == 'shutdown':
 				interact.write.write ('s', 'shutdown')

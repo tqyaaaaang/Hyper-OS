@@ -7,6 +7,7 @@ Write to screen
 
 
 from screen import data
+from screen.screen import utils
 
 
 def putchar (ch):
@@ -14,6 +15,7 @@ def putchar (ch):
 
 def newline ():
 	data.console_window.buffer.newline ()
+	utils.move_cursor_to_line_start (data.console_window.buffer)
 
 def backspace ():
 	data.console_window.buffer.delete_before_cursor ()

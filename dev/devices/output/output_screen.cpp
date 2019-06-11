@@ -33,13 +33,11 @@ void dev_output_screen::write ( char ch )
 
 	if ( ch == '\b' ) {   // handle backspace
 		device_desc::device_screen->write ( "c", "backspace" );
+	} else if ( ch == '\n' ) {
+		device_desc::device_screen->write ( "c", "newline" );
 	} else {
 		std::string data;
-		if ( ch == '\n' ) {
-			data = "\\n";
-		} else {
-			data = ch;
-		}
+		data = ch;
 		device_desc::device_screen->write ( "w", data );
 	}
 }
