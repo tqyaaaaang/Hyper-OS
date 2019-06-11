@@ -23,12 +23,16 @@ def daemon_thread ():
 
 	global kern_proc
 
-	kern_proc = subprocess.Popen (
-		args = [kern_path],
-		stdin = subprocess.PIPE,
-		stdout = subprocess.PIPE,
-		stderr = subprocess.PIPE
-	)
+	try:
+		kern_proc = subprocess.Popen (
+			args = [kern_path],
+			stdin = subprocess.PIPE,
+			stdout = subprocess.PIPE,
+			stderr = subprocess.PIPE
+		)
+	except FileNotFoundError:
+		print ('Error: cannot open kernel, check if kernel executable file is at bin/hos.')
+		os._exit (0)
 
 	kern_up_event.set ()
 
