@@ -29,29 +29,29 @@ signal_t::signal_t()
 signal_t::~signal_t()
 { }
 
-void signal_t::notify ( size_t data )
+void signal_t::notify(int data)
 {
-	lock_guard<mutex> lk ( mut );
-	if ( !this->proc.empty () ) {
-		process_t *proc = this->proc.front ();
-		this->proc.pop ();
-		proc->set_signal_data ( data );
-		sched_set_runable ( proc );
+	lock_guard<mutex> lk(mut);
+	if (!this->proc.empty()) {
+		process_t *proc = this->proc.front();
+		this->proc.pop();
+		proc->set_signal_data(data);
+		sched_set_runable(proc);
 	} else {
-		que.push ( data );
+		que.push(data);
 	}
 }
 
-void signal_t::wait ( process_t *proc )
+void signal_t::wait(process_t*proc)
 {
-	lock_guard<mutex> lk ( mut );
-	if ( !que.empty () ) {
-		size_t current_data = que.front ();
-		que.pop ();
-		proc->set_signal_data ( current_data );
-		sched_set_runable ( proc );
+	lock_guard<mutex> lk(mut);
+	if (!que.empty()) {
+		int current_data = que.front();
+		que.pop();
+		proc->set_signal_data(current_data);
+		sched_set_runable(proc);
 	} else {
-		this->proc.push ( proc );
+		this->proc.push(proc);
 	}
 }
 
@@ -70,7 +70,7 @@ void destroy_signal ()
 	}
 }
 
-int send_signal(int signal_id, size_t data)
+int send_signal(int signal_id, int data)
 {
 	if (!signal_table.count(signal_id)) {
 		logging::info << "signal " << signal_id << " not found" << logging::log_endl;
