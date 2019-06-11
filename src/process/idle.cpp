@@ -29,6 +29,7 @@ static void idle_main()
 			break;
 		proc.get_core()->set_current(&proc);
 		check_interrupt();
+		std::this_thread::sleep_for ( std::chrono::milliseconds ( 10 ) );
 	}
 	proc.get_core()->release();
 }

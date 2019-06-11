@@ -28,7 +28,8 @@ static void trap_exit()
 		process_t *p = status.get_core()->get_current();
 		schedule(status.get_core()->get_core_id());
 		process_t *proc = status.get_core()->get_current();
-		if (proc == nullptr && !TEST) {
+		if ((proc == nullptr || proc->get_prog () == nullptr) && !TEST) {   // is nullptr or is idle
+			logging::debug << "No process need to run, signal idle to run" << logging::log_endl;
 			signal_idle();
 		}
 	} catch(int id) {
