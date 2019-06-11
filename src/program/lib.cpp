@@ -79,7 +79,9 @@ void hos_std_t::println(handle<char> str)
 char hos_std_t::getchar()
 {
 	sys_t *sys = prog->sys;
-	return sys->read(sys->std_input());
+	handle<char> data = sys->read(sys->std_input());
+	this->putchar((char)data);
+	return (char)data;
 }
 
 int hos_std_t::read_int()
