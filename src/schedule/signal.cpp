@@ -6,8 +6,13 @@
 #include "signal.h"
 #include "../process/process_t.h"
 #include "../logging/logging.h"
+#include "../io/special_keys.h"
 #include "schedule.h"
 #include <unordered_map>
+#include "../process/process.h"
+#include <cassert>
+#include "../status/status.h"
+#include  "../core/core.h"
 
 using std::mutex;
 using std::lock_guard;
@@ -26,30 +31,71 @@ static unordered_map<int,signal_t *> signal_table;
 signal_t::signal_t()
 { }
 
+signal_t::signal_t(int id)
+{
+	this->signal_id = id;
+}
+
 signal_t::~signal_t()
 { }
+
+/**
+ * @return : false, not a keyboard signal or current is idle
+ *           true, is a keyboard signal and is handled
+ */
+bool signal_t::check_keyboard_signal(int data, process_t *proc)
+{
+	logging::debug << "check keyboard signal : " << data << " " << this->signal_id << logging::log_endl;
+	if (this->signal_id == signal_id::KEYBOARD) {
+		bool return_value;
+		switch (static_cast<special_keys>(-data)) {
+		case special_keys::CTRL_C:
+			assert(proc != nullptr);
+			if (proc->get_prog() == nullptr) {
+				// is idle
+				return_value = false;
+			} else {
+				logging::debug << "process " << proc->get_name() << " exits because of <c-c>" << logging::log_endl;
+				sched_set_exit(proc);
+				return_value = true;
+			}
+			break;
+		default:
+			break;
+		}
+		return return_value;
+	} else {
+		return 0;
+	}
+}
 
 void signal_t::notify(int data)
 {
 	lock_guard<mutex> lk(mut);
-	if (!this->proc.empty()) {
-		process_t *proc = this->proc.front();
-		this->proc.pop();
-		proc->set_signal_data(data);
-		sched_set_runable(proc);
-	} else {
-		que.push(data);
+	if (!check_keyboard_signal(data, status.get_core()->get_current())) {
+		if (!this->proc.empty()) {
+			process_t *proc = this->proc.front();
+			this->proc.pop();
+			if (!check_keyboard_signal(data, proc)) {
+				proc->set_signal_data(data);
+				sched_set_runable(proc);
+			}
+		} else {
+			que.push(data);
+		}
 	}
 }
 
-void signal_t::wait(process_t*proc)
+void signal_t::wait(process_t *proc)
 {
 	lock_guard<mutex> lk(mut);
 	if (!que.empty()) {
 		int current_data = que.front();
 		que.pop();
-		proc->set_signal_data(current_data);
-		sched_set_runable(proc);
+		if (!check_keyboard_signal(current_data, proc)) {
+			proc->set_signal_data(current_data);
+			sched_set_runable(proc);
+		}
 	} else {
 		this->proc.push(proc);
 	}
@@ -58,8 +104,8 @@ void signal_t::wait(process_t*proc)
 void init_signal ()
 {
 	logging::debug << "Initializing process wait signals" << logging::log_endl;
-	signal_table.insert ( std::make_pair ( signal_id::WAIT_EXIT, new signal_t () ) );
-	signal_table.insert ( std::make_pair ( signal_id::KEYBOARD, new signal_t () ) );
+	signal_table.insert ( std::make_pair ( signal_id::WAIT_EXIT, new signal_t (signal_id::WAIT_EXIT) ) );
+	signal_table.insert ( std::make_pair ( signal_id::KEYBOARD, new signal_t (signal_id::KEYBOARD) ) );
 }
 
 void destroy_signal ()
@@ -93,6 +139,7 @@ int wait_signal(int signal_id, process_t *proc)
 int register_signal ()
 {
 	int signal = --signal_id::signal_top;
-	signal_table.insert ( std::make_pair ( signal, new signal_t () ) );
+	signal_table.insert ( std::make_pair ( signal, new signal_t (signal) ) );
 	return signal;
 }
+

@@ -4,7 +4,10 @@
  */
 
 #include "special_keys.h"
+#include "../schedule/signal.h"
 #include "../logging/logging.h"
+#include "../process/process.h"
+#include "../message/message.h"
 
 std::vector < std::string > special_keys_list = {
 	"",
@@ -140,6 +143,13 @@ int handle_special_key ( special_keys key )
 		return_value = '\b';
 		break;
 
+	case special_keys::CTRL_C:
+		logging::debug << "Get <c-c>, transform to -1" << logging::log_endl;
+		message::process("kern kbd trap") << "<C-c> Received, try to exit current process" << message::msg_endl;
+		send_signal(signal_id::KEYBOARD, -static_cast<int>(special_keys::CTRL_C));
+		return_value = -1;
+		break;
+		
 	default:
 		logging::warning << "Processing special key <" << get_key_str ( key ) << "> not implemented" << logging::log_endl;
 		return_value = -2;

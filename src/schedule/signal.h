@@ -12,15 +12,18 @@ class signal_t {
 public:
 
 	signal_t();
+	signal_t(int id);
 	~signal_t();
 	void notify(int data);
 	void wait(process_t *proc);
-	
+
 private:
 
 	std::mutex mut;
 	std::queue<process_t*> proc;
 	std::queue<int> que;
+	int signal_id;
+	bool check_keyboard_signal(int data, process_t *proc);
 };
 
 namespace signal_id {
