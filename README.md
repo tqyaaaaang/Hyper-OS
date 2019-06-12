@@ -36,6 +36,7 @@ $ python3 entry.py
 #### Requirements
 - `Python3`
 - `python3-pip`
+- `CMake >= 3.1`
 - `Visual Studio 2017` or `Visual Studio 2019`
 
 Notes:
@@ -49,7 +50,13 @@ $ pip install -r requirements.txt
 ```
 
 #### Compile hos kernel
-You need to compile HOS using Visual Studio and copy the output `*.exe` to `bin/hos` to let `boot` module find it.
+Generate the Visual Studio Solution using cmake in PowerShell:
+```
+mkdir build
+cd build
+cmake ..
+```
+Then you need to compile HOS using Visual Studio.
 
 #### Run the kernel
 Just run the `entry.py` script, and have fun:
