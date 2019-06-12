@@ -9,6 +9,7 @@
 #include "../../logging/logging.h"
 #include "../../schedule/signal.h"
 #include "../../io/special_keys.h"
+#include "../../io/stdio.h"
 
 keyboard_interrupt::keyboard_interrupt ( std::string _data )
 	: external_interrupt_t ( interrupt_id_t::KEYBOARD_INTERRUPT )
@@ -39,5 +40,5 @@ void keyboard_interrupt::process ()
 void keyboard_interrupt::signal_data ( int data )
 {
 	logging::debug << "Sending KEYBOARD signal with data " << data << " to process" << logging::log_endl;
-	send_signal ( signal_id::KEYBOARD, data );
+	receive_keyboard ( data );
 }
