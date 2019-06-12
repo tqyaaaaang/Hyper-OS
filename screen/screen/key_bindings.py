@@ -13,6 +13,7 @@ from prompt_toolkit import keys
 from screen import data
 from screen.screen import key_bindings_with_any
 from screen.input import keyboard_event
+from screen.screen import windows
 
 
 def init ():
@@ -97,13 +98,24 @@ def init ():
 	def process_any_key (event):
 		keyboard_event.handle_keyboard_event (event)
 
-	@data.key_binding.add ('c-a', 'escape')
-	def process_exit (event):
-		data.application.exit ()
-
 	@data.key_binding.add ('c-a', 'c-a')
 	def process_c_a (event):
 		process_any_key (event)
+
+	@data.key_binding.add ('c-a', 'escape')
+	@data.message_window_key_binding.add ('c-a', 'escape')
+	def process_exit (event):
+		data.application.exit ()
+
+	@data.key_binding.add ('c-a', 'tab')
+	@data.message_window_key_binding.add ('c-a', 'tab')
+	def process_c_a_tab (event):
+		data.app_layout.focus_next ()
+
+	@data.key_binding.add ('c-a', 's-tab')
+	@data.message_window_key_binding.add ('c-a', 's-tab')
+	def process_c_a_s_tab (event):
+		data.app_layout.focus_previous ()
 
 	@data.key_binding.add ('c-a', '<any>')
 	def process_c_a_null (event):

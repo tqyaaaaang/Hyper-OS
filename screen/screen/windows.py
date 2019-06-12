@@ -20,5 +20,5 @@ def init ():
 
 	data.app_windows = [
 		containers.VSplit([widgets.Frame (data.console_window, title='console')], key_bindings=data.key_binding),
-		widgets.Frame (data.messages_window, title='messages')
+		containers.VSplit([widgets.Frame (data.messages_window, title='messages')], key_bindings=data.message_window_key_binding)
 	]

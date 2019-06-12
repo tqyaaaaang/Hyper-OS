@@ -9,11 +9,14 @@ Data in screen application
 import threading
 
 import prompt_toolkit
+from prompt_toolkit import layout
 from prompt_toolkit import widgets
 from prompt_toolkit.key_binding import KeyBindings
 
 
 application = prompt_toolkit.Application ()
+
+app_layout = None
 
 console_window = widgets.TextArea ()
 messages_window = widgets.TextArea ()
@@ -23,6 +26,7 @@ screen_up_event = threading.Event ()
 screen_down_event = threading.Event ()
 
 key_binding = KeyBindings ()
+message_window_key_binding = KeyBindings ()
 
 key_seq = []
 
