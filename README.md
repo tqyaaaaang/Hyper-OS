@@ -31,3 +31,27 @@ Just run the `entry.py` script, and have fun:
 ```
 $ python3 entry.py
 ```
+
+### Windows
+#### Requirements
+- `Python3`
+- `python3-pip`
+- `Visual Studio 2017` or `Visual Studio 2019`
+
+Notes:
+- Remember to add `python` to `PATH`
+
+#### Get dependencies with python-pip
+Install dependencies with the following command:
+```
+$ pip install -r requirements.txt
+```
+
+#### Compile hos kernel
+You need to compile HOS using Visual Studio and copy the output `*.exe` to `bin/hos` to let `boot` module find it.
+
+#### Run the kernel
+Just run the `entry.py` script, and have fun:
+```
+$ python entry.py
+```
