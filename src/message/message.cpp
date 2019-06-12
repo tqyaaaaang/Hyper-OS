@@ -148,6 +148,11 @@ void message::set_memory_message(bool flag)
 	memory = make_wrap_alias ( msg_info_t ("memory", flag) );	
 }
 
+void message::set_test_message(bool flag)
+{
+	test = make_wrap_alias ( msg_info_t ("test", flag) );	
+}
+
 void init_message ()
 {
 	logging::debug << "Initializing message service" << logging::log_endl;
@@ -162,8 +167,7 @@ void init_message ()
 	message::set_interrupt_message ( false );
 	message::set_process_message ( false );
 	message::set_memory_message ( false );
-
-	message::test = message::make_wrap_alias ( message::msg_info_t ( "test", true ) );
+	message::set_test_message ( false );
 }
 
 void destroy_message ()

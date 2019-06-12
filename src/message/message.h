@@ -155,6 +155,7 @@ namespace message
 	void set_interrupt_message(bool flag);
 	void set_process_message(bool flag);
 	void set_memory_message(bool flag);
+	void set_test_message(bool falg);
 }
 
 void init_message ();   // Initialize the message objects
