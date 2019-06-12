@@ -41,7 +41,6 @@ $ python3 entry.py
 
 Notes:
 - Remember to add `python` to `PATH`
-- **Note that compiling on `MinGW`/`cygwin`/`WSL` is currently not supported due to gcc bug [#64697](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64697)**
 
 #### Get dependencies with python-pip
 Install dependencies with the following command:
