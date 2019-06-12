@@ -11,7 +11,7 @@ public:
 	virtual void main();
 	virtual void static_init();
 	
-private:
+protected:
 
 	handle<char> graph;
 	handle<char> elep;

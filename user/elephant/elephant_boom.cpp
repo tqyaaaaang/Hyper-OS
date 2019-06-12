@@ -1,33 +1,9 @@
-#include "elephant.h"
-#include "../../src/program/program_manager.h"
 #include "elephant_boom.h"
 #include <cstring>
 
-static program* gen()
+void elephant_boom::static_init()
 {
-	return new elephant;
-}
-
-static program* gen_boom()
-{
-	return new elephant_boom;
-}
-
-void register_elephant()
-{
-	register_program("elephant", gen);
-	register_program("elephant-boom", gen_boom);
-}
-
-elephant::elephant()
-{ }
-
-elephant::~elephant()
-{ }
-
-void elephant::static_init()
-{
-	set_name("elephant");
+	set_name("elephant-boom");
 	const char str[] =
 		"--------------------------------------------------------------------\n"
 		"    //    / /                                      //   ) ) //   )  \n"
@@ -40,23 +16,24 @@ void elephant::static_init()
 	graph = alloc_static<char>(size);
 	for (size_t i = 0; i < size; i++)
 		graph[i].modify_in_compile(str[i]);
-    const char ele[] = "elephant\0";
+    const char ele[] = "elephant-boom\0";
 	size = strlen(ele) + 1;
 	elep = alloc_static<char>(size);
 	for (size_t i = 0; i < size; i++)
 		elep[i].modify_in_compile(ele[i]);
+
 }
 
-void elephant::main()
+void elephant_boom::main()
 {
-	hos_std->write_int(sys->pid());
-	hos_std->println(" in.");
-	hos_std->println(graph);
 	handle<int> pid = sys->create_process();
-	if (sys->pid() < 3) {
-		sys->exec_program(pid, elep);
-		sys->wait(pid);
-	}
+	sys->exec_program(pid, elep);
+	hos_std->println(graph);
 	hos_std->write_int(sys->pid());
-	hos_std->println(" exit.");
+	hos_std->println("");
+	while (1) {
+		sys->yield();
+		hos_std->write_int(sys->pid());
+		hos_std->println(" tick.");
+	}
 }
