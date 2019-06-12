@@ -11,7 +11,7 @@
 
 std::vector < device_t * > device_list ( {
 	new dev_null ( 0 ),
-	new dev_clock ( 0, std::chrono::milliseconds ( 200 ) ),
+	new dev_clock ( 0, std::chrono::milliseconds ( 20 ) ),
 	make_input_device ( 0 ),
 	make_output_device ( 0 ),
 	new dev_screen ( 0 )
