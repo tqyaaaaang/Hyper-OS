@@ -10,7 +10,7 @@
 
 namespace logging
 {
-	thread_local std::stringstream BUF;
+	thread_local std::string BUF;
 	std::ostream *OUT;
 	std::mutex output_lock;
 
@@ -21,6 +21,21 @@ namespace logging
 	logger debug;
 
 	log_endl_t log_endl;
+}
+
+void logging::add_string ( std::string str )
+{
+	BUF += str;
+}
+
+std::string logging::get_string ()
+{
+	return BUF;
+}
+
+void logging::clear_string ()
+{
+	BUF.clear ();
 }
 
 logging::logger::logger ()
