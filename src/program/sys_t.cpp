@@ -20,6 +20,7 @@
 #include "../syscall/syscalls/sys_wait.h"
 #include "../syscall/syscalls/sys_yield.h"
 #include "../syscall/syscalls/sys_pid.h"
+#include "../syscall/syscalls/sys_clock.h"
 #include "../interrupt/interrupts/syscall_interrupt.h"
 #include "../logging/logging.h"
 #include "../message/message.h"
@@ -127,4 +128,9 @@ dev_input* sys_t::std_input()
 int sys_t::pid()
 {
 	return intr(new sys_pid);
+}
+
+int sys_t::clock()
+{
+	return intr(new sys_clock);
 }

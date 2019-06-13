@@ -15,5 +15,6 @@ enum class syscall_id_t
 		EXIT,
 		READ,
 		WRITE,
-		PID
+		PID,
+		CLOCK
 };

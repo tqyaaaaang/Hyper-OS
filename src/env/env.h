@@ -39,3 +39,5 @@ extern const bool TEST; // test = true <=> run unit test
 
 // I/O Device
 extern const int IO_DEVICE;   // I/O Device method
+
+extern const int CLOCK_INTERVAL;
