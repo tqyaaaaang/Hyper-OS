@@ -47,7 +47,7 @@ bool signal_t::check_keyboard_signal(int data, process_t *proc)
 {
 	logging::debug << "check keyboard signal : " << data << " " << this->signal_id << logging::log_endl;
 	if (this->signal_id == signal_id::KEYBOARD) {
-		bool return_value;
+		bool return_value = false;
 		switch (static_cast<special_keys>(-data)) {
 		case special_keys::CTRL_C:
 			assert(proc != nullptr);

@@ -21,13 +21,6 @@ using std::string;
 
 typedef intr_pagefault_t::error_info error_info;
 
-static void msg_mm(string str)
-{
-	message::memory(message::wrap_core_info("kern ISR(#PF)"))
-		<< str
-		<< message::msg_endl;
-}
-
 error_info::error_info()
 {
 	present = write = super = 0;

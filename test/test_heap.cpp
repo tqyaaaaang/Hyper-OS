@@ -78,7 +78,7 @@ public:
 		n = 10;
 		arr = alloc_static<int>(n);
 		size_t a = 31, b = 19260817, x = 0;
-		for (size_t i = 0; i < n; i++) {
+		for (int i = 0; i < n; i++) {
 			info << (int)x << log_endl;
 			arr[i].modify_in_compile(x);
 			x = a * x + b;

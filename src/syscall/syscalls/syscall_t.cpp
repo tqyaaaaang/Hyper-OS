@@ -13,6 +13,11 @@ syscall_t::syscall_t ( syscall_id_t id )
 {
 }
 
+syscall_t::~syscall_t ()
+{
+	
+}
+
 void syscall_t::set_syscalL_id ( syscall_id_t id )
 {
 	syscall_id = id;

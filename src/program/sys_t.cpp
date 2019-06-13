@@ -40,14 +40,6 @@ static void msg_intr(string str)
 		<< message::msg_endl;
 }
 
-static void msg_mm(string str)
-{
-	message::memory
-		(message::wrap_core_info("user syscall"))
-		<< str
-		<< message::msg_endl;
-}
-
 sys_t::sys_t(program *prog)
 {
 	this->prog = prog;

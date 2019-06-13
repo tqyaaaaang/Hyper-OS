@@ -48,7 +48,7 @@ void process_t::heap_free(size_t ptr)
 	vm_read(pt,
 			ptr - sizeof(size_t),
 			ptr);
-	assert(len != -1);
+	assert(len != (size_t)-1);
 	size_t offset = prog->get_data_size()
 		+ prog->get_bss_size();
 	ptr -= offset + sizeof(size_t);
