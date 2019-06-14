@@ -74,6 +74,10 @@ def read_thread_entry ():
 				write.backspace ()
 			elif current_data == 'newline':
 				write.newline ()
+			elif current_data == 'cursor_move_left':
+				write.cursor_move_left ()
+			elif current_data == 'cursor_move_right':
+				write.cursor_move_right ()
 		elif current_type == 's':
 			if current_data == 'shutdown':
 				interact.write.write ('s', 'shutdown')

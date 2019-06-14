@@ -28,6 +28,8 @@ public:
 	virtual void write_char ( char ch );
 	virtual void backspace ();
 	virtual void newline ();
+	virtual void cursor_move_left ();
+	virtual void cursor_move_right ();
 
 private:
 	virtual void device_thread_event_loop ();

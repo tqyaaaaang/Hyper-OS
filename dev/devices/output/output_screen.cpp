@@ -45,6 +45,14 @@ void dev_output_screen::write ( int ch )
 		logging::debug << "Device output received special key " << get_key_str ( key ) << logging::log_endl;
 
 		switch ( key ) {
+		case special_keys::LEFT:
+			device_desc::device_screen->cursor_move_left ();
+			break;
+
+		case special_keys::RIGHT:
+			device_desc::device_screen->cursor_move_right ();
+			break;
+
 		default:
 			logging::warning << "Special key " << get_key_str ( key ) << " not handled" << logging::log_endl;
 		}

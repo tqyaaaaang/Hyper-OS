@@ -19,3 +19,9 @@ def newline ():
 
 def backspace ():
 	data.console_window.buffer.delete_before_cursor ()
+
+def cursor_move_left ():
+	data.console_window.buffer.cursor_left ()
+
+def cursor_move_right ():
+	data.console_window.buffer.cursor_right ()

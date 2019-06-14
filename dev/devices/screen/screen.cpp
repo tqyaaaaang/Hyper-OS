@@ -75,6 +75,16 @@ void dev_screen::newline ()
 	write ( "c", "newline" );
 }
 
+void dev_screen::cursor_move_left ()
+{
+	write ( "c", "cursor_move_left" );
+}
+
+void dev_screen::cursor_move_right ()
+{
+	write ( "c", "cursor_move_right" );
+}
+
 void dev_screen::device_thread_event_loop ()
 {
 	if ( IO_DEVICE ) {
