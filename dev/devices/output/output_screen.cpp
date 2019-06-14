@@ -39,7 +39,7 @@ void dev_output_screen::write ( int ch )
 			device_desc::device_screen->write ( "c", "newline" );
 		} else {
 			std::string data;
-			data = ch;
+			data = static_cast < char > ( ch );
 			device_desc::device_screen->write ( "w", data );
 		}
 	} else {
