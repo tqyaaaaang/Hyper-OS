@@ -72,7 +72,7 @@ void test_multiproc()
 		x[i] = proc_create_process();
 	}
 	for (int i = 0; i < 10; i++) {
-		int ok = proc_exec_program(x[i], prox[i]);
+		proc_exec_program(x[i], prox[i]);
 	}
 	schedule(0);
 	while (1) {
