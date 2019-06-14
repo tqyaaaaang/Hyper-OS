@@ -50,6 +50,13 @@ void dev_screen::write ( std::string type, std::string data )
 	std::cout << type << "[" << data << "]" << std::endl;
 }
 
+void dev_screen::write ( std::string type, std::string config, std::string data )
+{
+	std::unique_lock < std::mutex > lck ( write_lock );
+
+	std::cout << type << "{" << config << "}" << "[" << data << "]" << std::endl;
+}
+
 void dev_screen::device_thread_event_loop ()
 {
 	if ( IO_DEVICE ) {

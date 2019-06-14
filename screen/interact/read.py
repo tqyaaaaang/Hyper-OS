@@ -9,6 +9,8 @@ Read service to read from kernel
 import threading
 import os
 
+import json
+
 from screen import data
 from screen.output import write
 from screen import message
@@ -35,6 +37,25 @@ def read_thread_entry ():
 
 		current_type = current_data[0]
 		current_data = current_data[1:]
+
+		count_brac = 0
+		config_split_i = 0
+		for i in current_data:
+			if i == '{':
+				count_brac += 1
+			elif i == '}':
+				count_brac -= 1
+			if count_brac == 0:
+				break
+			config_split_i += 1
+
+		current_config = current_data[:config_split_i]
+		current_data = current_data[config_split_i:]
+
+		if current_config == '':
+			current_config = {}
+		else:
+			current_config = json.loads (current_config)
 
 		# TODO: Check that input has correct format
 
