@@ -197,7 +197,7 @@ namespace pm {
 	 * interface for mmu, read a byte
 	 * @paddr : physical address to read
 	 */
-	size_t read(size_t paddr)
+	char read(size_t paddr)
 	{
 		lock_guard<mutex> lk (pm_mut);
 		pm_info info;
