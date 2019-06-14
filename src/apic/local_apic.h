@@ -51,9 +51,9 @@ private:
 	void schedule ( bool internal_only );   // choose a new interrupt to run
 	void run_isr ( interrupt_t *current_interrupt );   // run ISR of an interrupt
 
+	CPU_core *core;   // CPU core in which it affliate
 	bool enabled;   // is LAPIC enabled
 	std::thread lapic_thread;   // LAPIC daemon thread
-	CPU_core *core;   // CPU core in which it affliate
 
 	std::stack < std::pair < interrupt_t *, std::thread > > isr_stack;   // stack of current running ISRs
 	interrupt_queue_t interrupt_queue;   // interrupts waiting
