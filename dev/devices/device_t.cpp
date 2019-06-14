@@ -22,6 +22,10 @@ device_t::device_t ( motherboard_t * _motherboard )
 {
 }
 
+device_t::~device_t ()
+{
+}
+
 void device_t::set_id ( int _id )
 {
 	id = _id;

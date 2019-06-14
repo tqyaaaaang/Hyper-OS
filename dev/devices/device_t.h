@@ -17,6 +17,7 @@ public:
 	device_t ();
 	device_t ( int __motherboard_id );   // initialize with motherboard ID
 	device_t ( motherboard_t *_motherboard );   // initialize with a specific motherboard
+	virtual ~device_t ();
 
 	void set_id ( int _id );
 	int get_id () const;
