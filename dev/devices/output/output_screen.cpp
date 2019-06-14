@@ -42,7 +42,7 @@ void dev_output_screen::write ( int ch )
 		}
 	} else {
 		special_keys key = static_cast < special_keys > ( -ch );
-		logging::debug << "Device output received special key " << get_key_str ( key ) << logging::log_endl;
+		logging::debug << "Device output received special key <" << get_key_str ( key ) << ">" << logging::log_endl;
 
 		switch ( key ) {
 		case special_keys::LEFT:
@@ -54,7 +54,7 @@ void dev_output_screen::write ( int ch )
 			break;
 
 		default:
-			logging::warning << "Special key " << get_key_str ( key ) << " not handled" << logging::log_endl;
+			logging::warning << "Special key <" << get_key_str ( key ) << "> not handled" << logging::log_endl;
 		}
 	}
 }
