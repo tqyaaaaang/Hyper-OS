@@ -53,4 +53,5 @@ string proc_state(process_t *proc)
 		break;
 	}
 	panic ( "unknown process state" );
+	return "";
 }
