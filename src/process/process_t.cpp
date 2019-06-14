@@ -25,6 +25,7 @@ process_t::process_t()
 	heap_allocator = nullptr;
 	need_resched = false;
 	exit_flag = false;
+	clock_counter = 0;
 }
 
 process_t::~process_t()
