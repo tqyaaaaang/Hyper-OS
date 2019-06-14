@@ -114,6 +114,8 @@ handle<int> hyper_shell::servant(handle<char> cmd)
 		help_prog();
 	} else if (str == "msg") {
 		msg_prog();
+	} else if (str == "pid") {
+		pid_prog();
 	} else if (is_program(to_string(cmd))) {
 		exec();
 	} else {

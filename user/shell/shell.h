@@ -32,14 +32,17 @@ private:
 
 	void help_prog();
 	void msg_prog();
+	void pid_prog();
 	
 	void general_help();
 	
 	void help_exit_title();
 	void help_exec_title();
 	void help_msg_title();
-
+	void help_pid_title();
+	
 	void help_msg_body();
+	void help_pid_body();
 };
 
 void register_shell();

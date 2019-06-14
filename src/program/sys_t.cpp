@@ -20,6 +20,7 @@
 #include "../syscall/syscalls/sys_wait.h"
 #include "../syscall/syscalls/sys_yield.h"
 #include "../syscall/syscalls/sys_pid.h"
+#include "../syscall/syscalls/sys_parent.h"
 #include "../syscall/syscalls/sys_clock.h"
 #include "../interrupt/interrupts/syscall_interrupt.h"
 #include "../logging/logging.h"
@@ -125,4 +126,9 @@ int sys_t::pid()
 int sys_t::clock()
 {
 	return intr(new sys_clock);
+}
+
+int sys_t::parent()
+{
+	return intr(new sys_parent);
 }
