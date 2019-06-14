@@ -25,6 +25,10 @@ public:
 	virtual void write ( std::string type, std::string data );
 	virtual void write ( std::string type, std::string config, std::string data );
 
+	virtual void write_char ( char ch );
+	virtual void backspace ();
+	virtual void newline ();
+
 private:
 	virtual void device_thread_event_loop ();
 

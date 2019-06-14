@@ -10,6 +10,7 @@
 #include "../../../src/logging/logging.h"
 #include "../../device_list.h"
 #include "../input/input_screen.h"
+#include <string>
 
 dev_screen::dev_screen ( int __motherboard_id )
 	: device_t ( __motherboard_id )
@@ -55,6 +56,23 @@ void dev_screen::write ( std::string type, std::string config, std::string data 
 	std::unique_lock < std::mutex > lck ( write_lock );
 
 	std::cout << type << "{" << config << "}" << "[" << data << "]" << std::endl;
+}
+
+void dev_screen::write_char ( char ch )
+{
+	std::string str;
+	str = ch;
+	write ( "w", str );
+}
+
+void dev_screen::backspace ()
+{
+	write ( "c", "backspace" );
+}
+
+void dev_screen::newline ()
+{
+	write ( "c", "newline" );
 }
 
 void dev_screen::device_thread_event_loop ()
