@@ -13,6 +13,10 @@ interrupt_t::interrupt_t ( interrupt_id_t id )
 {
 }
 
+interrupt_t::~interrupt_t ()
+{
+}
+
 void interrupt_t::set_interrupt_id ( interrupt_id_t id )
 {
 	interrupt_id = id;

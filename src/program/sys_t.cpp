@@ -49,7 +49,7 @@ sys_t::sys_t(program *prog)
 int sys_t::intr(syscall_t *sys)
 {
 	msg_intr("syscall function trigger INTR #80 using \'INT 80\' instruction");
-	int result = syscall(sys);
+	syscall(sys);
 	int return_value = sys->get_return_value();
 	delete sys;
 	check_interrupt ();

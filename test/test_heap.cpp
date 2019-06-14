@@ -100,7 +100,7 @@ void test_heap()
 {
 	program *prog = new merge_sort;
 	size_t pid = proc_create_process();
-	int ok = proc_exec_program(pid, prog);
+	proc_exec_program(pid, prog);
 	schedule(0);
 	while (1) {
 		std::this_thread::yield();

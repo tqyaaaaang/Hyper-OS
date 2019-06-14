@@ -59,7 +59,7 @@ void test_process()
 	info << "start test process." << log_endl;
 	program *prog = new hello_world;
 	size_t pid = proc_create_process();
-	int ok = proc_exec_program(pid, prog);
+	proc_exec_program(pid, prog);
 	// set to runable
 	schedule(0);
 	// run!

@@ -48,7 +48,7 @@ void demo_interrupt::main()
 	handle < int > answer = alloc_stack < int > ();
 	answer = 0;
 	for ( timer = 0; timer < 10; timer = timer + 1 ) {
-		answer = answer + ( timer >> 3 ) ^ ( timer << 7 );
+		answer = answer + ( ( timer >> 3 ) ^ ( timer << 7 ) );
 	}
 	message::interrupt ( "user demo_interrupt" ) << "Waiting completed" << message::msg_endl;
 

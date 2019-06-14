@@ -1,5 +1,6 @@
 #include "sched_msg.h"
 #include "../process/process_t.h"
+#include "../utils/panic.h"
 #include <cassert>
 
 using std::string;
@@ -51,5 +52,5 @@ string proc_state(process_t *proc)
 		return "zombie";
 		break;
 	}
-	assert(false);
+	panic ( "unknown process state" );
 }
