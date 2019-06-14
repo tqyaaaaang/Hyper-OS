@@ -18,7 +18,7 @@ const int MOTHERBOARD_NUM = 1;   // The number of motherboards
 // Logging
 const char *LOG_FILE_NAME = "hos.log";   // File name to write log, NULL if write to stdout
 
-const int LOG_LEVEL = LOGGING_LEVEL::NONE;   // Logging level to be used
+const int LOG_LEVEL = LOGGING_LEVEL::DEBUG;   // Logging level to be used
 
 // Message service
 extern const char *MESSAGE_FILE_NAME = "msg.log";   // File name to write messages, write to stdout if is NULL and IO_DEVICE is 0
