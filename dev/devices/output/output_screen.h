@@ -18,7 +18,7 @@ public:
 	virtual void init ();
 	virtual void destroy ();
 
-	virtual void write ( char ch );
+	virtual void write ( int ch );
 
 private:
 };

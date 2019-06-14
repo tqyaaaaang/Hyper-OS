@@ -23,7 +23,7 @@ void dev_output_screen::destroy ()
 	logging::debug << "Destroying device output, mode: screen" << logging::log_endl;
 }
 
-void dev_output_screen::write ( char ch )
+void dev_output_screen::write ( int ch )
 {
 	if ( ch >= 32 ) {
 		logging::debug << "Device output received character '" << ch << "' ( ASCII " << static_cast < int > ( ch ) << " ) " << logging::log_endl;

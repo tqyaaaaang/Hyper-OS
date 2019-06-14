@@ -22,7 +22,7 @@ void dev_output_terminal::destroy ()
 	logging::debug << "Destroying device output, mode: terminal" << logging::log_endl;
 }
 
-void dev_output_terminal::write ( char ch )
+void dev_output_terminal::write ( int ch )
 {
 	if ( ch >= 32 ) {
 		logging::debug << "Device output received character '" << ch << "' ( ASCII " << static_cast < int > ( ch ) << " ) " << logging::log_endl;

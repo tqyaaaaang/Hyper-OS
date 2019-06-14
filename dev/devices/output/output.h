@@ -16,7 +16,7 @@ public:
 
 	virtual std::string to_string () const;
 
-	virtual void write ( char ch ) = 0;
+	virtual void write ( int ch ) = 0;
 	virtual void write ( std::string str );
 
 private:
