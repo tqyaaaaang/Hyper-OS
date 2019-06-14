@@ -11,6 +11,10 @@
 #include "../utils/panic.h"
 #include "../utils/check.h"
 
+#ifdef _MSC_VER
+#pragma warning(disable: 4661)
+#endif // _MSC_VER
+
 using handle_type::type;
 using std::vector;
 using std::string;
