@@ -136,10 +136,10 @@ private:
 	bool _preserved_interrupt_enabled_flag;
 	int core_id;
 
+	local_apic lapic;
+
 	int interrupt_depth;
 
-	local_apic lapic;
-	
 	std::mutex cpu_lock;
 
 	CPU_mmu mmu;
