@@ -29,4 +29,5 @@ const bool TEST = false;
 // I/O Device
 extern const int IO_DEVICE = 1;   // I/O Device method, 0 if directly to terminal, 1 if to module screen
 
+// Tick interval of clock device ( ms )
 const int CLOCK_INTERVAL = 20;
