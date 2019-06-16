@@ -14,7 +14,7 @@ Hyper-OS(HOS) is an Operating System Simulator for teaching and research use. It
 #### Get dependencies with python-pip
 Install dependencies with the following command:
 ```
-$ pip3 install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 #### Compile hos kernel
@@ -33,7 +33,7 @@ the binary file is located in `bin/hos`.
 #### Run the kernel
 Just run the `entry.py` script, and have fun:
 ```
-$ python3 entry.py
+python3 entry.py
 ```
 
 ### Windows
@@ -49,7 +49,7 @@ Notes:
 #### Get dependencies with python-pip
 Install dependencies with the following command:
 ```
-$ pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 #### Compile hos kernel
@@ -64,5 +64,5 @@ Then you need to compile HOS using Visual Studio. You may need to copy the execu
 #### Run the kernel
 Just run the `entry.py` script, and have fun:
 ```
-$ python entry.py
+python entry.py
 ```
