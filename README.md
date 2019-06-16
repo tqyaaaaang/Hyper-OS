@@ -20,8 +20,12 @@ $ pip3 install -r requirements.txt
 #### Compile hos kernel
 Compile HOS using CMake and GNU make
 ```
-$ cmake .
-$ make
+mkdir build
+cd build
+cmake ..
+make
+cd ..
+cp build/bin/hos bin/hos
 ```
 
 the binary file is located in `bin/hos`.
@@ -55,7 +59,7 @@ mkdir build
 cd build
 cmake ..
 ```
-Then you need to compile HOS using Visual Studio.
+Then you need to compile HOS using Visual Studio. You may need to copy the executable file generated to `bin/hos`.
 
 #### Run the kernel
 Just run the `entry.py` script, and have fun:
