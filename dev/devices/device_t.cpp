@@ -22,6 +22,10 @@ device_t::device_t ( motherboard_t * _motherboard )
 {
 }
 
+device_t::~device_t ()
+{
+}
+
 void device_t::set_id ( int _id )
 {
 	id = _id;
@@ -45,6 +49,16 @@ void device_t::set_motherboard ( motherboard_t * _motherboard )
 motherboard_t * device_t::get_motherboard () const
 {
 	return motherboard;
+}
+
+void device_t::init ()
+{
+	logging::debug << "Initializing device " << to_string () << logging::log_endl;
+}
+
+void device_t::destroy ()
+{
+	logging::debug << "Destroying device " << to_string () << logging::log_endl;
 }
 
 std::string device_t::to_string () const

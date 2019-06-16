@@ -3,11 +3,11 @@
 #include "../hyperstd.h"
 #include "../hyperlib.h"
 
-class demo_syscall : public program {
+class demo_interrupt : public program {
 public:
 
-	demo_syscall();
-	virtual ~demo_syscall();
+	demo_interrupt();
+	virtual ~demo_interrupt();
 	virtual void static_init();
 	virtual void main();
 	

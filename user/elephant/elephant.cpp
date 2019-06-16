@@ -1,5 +1,6 @@
 #include "elephant.h"
 #include "../../src/program/program_manager.h"
+#include "elephant_boom.h"
 #include <cstring>
 
 static program* gen()
@@ -7,9 +8,15 @@ static program* gen()
 	return new elephant;
 }
 
+static program* gen_boom()
+{
+	return new elephant_boom;
+}
+
 void register_elephant()
 {
 	register_program("elephant", gen);
+	register_program("elephant-boom", gen_boom);
 }
 
 elephant::elephant()
@@ -42,11 +49,14 @@ void elephant::static_init()
 
 void elephant::main()
 {
+	hos_std->write_int(sys->pid());
+	hos_std->println(" in.");
 	hos_std->println(graph);
-	/*handle<int> pid = sys->create_process();
-	sys->exec_program(pid, elep);
-	while (1) {
-		sys->yield();
-		hos_std->println(elep);
-    }*/
+	handle<int> pid = sys->create_process();
+	if (sys->pid() < 3) {
+		sys->exec_program(pid, elep);
+		sys->wait(pid);
+	}
+	hos_std->write_int(sys->pid());
+	hos_std->println(" exit.");
 }

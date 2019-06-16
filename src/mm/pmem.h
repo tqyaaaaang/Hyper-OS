@@ -4,7 +4,7 @@
 namespace pm {
 
 // interface for simulater
-size_t read(size_t paddr);
+char read(size_t paddr);
 void write(size_t paddr, char data);
 
 }

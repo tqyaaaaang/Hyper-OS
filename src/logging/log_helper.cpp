@@ -74,7 +74,7 @@ std::string logging::get_thread ()
 	if ( status.get_name () != "" ) {
 		string_helper << " " << status.get_name () << " ";
 	}
-	string_helper << ") ";
+	string_helper << ")";
 	std::string result;
 	getline ( string_helper, result );
 	return result;

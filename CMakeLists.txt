@@ -15,7 +15,12 @@ ADD_EXECUTABLE ( ${prog_name} ${src_list} )
 
 target_link_libraries( ${prog_name} pthread )
 
-if(CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS "-Wall -fsanitize=undefined ${CMAKE_CXX_FLAGS}")
-endif(CMAKE_COMPILER_IS_GNUCXX)
-
+if (WIN32)
+  if(CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS "-Wall -O2")
+  endif(CMAKE_COMPILER_IS_GNUCXX)
+else ()
+  if(CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS "-Wall -O2 -fsanitize=undefined ${CMAKE_CXX_FLAGS}")
+  endif(CMAKE_COMPILER_IS_GNUCXX)
+endif ()

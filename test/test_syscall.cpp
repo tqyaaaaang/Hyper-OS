@@ -27,15 +27,15 @@ void test_syscall ()
 		logging::info << "Test on SYSCALL TEST system call succeeded, interrupt return value : " << return_value << ", syscall return value : " << current_syscall.get_return_value () << logging::log_endl;
 	}
 
-	{
-		sys_read read_syscall ( device_desc::standard_input );
-		return_value = syscall ( &read_syscall );
-		logging::info << "Test on SYSCALL READ succeeded, interrupt return value : " << return_value << ", syscall return value : " << read_syscall.get_return_value () << logging::log_endl;
+	//{
+	//	sys_read read_syscall ( device_desc::standard_input );
+	//	return_value = syscall ( &read_syscall );
+	//	logging::info << "Test on SYSCALL READ succeeded, interrupt return value : " << return_value << ", syscall return value : " << read_syscall.get_return_value () << logging::log_endl;
 
-		sys_write write_syscall ( device_desc::standard_output, read_syscall.get_return_value () );
-		return_value = syscall ( &write_syscall );
-		logging::info << "Test on SYSCALL WRITE succeeded, interrupt return value : " << return_value << ", syscall return value : " << write_syscall.get_return_value () << logging::log_endl;
-	}
+	//	sys_write write_syscall ( device_desc::standard_output, read_syscall.get_return_value () );
+	//	return_value = syscall ( &write_syscall );
+	//	logging::info << "Test on SYSCALL WRITE succeeded, interrupt return value : " << return_value << ", syscall return value : " << write_syscall.get_return_value () << logging::log_endl;
+	//}
 
 	status.get_core ()->release ();
 }

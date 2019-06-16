@@ -66,7 +66,6 @@ namespace message
 		template < typename T >
 		friend message & operator << ( message &buf, T a )
 		{
-			logging::debug << "message output : " << a << logging::log_endl;
 			if ( buf.info.get_visible () ) {
 				buf.BUF << a;
 			}
@@ -76,10 +75,11 @@ namespace message
 		friend message & operator << ( message &buf, msg_endl_t a )
 		{
 			if ( buf.info.get_visible () ) {
+				logging::debug << "message output : " << buf.BUF.str () << logging::log_endl;
 				{
 					std::lock_guard < std::mutex > lock ( output_lock );
 
-					( *OUT ) << get_prefix ( buf.info, buf.source ) << buf.BUF.str () << get_suffix ( buf.info, buf.source ) << std::endl;
+					output_message ( get_prefix ( buf.info, buf.source ) + buf.BUF.str () + get_suffix ( buf.info, buf.source ) );
 				}
 				buf.BUF.clear ();
 				buf.BUF.str ( "" );
@@ -155,6 +155,7 @@ namespace message
 	void set_interrupt_message(bool flag);
 	void set_process_message(bool flag);
 	void set_memory_message(bool flag);
+	void set_test_message(bool falg);
 }
 
 void init_message ();   // Initialize the message objects

@@ -9,7 +9,7 @@
 #include "../../user/lp/lp.h"
 #include "../../user/elephant/elephant.h"
 #include "../../user/matrix/matrix.h"
-#include "../../user/demo_syscall/demo_syscall.h"
+#include "../../user/demo_interrupt/demo_interrupt.h"
 #include "../../user/demo_pagefault/demo_pagefault.h"
 #include "../../user/demo_process/demo_process.h"
 #include <cstdlib>

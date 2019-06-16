@@ -29,6 +29,11 @@ hos_std_t::~hos_std_t()
 	
 }
 
+void hos_std_t::init()
+{
+	
+}
+
 void hos_std_t::println(string str)
 {
 	msg_intr("call function \'println\' in standard library");
@@ -71,41 +76,51 @@ void hos_std_t::println(handle<char> str)
 	this->putchar('\n');
 }
 
-char hos_std_t::getchar()
+int hos_std_t::getchar()
 {
 	sys_t *sys = prog->sys;
-	return sys->read(sys->std_input());
+	handle<int> data = sys->read(sys->std_input());
+	return (int)data;
 }
 
 int hos_std_t::read_int()
 {
 	msg_intr("call function \'read_int\' in standard library");
 	handle<int> result = 0;
-	handle<char> ch = (char)0;
-	while (ch < '0' || ch > '9') {
+	handle<int> ch = (int)0;
+	handle<int> flag = 1;
+	while ((ch < '0' || ch > '9') && ch != '-') {
+		ch = this->getchar();
+	}
+	if (ch == '-') {
+		flag = -1;
 		ch = this->getchar();
 	}
 	do {
 		result = result * 10 + (int)(ch - '0');
 		ch = this->getchar();
 	} while ('0' <= ch && ch <= '9');
-	int dat = result;
+	int dat = result * flag;
 	logging::debug << "read a int : " << dat << logging::log_endl;
-	return result;
+	return result * flag;
 }
 
 void hos_std_t::write_recur(handle<int> dat)
 {
 	if (dat != 0) {
 		write_recur(dat / 10);
-	msg_intr("call function \'print\' in standard library");
-		this->putchar(char(dat % 10) + '0');
+		msg_intr("call function \'print\' in standard library");
+		this->putchar((int)((dat % 10) + '0'));
 	}
 }
 
 void hos_std_t::write_int(int data)
 {
 	msg_intr("call function \'write_int\' in standard library");
+	if (data < 0) {
+		this->putchar('-');
+		data = -data;
+	}
 	handle<int> num = data;
 	if (num == 0) {
 		this->putchar('0');

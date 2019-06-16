@@ -20,11 +20,14 @@
 #include "../syscall/syscalls/sys_wait.h"
 #include "../syscall/syscalls/sys_yield.h"
 #include "../syscall/syscalls/sys_pid.h"
+#include "../syscall/syscalls/sys_parent.h"
+#include "../syscall/syscalls/sys_clock.h"
 #include "../interrupt/interrupts/syscall_interrupt.h"
 #include "../logging/logging.h"
 #include "../message/message.h"
 #include "program.h"
 #include <unordered_map>
+#include <cassert>
 
 using std::string;
 
@@ -38,14 +41,6 @@ static void msg_intr(string str)
 		<< message::msg_endl;
 }
 
-static void msg_mm(string str)
-{
-	message::memory
-		(message::wrap_core_info("user syscall"))
-		<< str
-		<< message::msg_endl;
-}
-
 sys_t::sys_t(program *prog)
 {
 	this->prog = prog;
@@ -54,7 +49,7 @@ sys_t::sys_t(program *prog)
 int sys_t::intr(syscall_t *sys)
 {
 	msg_intr("syscall function trigger INTR #80 using \'INT 80\' instruction");
-	int result = syscall(sys);
+	syscall(sys);
 	int return_value = sys->get_return_value();
 	delete sys;
 	check_interrupt ();
@@ -102,7 +97,10 @@ int sys_t::wait(int pid)
 int sys_t::read(dev_input *device)
 {
 	int w = intr(new sys_read(device));
-	return w;
+    assert(w == 0);
+	assert(prog != nullptr);
+	assert(prog->cur_proc != nullptr);
+	return prog->cur_proc->get_signal_data();
 }
 
 int sys_t::write(dev_output *device, char data)
@@ -123,4 +121,14 @@ dev_input* sys_t::std_input()
 int sys_t::pid()
 {
 	return intr(new sys_pid);
+}
+
+int sys_t::clock()
+{
+	return intr(new sys_clock);
+}
+
+int sys_t::parent()
+{
+	return intr(new sys_parent);
 }

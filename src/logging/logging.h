@@ -14,9 +14,13 @@
 
 namespace logging
 {
-	extern thread_local std::stringstream BUF;
+	extern thread_local std::string BUF;
 	extern std::ostream *OUT;
 	extern std::mutex output_lock;
+
+	void add_string ( std::string str );
+	std::string get_string ();
+	void clear_string ();
 
 	/**
 	* class log_endl_t
@@ -42,7 +46,9 @@ namespace logging
 		friend logger & operator << ( logger &buf, T a )
 		{
 			if ( buf.visible ) {
-				BUF << a;
+				std::stringstream SS_BUF;
+				SS_BUF << a;
+				add_string ( SS_BUF.str () );
 			}
 			return buf;
 		}
@@ -53,10 +59,9 @@ namespace logging
 				{
 					std::lock_guard < std::mutex > lock ( output_lock );
 
-					( *OUT ) << get_prefix ( buf.level ) << BUF.str () << std::endl;
+					( *OUT ) << get_prefix ( buf.level ) << get_string () << std::endl;
 				}
-				BUF.clear ();
-				BUF.str ( "" );
+				clear_string ();
 			}
 			return buf;
 		}

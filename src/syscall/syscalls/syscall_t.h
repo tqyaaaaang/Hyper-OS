@@ -13,7 +13,8 @@ class syscall_t
 {
 public:
 	syscall_t ( syscall_id_t id );
-
+	virtual ~syscall_t();
+	
 	void set_syscalL_id ( syscall_id_t id );
 	syscall_id_t get_syscall_id () const;
 

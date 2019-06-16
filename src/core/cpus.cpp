@@ -5,7 +5,6 @@
 
 #include "cpus.h"
 #include "../logging/logging.h"
-#include "../schedule/schedule.h"
 #include <cassert>
 
 CPU_core *cores;   // List of CPU cores
@@ -29,12 +28,10 @@ void init_cpus ( int n )
 		cores[i].enable ();
 		cores[i].enable_interrupt ();
 	}
-	init_schedule();
 }
 
 void destroy_cpus ()
 {
-	destroy_schedule();
 	logging::debug << "Destorying CPUs" << logging::log_endl;
 	delete[] cores;
 }

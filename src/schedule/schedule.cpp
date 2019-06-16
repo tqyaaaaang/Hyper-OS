@@ -5,10 +5,12 @@
 
 #include "schedule.h"
 #include "sched_msg.h"
+#include "signal.h"
 #include "../process/process_t.h"
 #include "../core/cpus.h"
 #include "../logging/logging.h"
 #include "../status/status.h"
+#include "../utils/panic.h"
 #include <list>
 #include <mutex>
 #include <cassert>
@@ -60,8 +62,12 @@ vector< list<process_t*> > awake_list;
  */
 void init_schedule()
 {
+	logging::debug << "Initializing schedule module" << logging::log_endl;
+
 	state_list.resize(get_core_num());
 	awake_list.resize(get_core_num());
+
+	init_signal ();
 }
 
 /**
@@ -69,8 +75,12 @@ void init_schedule()
  */
 void destroy_schedule()
 {
+	logging::debug << "Destroying schedule module" << logging::log_endl;
+
 	// delete[] state_list;
 	// delete[] awake_list;
+
+	destroy_signal ();
 }
 
 static mutex sched_mutex;
@@ -215,18 +225,23 @@ void sched_set_exit(process_t *proc)
 	msg_proc("process " + proc_info(proc)
 			 + " exit");
 	
-	assert(proc == status.get_core()->get_current());
-	assert(proc->get_state() == state::RUNABLE);
-
-	proc->set_state(state::ZOMBIE);
-	
 	int id = proc->get_core()->get_core_id();
 
-	state_list[id].running.erase(proc->linker);
+	if (proc->get_state() == state::RUNABLE) {
+		state_list[id].running.erase(proc->linker);
+	} else if (proc->get_state() == state::SLEEPING) {
+		state_list[id].sleeping.erase(proc->linker);
+	} else {
+		panic("try to exit an zombie or uninit process");
+	}
+
+	proc->set_state(state::ZOMBIE);
 	zombie.push_front(proc);
 	proc->linker = zombie.begin();
-	
-	status.get_core()->set_current(nullptr);
+
+	if (proc == status.get_core()->get_current()) {
+		status.get_core()->set_current(nullptr);
+	}
 
 	logging::info << "process " << proc->get_name() << " " << proc->get_pid() << " exit." << log_endl;
 

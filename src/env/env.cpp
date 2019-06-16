@@ -20,5 +20,14 @@ const char *LOG_FILE_NAME = "hos.log";   // File name to write log, NULL if writ
 
 const int LOG_LEVEL = LOGGING_LEVEL::DEBUG;   // Logging level to be used
 
+// Message service
+const char *MESSAGE_FILE_NAME = "msg.log";   // File name to write messages, write to stdout if is NULL and IO_DEVICE is 0
+
 // Unittest
 const bool TEST = false;
+
+// I/O Device
+extern const int IO_DEVICE = 1;   // I/O Device method, 0 if directly to terminal, 1 if to module screen
+
+// Tick interval of clock device ( ms )
+const int CLOCK_INTERVAL = 20;

@@ -10,6 +10,7 @@
 #include <iostream>
 #include <string>
 #include "../../src/logging/logging.h"
+#include "../keymap.h"
 
 using std::string;
 
@@ -74,6 +75,15 @@ handle<int> hyper_shell::parse()
 			argv[argc][top] = '\0';
 			argc = argc + 1;
 			top = 0;
+		} else if (c == '\b') {
+			if (top > 0) {
+				top = top - 1;
+			} else if (argc > 0) {
+			    argc = argc - 1;
+				top = 0;
+				while (argv[argc][top] != '\0')
+					top = top + 1;
+			}
 		} else {
 			argv[argc][top] = c;
 			top = top + 1;
@@ -102,70 +112,14 @@ handle<int> hyper_shell::servant(handle<char> cmd)
 		return -1;
 	} else if (str == "help") {
 		help_prog();
+	} else if (str == "msg") {
+		msg_prog();
+	} else if (str == "pid") {
+		pid_prog();
 	} else if (is_program(to_string(cmd))) {
 		exec();
 	} else {
 		program_not_found_error();
 	}
 	return 0;
-}
-
-string hyper_shell::to_string(handle<char> str)
-{
-	string tar;
-	for (size_t i = 0; str[i] != '\0'; i++) {
-		tar = tar + (char)(str[i]);
-	}
-	return tar;
-}
-
-void hyper_shell::program_not_found_error()
-{
-	hos_std->print("invalid program name \'");
-	hos_std->print(argv[0]);
-	hos_std->println("\'");
-}
-
-void hyper_shell::too_long_error()
-{
-	hos_std->println("command is too long");
-}
-
-void hyper_shell::exec()
-{
-	int pid = sys->create_process();
-	logging::debug << "create process pid" << logging::log_endl;
-	// program *prog = get_program(to_string(argv[0]));
-	logging::debug << "get program : " << to_string(argv[0]) << " pid : " << pid << logging::log_endl;
-	sys->exec_program(pid, argv[0]);
-	logging::debug << "sub program start." << logging::log_endl;
-	sys->wait(pid);
-	logging::debug << "sub program exit." << logging::log_endl;
-}
-
-void hyper_shell::help_prog()
-{
-	if (argc == 1) {
-		general_help();
-	} else {
-		hos_std->println("not supported yet");
-	}
-}
-
-void hyper_shell::general_help()
-{
-	hos_std->println("Hyper-OS Shell, Version 0.1");
-	hos_std->println("--- Supported Commands  ---");
-    help_exit_title();
-	help_exec_title();
-}
-
-void hyper_shell::help_exit_title()
-{
-	hos_std->println("[exit] : exit the shell");
-}
-
-void hyper_shell::help_exec_title()
-{
-	hos_std->println("[program-name] : run program by name");
 }

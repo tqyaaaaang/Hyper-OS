@@ -25,6 +25,7 @@ process_t::process_t()
 	heap_allocator = nullptr;
 	need_resched = false;
 	exit_flag = false;
+	clock_counter = 0;
 }
 
 process_t::~process_t()
@@ -115,6 +116,7 @@ int process_t::get_par() const
 
 bool process_t::tick()
 {
+	clock_counter++;
 	return (slice--) == 0;
 }
 
@@ -182,3 +184,17 @@ size_t process_t::get_signal_data() const
 {
 	return signal_data;
 }
+
+int process_t::get_clock_counter() const
+{
+	return clock_counter;
+}
+
+/**
+ * idle is the only process that prog == nullptr
+ */
+bool process_t::is_idle() const
+{
+	return prog == nullptr;
+}
+

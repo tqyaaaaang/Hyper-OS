@@ -14,6 +14,7 @@ class interrupt_t
 {
 public:
 	interrupt_t ( interrupt_id_t id );
+	virtual ~interrupt_t ();
 
 	void set_interrupt_id ( interrupt_id_t id );
 	interrupt_id_t get_interrupt_id () const;

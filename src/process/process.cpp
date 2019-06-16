@@ -61,13 +61,10 @@ void init_proc()
 		init_idle();
 		int pid = proc_create_process();
 		proc_exec_program(pid, get_program("shell"));
-		schedule ( 0 );
 		while (proc_not_exit(pid)) {
 			std::this_thread::yield();
 		}
-		logging::info << "main shell exit, system shut down." << logging::log_endl;
 		idle_exit();
-		cores[0].disable_interrupt();
 		logging::info << "main shell exit, system shut down." << logging::log_endl;
 	}
 }

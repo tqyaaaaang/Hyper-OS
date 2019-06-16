@@ -11,6 +11,10 @@
 #include "../utils/panic.h"
 #include "../utils/check.h"
 
+#ifdef _MSC_VER
+#pragma warning(disable: 4661)
+#endif // _MSC_VER
+
 using handle_type::type;
 using std::vector;
 using std::string;
@@ -133,7 +137,6 @@ handle<T> program::alloc_static(size_t n)
  */
 size_t program::alloc_bss_area(size_t len)
 {
-	size_t ret = bss_size;
 	if (!add_check(bss_size, len)) {
 		panic("compile fail. bss array is too large");
 	}

@@ -14,12 +14,9 @@ class dev_output : public device_t
 public:
 	dev_output ( int __motherboard_id );
 
-	virtual void init ();
-	virtual void destroy ();
-
 	virtual std::string to_string () const;
 
-	virtual void write ( char ch );
+	virtual void write ( int ch ) = 0;
 	virtual void write ( std::string str );
 
 private:

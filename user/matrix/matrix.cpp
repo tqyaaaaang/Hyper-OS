@@ -99,5 +99,8 @@ void matrix::main()
     matrix_mul(C, A, B, n, m, k);
 	hos_std->println("result matrix");
 	write_matrix(n, k, C);
+	hos_std->print("computation finished in : ");
+	hos_std->write_int(sys->clock() * CLOCK_INTERVAL);
+	hos_std->println(" ms.");
 }
 

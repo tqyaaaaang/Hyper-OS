@@ -6,11 +6,13 @@
 #include "io_apic.h"
 #include "interrupt_affinity.h"
 #include "../logging/logging.h"
+#include "../message/message.h"
 #include "../status/status.h"
 #include "../interrupt/interrupts/disable_io_apic.h"
 #include "../interrupt/interrupts/io_apic_end_of_interrupt.h"
 #include "interrupt_affinity.h"
 #include "../core/cpus.h"
+#include "../core/core.h"
 #include "../motherboard/motherboard.h"
 #include "../env/env.h"
 #include <sstream>
@@ -68,6 +70,9 @@ motherboard_t * io_apic::get_motherboard () const
 
 void io_apic::interrupt ( external_interrupt_t * current_interrupt )
 {
+	if ( !current_interrupt->is_io_apic_signal () ) {
+		message::interrupt ( "hd I/O APIC" ) << "Sending an interrupt request to I/O APIC : " << current_interrupt->to_string () << message::msg_endl;
+	}
 	logging::debug << "I/O APIC received interrupt request : " << current_interrupt->to_string () << logging::log_endl;
 	event_queue.push_back ( current_interrupt );
 }
@@ -101,6 +106,7 @@ void io_apic::io_apic_thread_event_loop ()
 		} else {   // interrupts
 			logging::debug << "I/O APIC received new interrupt request : " << current_interrupt->to_string () << logging::log_endl;
 			CPU_core &current_core = cores[get_interrupt_affinity ( current_interrupt->get_interrupt_id () )];
+			message::interrupt ( "hd I/O APIC" ) << "I/O APIC received interrupt request : " << current_interrupt->to_string () << ", sending to core #" << current_core.get_core_id () << message::msg_endl;
 			current_core.get_lapic ().interrupt ( current_interrupt, false );
 		}
 	}

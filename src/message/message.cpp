@@ -5,6 +5,8 @@
 
 #include "message.h"
 #include "../logging/logging.h"
+#include "../env/env.h"
+#include <fstream>
 #include <functional>
 
 namespace message
@@ -146,20 +148,33 @@ void message::set_memory_message(bool flag)
 	memory = make_wrap_alias ( msg_info_t ("memory", flag) );	
 }
 
+void message::set_test_message(bool flag)
+{
+	test = make_wrap_alias ( msg_info_t ("test", flag) );	
+}
+
 void init_message ()
 {
 	logging::debug << "Initializing message service" << logging::log_endl;
 
-	message::OUT = &std::cout;
+	message::OUT = NULL;
+	if ( MESSAGE_FILE_NAME != NULL ) {
+		message::OUT = new std::ofstream ( MESSAGE_FILE_NAME );
+	} else if ( MESSAGE_FILE_NAME == NULL && IO_DEVICE == 0 ) {
+		message::OUT = &std::cout;
+	}
 
-	message::set_interrupt_message(false);
-	message::set_process_message(false);
-	message::set_memory_message(false);
-	
-	message::test = message::make_wrap_alias ( message::msg_info_t ( "test", true ) );
+	message::set_interrupt_message ( false );
+	message::set_process_message ( false );
+	message::set_memory_message ( false );
+	message::set_test_message ( false );
 }
 
 void destroy_message ()
 {
 	logging::debug << "Message service destroyed" << logging::log_endl;
+
+	if ( message::OUT != NULL && message::OUT != &std::cout ) {
+		delete message::OUT;
+	}
 }

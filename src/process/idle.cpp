@@ -22,6 +22,7 @@ static mutex flag_mut;
 static void idle_main()
 {
 	status.set_core(proc.get_core());
+	status.set_name(proc.get_name());
 	proc.get_core()->acquire();
 	while (1) {
 	    lock_guard<mutex> lk(flag_mut);
@@ -29,6 +30,7 @@ static void idle_main()
 			break;
 		proc.get_core()->set_current(&proc);
 		check_interrupt();
+		std::this_thread::sleep_for ( std::chrono::milliseconds ( 20 ) );
 	}
 }
 

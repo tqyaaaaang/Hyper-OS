@@ -2,6 +2,7 @@
 
 #include "../hyperstd.h"
 #include "../hyperlib.h"
+#include "../../src/logging/logging.h"
 #include <string>
 
 class hyper_shell : public program {
@@ -24,14 +25,24 @@ private:
 
 	void program_not_found_error();
 	void too_long_error();
-
+	void format_error();
+	void argv_error(handle<int> id);
+	
 	std::string to_string(handle<char> str);
 
 	void help_prog();
+	void msg_prog();
+	void pid_prog();
+	
 	void general_help();
 	
 	void help_exit_title();
 	void help_exec_title();
+	void help_msg_title();
+	void help_pid_title();
+	
+	void help_msg_body();
+	void help_pid_body();
 };
 
 void register_shell();

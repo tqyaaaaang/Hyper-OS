@@ -18,14 +18,6 @@
 
 using std::string;
 
-static void msg_intr(string str)
-{
-	message::interrupt
-		(message::wrap_core_info("kern trap"))
-		<< str
-		<< message::msg_endl;
-}
-
 /**
  * schedule process
  * RR
@@ -33,10 +25,10 @@ static void msg_intr(string str)
 static void trap_exit()
 {
 	try {
-		process_t *p = status.get_core()->get_current();
 		schedule(status.get_core()->get_core_id());
 		process_t *proc = status.get_core()->get_current();
-		if (proc == nullptr && !TEST) {
+		if ((proc == nullptr || proc->get_prog () == nullptr) && !TEST) {   // is nullptr or is idle
+			logging::debug << "No process need to run, signal idle to run" << logging::log_endl;
 			signal_idle();
 		}
 	} catch(int id) {
@@ -54,7 +46,7 @@ void interrupt_trap_entry ( status_t thread_status, interrupt_t * current_interr
 	clock_t c = clock();
 	status = thread_status;
 	
-	msg_intr("(switch to kernel mode) trap entry of interrupt " + current_interrupt->to_string());
+	message::interrupt ( message::wrap_core_info ( "kern trap" ) ) << "(switch to kernel mode) trap entry of interrupt : " << current_interrupt->to_string () << message::msg_endl;
 	logging::debug << "Interrupt Service Routine for CPU #" << status.get_core ()->get_core_id () << " created" << logging::log_endl;
 
 	logging::debug << "CPU #" << status.get_core ()->get_core_id () << " received interrupt : " << current_interrupt->to_string () << logging::log_endl;
@@ -78,7 +70,8 @@ void interrupt_trap_entry ( status_t thread_status, interrupt_t * current_interr
 	}
 	current_interrupt->process ();
 	trap_exit();
-	msg_intr("(switch to user mode) trap exit, restore context of current process");
+
+	message::interrupt ( message::wrap_core_info ( "kern trap" ) ) << "(switch to user mode) trap exit, restore context of current process" << message::msg_endl;
 
 	status.get_core ()->dec_interrupt_depth ();
 	status.get_core()->release ();

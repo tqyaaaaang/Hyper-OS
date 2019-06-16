@@ -25,6 +25,10 @@
 #include "sys_t.h"
 #include "lib.h"
 
+#ifdef _MSC_VER
+#pragma warning(disable: 4661)
+#endif // _MSC_VER
+
 using std::mutex;
 using std::unique_lock;
 using handle_type::type;
@@ -34,13 +38,6 @@ using logging::log_endl;
 using logging::info;
 using std::terminate;
 using std::lock_guard;
-
-template class handle<int>;
-template class handle<char>;
-template class handle<long long>;
-template class handle<size_t>;
-template class handle<double>;
-template class handle< handle<int> >;
 
 static void msg_mm(string str)
 {
@@ -232,6 +229,7 @@ void program::build()
 	running = false;
 	debug << "STATIC INIT" << log_endl;
 	this->static_init(); // init static info
+	hos_std->init();
 	info << "COMPILE" << log_endl;
 	compile();           // simulate compile
 	info << "BUILDING FINISH" << log_endl;
@@ -348,3 +346,12 @@ string program::get_name() const
 {
 	return name;
 }
+
+
+
+template class handle < int >;
+template class handle < char >;
+template class handle < long long >;
+template class handle < size_t >;
+template class handle < double >;
+template class handle < handle < int > >;

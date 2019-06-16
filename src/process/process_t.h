@@ -109,6 +109,10 @@ public:
 	// set/get signal data (for wait/signal)
 	void set_signal_data(size_t data);
 	size_t get_signal_data() const;
+
+	int get_clock_counter() const;
+
+	bool is_idle() const;
 	
 private:
 
@@ -129,4 +133,7 @@ private:
 
 	bool exit_flag;
 	size_t signal_data;
+
+	int clock_counter;
+	// count time slice @this use
 };

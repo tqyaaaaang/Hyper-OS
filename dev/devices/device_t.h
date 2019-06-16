@@ -17,6 +17,7 @@ public:
 	device_t ();
 	device_t ( int __motherboard_id );   // initialize with motherboard ID
 	device_t ( motherboard_t *_motherboard );   // initialize with a specific motherboard
+	virtual ~device_t ();
 
 	void set_id ( int _id );
 	int get_id () const;
@@ -26,8 +27,8 @@ public:
 	void set_motherboard ( motherboard_t *_motherboard );
 	motherboard_t * get_motherboard () const;
 
-	virtual void init () = 0;
-	virtual void destroy () = 0;
+	virtual void init ();
+	virtual void destroy ();
 
 	virtual std::string to_string () const;
 

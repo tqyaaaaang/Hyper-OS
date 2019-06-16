@@ -26,6 +26,8 @@ public:
 	dev_output* std_output();
 	dev_input* std_input();
 	int pid();
+	int parent();
+	int clock();
 	
 private:
 
